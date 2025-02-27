@@ -9,10 +9,10 @@ namespace joro.too.Web.Controllers
     {
         private readonly IGenreService _genreService;
         private readonly IMediaService _mediaService;
-        public MediaController(MovieDbContext context) 
+        public MediaController(IGenreService genreService, IMediaService mediaservice) 
         {
-            _genreService = new GenreService(context);
-            _mediaService = new MediaService(context);
+            _genreService = genreService;
+            _mediaService = mediaservice;
         }    
         public async Task<IActionResult> SearchResult()
         {
@@ -28,6 +28,8 @@ namespace joro.too.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMedia(string name, string desc, string imgSrc, bool isShow)
         {
+            Console.WriteLine(name);
+            Console.WriteLine("does this work here");
             return RedirectToAction("SearchResult");
         }
     }

@@ -27,6 +27,7 @@ namespace joro.too.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<MediaGenres>().HasKey(k => new { k.MediaId, k.GenreId });
             modelBuilder.Entity<MediaGenres>().HasOne(g => g.Genre).WithMany(m => m.Medias).HasForeignKey(m => m.GenreId);
             modelBuilder.Entity<MediaGenres>().HasOne(m => m.Media).WithMany(g => g.Genres).HasForeignKey(g => g.MediaId);
@@ -37,12 +38,13 @@ namespace joro.too.DataAccess
 
 
             modelBuilder.Entity<Genre>().HasData(
-                new Genre() { Id = 0, Type = "Comedy" },
-                new Genre() { Id = 1, Type = "Action"},
-                new Genre() { Id = 1, Type = "Thriller" },
-                new Genre() { Id = 1, Type = "Romance" },
-                new Genre() { Id = 1, Type = "Science Fiction" }
+                new Genre() { Id = 1, Type = "Comedy" },
+                new Genre() { Id = 2, Type = "Action"},
+                new Genre() { Id = 3, Type = "Thriller" },
+                new Genre() { Id = 4, Type = "Romance" },
+                new Genre() { Id = 5, Type = "Science Fiction" }
                 );
+            
         }
 
     }

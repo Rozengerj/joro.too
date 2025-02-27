@@ -19,7 +19,7 @@
     <div>
         @foreach (var item in Model)
         {
-            <input id="genres" type="checkbox"> @item.Type
+            <input name="genres" id="@item.Id" type="checkbox"> @item.Type
         }
     </div>
     <input type="submit" class="btn">

@@ -12,10 +12,10 @@ public class GenreService:IGenreService
     public GenreService(MovieDbContext context)
     {
         this.context = context;
-        db = context.Set<Genre>();
+        //db = context.Set<Genre>();
     }
     public async Task<List<Genre>> GetGenres()
     {
-        return db.ToList();
+        return context.Genres.ToList();
     }
 }

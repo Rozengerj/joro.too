@@ -1,5 +1,8 @@
 using joro.too.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using joro.too.Services.Services.IServices;
+using joro.too.Services.Services;
 
 namespace joro.too.Web
 {
@@ -12,6 +15,9 @@ namespace joro.too.Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<IGenreService, GenreService>();
+            builder.Services.AddScoped<IMediaService, MediaService>();
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<MovieDbContext>();
 
 
             var app = builder.Build();
