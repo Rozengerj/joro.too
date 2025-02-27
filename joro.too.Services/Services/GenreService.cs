@@ -18,4 +18,9 @@ public class GenreService:IGenreService
     {
         return context.Genres.ToList();
     }
+
+    public async Task<List<Genre>> GetGenresById(List<int> ids)
+    {
+        return db.Where(x => ids.Contains(x.Id)).ToList();
+    }
 }

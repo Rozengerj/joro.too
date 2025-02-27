@@ -42,7 +42,7 @@ public class MediaService:IMediaService
     }
     public async Task<bool> RemoveMedia(int mediaId)
     {
-        if(db.Where(x => x.Id == mediaId).FirstOrDefaultAsync() == null)
+        if(await db.Where(x => x.Id == mediaId).FirstOrDefaultAsync() == null)
         {
             return false;
         }

@@ -1,14 +1,14 @@
 using joro.too.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace joro.too.Web.Models;
 
 public class AddMediaModel
 {
-    public string name { get; set; }
-    public string coversrc { get; set; }
-    public bool isShow { get; set; }
-    public string description { get; set; }
-    public List<int> genreIds { get; set; }
+    public string GenreName { get; set; }
+    public string GenreId { get; set; }
+    public List<SelectListItem> Genres { get; set; }
+    
     
 
 }
