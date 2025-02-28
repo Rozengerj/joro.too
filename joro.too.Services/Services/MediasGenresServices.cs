@@ -23,7 +23,7 @@ public class MediasGenresServices
         {
             GenresForMedia.Add(new MediaGenres(){Media = media, MediaId = media.Id, Genre = item, GenreId = item.Id});
         }
-        db.AddRangeAsync(GenresForMedia);
+        context.MediasGenres.AddRangeAsync(GenresForMedia);
         context.SaveChangesAsync();
         return GenresForMedia;
     }

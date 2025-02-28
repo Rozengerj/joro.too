@@ -12,7 +12,7 @@ public class GenreService:IGenreService
     public GenreService(MovieDbContext context)
     {
         this.context = context;
-        //db = context.Set<Genre>();
+        db = context.Set<Genre>();
     }
     public async Task<List<Genre>> GetGenres()
     {
@@ -21,6 +21,10 @@ public class GenreService:IGenreService
 
     public async Task<List<Genre>> GetGenresById(List<int> ids)
     {
+        if (ids is null)
+        {
+            return context.Genres.ToList();
+        }
         return db.Where(x => ids.Contains(x.Id)).ToList();
     }
 }

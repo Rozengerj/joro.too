@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using joro.too.DataAccess;
 using joro.too.Entities;
 using joro.too.Services.Services.IServices;
@@ -12,19 +13,19 @@ public class MediaService:IMediaService
 {
     public MovieDbContext context;
     public DbSet<Media> db;
-    public MediasGenresServices mediagenerservice;
+    //public MediasGenresServices mediagenerservice;
     public MediaService(MovieDbContext context)
     {
         this.context = context;
         db = context.Set<Media>();
-        mediagenerservice = new MediasGenresServices(context);
+        //mediagenerservice = new MediasGenresServices(context);
     }
 
     public async Task AddMedia(string name, string coversrc, bool isShow, List<Genre> genres, string Desc)
     {
         
         var tempMedia = new Media(){Name = name, MediaImgSrc = coversrc, Description =Desc, IsShow = isShow, Rating = new List<decimal>()};
-        tempMedia.Genres = mediagenerservice.AddMediaGenresTable(tempMedia, genres);
+        tempMedia.Genres = await AddMediaGenresTable(tempMedia, genres);
         if (isShow)
         {
             tempMedia.Movie = null;
@@ -46,7 +47,7 @@ public class MediaService:IMediaService
         {
             return false;
         }
-        db.Remove(db.FirstOrDefaultAsync(x=>x.Id==mediaId).Result);
+        db.Remove(await db.FirstOrDefaultAsync(x=>x.Id==mediaId));
         await context.SaveChangesAsync();
         return true;
     }
@@ -94,5 +95,15 @@ public class MediaService:IMediaService
         context.SaveChanges();
         return;
     }
-
+    public async Task<List<MediaGenres>> AddMediaGenresTable(Media media, List<Genre> genres)
+    {
+        List<MediaGenres> GenresForMedia = new List<MediaGenres>();
+        foreach (var item in genres)
+        {
+            GenresForMedia.Add(new MediaGenres(){Media = media, MediaId = media.Id, Genre = item, GenreId = item.Id});
+        }
+        await context.MediasGenres.AddRangeAsync(GenresForMedia);
+        await context.SaveChangesAsync();
+        return GenresForMedia;
+    }
 }

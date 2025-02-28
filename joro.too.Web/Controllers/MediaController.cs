@@ -5,6 +5,7 @@ using joro.too.Services.Services.IServices;
 using joro.too.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace joro.too.Web.Controllers
 {
@@ -17,26 +18,12 @@ namespace joro.too.Web.Controllers
             _genreService = genreService;
             _mediaService = mediaservice;
         }    
-        public async Task<IActionResult> SearchResult()
+        public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model, string[] genres, bool IsShow, bool isMovie)
         {
-
-            return View();
-        }
-
-        public async Task<IActionResult> AddMedia()
-        {
-            var genres = _genreService.GetGenres().Result;
-            AddMediaModel model = new AddMediaModel();
+            //this method is ugly and long and im sure it could be compacted by a lot but honestly if it works like this im not gonna touch it further except if i dont get drunk lmao
+            var genreIds = new List<int>();
             model.Genres = new List<SelectListItem>();
-            foreach (Genre item in genres)
-            {
-                model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });}
-            return View(model);
-        }
-        [HttpPost]
-        public async Task<IActionResult> AddMedia(string name, string desc, string imgSrc, bool isShow, string[] genres, AddMediaModel model)
-        {
-            foreach (Genre item in _genreService.GetGenres().Result)
+            foreach (Genre item in await _genreService.GetGenres())
             {
                 model.Genres.Add(new SelectListItem(){Value = item.Id.ToString(), Text = item.Type});
             }
@@ -45,10 +32,58 @@ namespace joro.too.Web.Controllers
                 if (genres.Contains(li.Value))
                 {
                     li.Selected = true;
-                    
+                    genreIds.Add(int.Parse(li.Value));
                 }
             }
-            return RedirectToAction("SearchResult");
+
+            Console.WriteLine(string.Join(", ",genreIds));
+            List<Genre> genresfr = await _genreService.GetGenresById(genreIds);
+            List<SearchResultModel> modellist = new List<SearchResultModel>();
+            List<Media> media = await _mediaService.GetMediasWithGenres(genresfr);
+            if (name!=null)
+            {
+                media = media.Where(x => x.Name.Contains(name)).ToList();
+            }
+            if (rating != null)
+            {
+                media = media.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
+            }
+            if (IsShow == false && isMovie == false)
+            {
+                foreach (var item in media)
+                {
+                    modellist.Add(new SearchResultModel()
+                    {
+                        name = item.Name,
+                        id = item.Id,
+                        imgsrc = item.MediaImgSrc,
+                        desc = item.Description
+                    });
+                }
+                return View(modellist);
+            }
+
+            if (IsShow)
+            {
+                media = media.Where(x => x.IsShow == true).ToList();
+            }
+            else if (isMovie)
+            {
+                media = media.Where(x => x.IsShow == false).ToList();
+            }
+            foreach (var item in media)
+            {
+                modellist.Add(new SearchResultModel()
+                {
+                    name = item.Name,
+                    id = item.Id,
+                    imgsrc = item.MediaImgSrc,
+                    desc = item.Description
+                });
+            }
+            return View(modellist);
         }
+
+        
     }
 }

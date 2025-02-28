@@ -1,10 +1,10 @@
-﻿<div class="container-fluid" style="display: flex; max-width: 1920px">
-
-
+﻿
+@model List<SearchResultModel>
+<div class="container-fluid" style="display: flex; max-width: 1920px">
     <ul style="flex-wrap: wrap; list-style-type: none; float: unset" class="list-group list-group-horizontal ">
-        @for (int i = 0; i < 15; i++)
+        @foreach(var item in Model)
         {
-            <a asp-action="">
+            <a asp-action="ViewMedia" asp-route-id="@item.id">
                 <li style="margin: 0.5em">
                     <div height="100em">
                         <div class="card-container">
