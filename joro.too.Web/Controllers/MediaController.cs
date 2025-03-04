@@ -35,8 +35,7 @@ namespace joro.too.Web.Controllers
                     genreIds.Add(int.Parse(li.Value));
                 }
             }
-
-            Console.WriteLine(string.Join(", ",genreIds));
+            //Console.WriteLine(string.Join(", ",genreIds));
             List<Genre> genresfr = await _genreService.GetGenresById(genreIds);
             List<SearchResultModel> modellist = new List<SearchResultModel>();
             List<Media> media = await _mediaService.GetMediasWithGenres(genresfr);
@@ -62,7 +61,7 @@ namespace joro.too.Web.Controllers
                 }
                 return View(modellist);
             }
-
+            //checks if its a show
             if (IsShow)
             {
                 media = media.Where(x => x.IsShow == true).ToList();
