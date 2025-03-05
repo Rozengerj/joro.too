@@ -16,7 +16,8 @@ namespace joro.too.Services.Services.IServices
         public Task<decimal> GetAvgRating(Media media);
         public Task<decimal> UpdateRating(int newRating, Media media);
         public Task UpdateMedia(Media Media); //update
-        
+        public Task<Media> FindMediaById(int id);
+
 
     }
 }

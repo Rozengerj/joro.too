@@ -4,6 +4,7 @@ using joro.too.Services.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using joro.too.Web.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.Tokens;
 
 namespace joro.too.Web.Controllers;
 
@@ -23,6 +24,10 @@ public class HomeController : Controller
         recommendedMedia.Where(x=> x.Rating.Average() > (decimal)7.5).ToList();
         Random k = new Random();
         HashSet<SearchResultModel> thething = new HashSet<SearchResultModel>();
+        if (recommendedMedia.IsNullOrEmpty())
+        {
+            return View();
+        }
         for (int i = 0; i < 10; i++)
         {
             var currmedia = recommendedMedia[k.Next(0, recommendedMedia.Count)];

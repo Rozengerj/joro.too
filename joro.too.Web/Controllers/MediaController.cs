@@ -17,7 +17,7 @@ namespace joro.too.Web.Controllers
         {
             _genreService = genreService;
             _mediaService = mediaservice;
-        }    
+        }
         public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model, string[] genres, bool IsShow, bool isMovie)
         {
             //this method is ugly and long and im sure it could be compacted by a lot but honestly if it works like this im not gonna touch it further except if i dont get drunk lmao
@@ -25,7 +25,7 @@ namespace joro.too.Web.Controllers
             model.Genres = new List<SelectListItem>();
             foreach (Genre item in await _genreService.GetGenres())
             {
-                model.Genres.Add(new SelectListItem(){Value = item.Id.ToString(), Text = item.Type});
+                model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
             }
             foreach (SelectListItem li in model.Genres)
             {
@@ -39,11 +39,11 @@ namespace joro.too.Web.Controllers
             List<Genre> genresfr = await _genreService.GetGenresById(genreIds);
             List<SearchResultModel> modellist = new List<SearchResultModel>();
             List<Media> media = await _mediaService.GetMediasWithGenres(genresfr);
-            if (name!=null)
+            if (name != null)
             {
                 media = media.Where(x => x.Name.Contains(name)).ToList();
             }
-            if (rating != null)
+            if (rating!= null)
             {
                 media = media.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
             }
@@ -82,7 +82,27 @@ namespace joro.too.Web.Controllers
             }
             return View(modellist);
         }
-
-        
+        [Route("id")]
+        public async Task<IActionResult> ViewMedia(int id)
+        {
+            var media = await _mediaService.FindMediaById(id);
+            var model = new ViewMediaModel() 
+            { 
+                id = media.Id, genres = media.Genres.Select(x => x.Genre).ToList(), name = media.Name, 
+                rating = media.Rating, actors = media.Actors.ToList(), description = media.Description, imgsrc = media.MediaImgSrc
+            };
+            if (!media.IsShow)
+            {
+                return View("ViewMovie", media);
+            }
+            model.SeasonsNames = new List<string>();
+            model.EpisodesInSeasons = new List<List<Video>>();
+            foreach (var season in media.Seasons)
+            {
+                model.EpisodesInSeasons.Add(season.Episodes);
+                model.SeasonsNames.Add(season.Name);
+            }
+            return View("ViewShow", media);
+        }
     }
 }

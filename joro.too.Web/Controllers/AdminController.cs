@@ -1,4 +1,6 @@
+using CloudinaryDotNet;
 using joro.too.Entities;
+using joro.too.Services.Services;
 using joro.too.Services.Services.IServices;
 using joro.too.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,12 @@ public class AdminController:Controller
     
     private readonly IGenreService _genreService;
     private readonly IMediaService _mediaService;
-    public AdminController(IGenreService genreService, IMediaService mediaservice) 
+    private CloudinaryService _cloudinary;
+    public AdminController(IGenreService genreService, IMediaService mediaservice, CloudinaryService cloudinary) 
     {
         _genreService = genreService;
         _mediaService = mediaservice;
+        _cloudinary = cloudinary;
     }    
     public async Task<IActionResult> AddMovie()
     {
@@ -27,7 +31,7 @@ public class AdminController:Controller
         return View(model);
     }
     [HttpPost]
-    public async Task<IActionResult> AddMovie(string name, string desc, string imgSrc,  string[] genres, AddMediaModel model)
+    public async Task<IActionResult> AddMovie(string name, string desc, IFormFile imgSrc,  string[] genres, AddMediaModel model)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
@@ -43,8 +47,13 @@ public class AdminController:Controller
                 genreIds.Add(int.Parse(li.Value));
             }
         }
+        // this thing
+        var imageUrl = await _cloudinary.UploadImageAsync(imgSrc);
+        //
+        
         var genresreal = await _genreService.GetGenresById(genreIds);
-        await _mediaService.AddMedia(name, imgSrc, true, genresreal, desc);
+        
+        await _mediaService.AddMedia(name, imageUrl, true, genresreal, desc);
         return RedirectToAction("SearchResult","Media");
     }
     

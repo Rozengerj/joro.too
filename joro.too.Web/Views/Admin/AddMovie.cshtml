@@ -3,7 +3,7 @@
 @model AddMediaModel
 
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <div>
         Name
         <input name="name" id="name" type="text">
@@ -14,7 +14,7 @@
     </div>
     <div style="float: right">
         Upload image
-        <input type="file" id="imgSrc" name="imgSrc">
+        <input type="file" id="imgSrc" name="imgSrc" accept="image/*">
     </div>
     <div>
         @foreach (var item in Model.Genres)

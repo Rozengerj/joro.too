@@ -25,7 +25,7 @@ public class MediaService:IMediaService
     {
         
         var tempMedia = new Media(){Name = name, MediaImgSrc = coversrc, Description =Desc, IsShow = isShow, Rating = new List<decimal>()};
-        tempMedia.Genres = await AddMediaGenresTable(tempMedia, genres);
+        //tempMedia.Genres = await AddMediaGenresTable(tempMedia, genres);
         if (isShow)
         {
             tempMedia.Movie = null;
@@ -64,6 +64,10 @@ public class MediaService:IMediaService
     public async Task<decimal> GetAvgRating(Media media)
     {
         decimal avg = 0;
+        if (media.Rating.IsNullOrEmpty())
+        {
+            return 0;
+        }
         media.Rating.ForEach(x=>avg+=x);
         return avg / media.Rating.Count;
     }
@@ -105,5 +109,9 @@ public class MediaService:IMediaService
         await context.MediasGenres.AddRangeAsync(GenresForMedia);
         await context.SaveChangesAsync();
         return GenresForMedia;
+    }
+    public async Task<Media> FindMediaById(int id)
+    {
+        return await db.Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 }

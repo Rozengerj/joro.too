@@ -12,6 +12,7 @@ namespace joro.too.Entities
         public int MediaId { get; set; }
         public Actor Actor { get; set; }
         public Media Media { get; set; }
+        
         public string Role { get; set; }
     }
 }
