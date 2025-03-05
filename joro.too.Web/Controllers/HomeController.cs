@@ -21,7 +21,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         var recommendedMedia = await mediaService.GetMediasWithGenres(null);
-        recommendedMedia.Where(x=> x.Rating.Average() > (decimal)7.5).ToList();
+        recommendedMedia.Where(x=> !x.Rating.IsNullOrEmpty() && x.Rating.Average() > (decimal)7.5  ).ToList();
         Random k = new Random();
         HashSet<SearchResultModel> thething = new HashSet<SearchResultModel>();
         if (recommendedMedia.IsNullOrEmpty())

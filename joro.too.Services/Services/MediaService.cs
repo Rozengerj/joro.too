@@ -25,7 +25,6 @@ public class MediaService:IMediaService
     {
         
         var tempMedia = new Media(){Name = name, MediaImgSrc = coversrc, Description =Desc, IsShow = isShow, Rating = new List<decimal>()};
-        //tempMedia.Genres = await AddMediaGenresTable(tempMedia, genres);
         if (isShow)
         {
             tempMedia.Movie = null;
@@ -39,6 +38,7 @@ public class MediaService:IMediaService
             tempMedia.Seasons = null;
         }
         await db.AddAsync(tempMedia);
+        await AddMediaGenresTable(tempMedia, genres);
         await context.SaveChangesAsync();
     }
     public async Task<bool> RemoveMedia(int mediaId)
@@ -99,7 +99,8 @@ public class MediaService:IMediaService
         context.SaveChanges();
         return;
     }
-    public async Task<List<MediaGenres>> AddMediaGenresTable(Media media, List<Genre> genres)
+    
+    public async Task AddMediaGenresTable(Media media, List<Genre> genres)
     {
         List<MediaGenres> GenresForMedia = new List<MediaGenres>();
         foreach (var item in genres)
@@ -108,7 +109,7 @@ public class MediaService:IMediaService
         }
         await context.MediasGenres.AddRangeAsync(GenresForMedia);
         await context.SaveChangesAsync();
-        return GenresForMedia;
+        
     }
     public async Task<Media> FindMediaById(int id)
     {
