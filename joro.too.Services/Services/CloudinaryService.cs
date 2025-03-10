@@ -20,7 +20,7 @@ public class CloudinaryService
     {
         if (file == null || file.Length == 0)
         {
-            Console.WriteLine("ma to izobshto ne pravi nishto tuka");
+            //Console.WriteLine("ma to izobshto ne pravi nishto tuka");
             return null;
         }
             
@@ -33,10 +33,31 @@ public class CloudinaryService
         var uploadResult = await _cloudinary.UploadAsync(uploadParams); 
         if (uploadResult == null || uploadResult.SecureUrl == null) 
         {
-            Console.WriteLine("liniq 36 neshto nz");
+            //Console.WriteLine("liniq 36 neshto nz");
             return null; 
         } 
-        Console.WriteLine("minalo e qvno");
+        //Console.WriteLine("minalo e qvno");
+        return uploadResult.SecureUrl.ToString();
+    } public async Task<string> UploadVideoAsync(IFormFile file) 
+    {
+        if (file == null || file.Length == 0)
+        {
+            //Console.WriteLine("ma to izobshto ne pravi nishto tuka vid");
+            return null;
+        }
+            
+        using var stream = file.OpenReadStream(); 
+        var uploadParams = new VideoUploadParams() 
+        {
+            File = new FileDescription(file.FileName, stream)
+        }; 
+        var uploadResult = await _cloudinary.UploadAsync(uploadParams); 
+        if (uploadResult == null || uploadResult.SecureUrl == null) 
+        {
+            //Console.WriteLine("liniq 36 neshto nz vid");
+            return null; 
+        } 
+        //Console.WriteLine("minalo e qvno vid");
         return uploadResult.SecureUrl.ToString();
     } 
 }

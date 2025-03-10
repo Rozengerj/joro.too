@@ -1,0 +1,36 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using joro.too.Entities
+@model AddMediaModel
+
+
+
+<form method="post" enctype="multipart/form-data">
+    <div>
+        Name
+        <input name="name" id="name" type="text">
+    </div>
+    <div>
+        Description
+        <input name="desc" id="desc" type="text">
+    </div>
+    <div style="float: right">
+        Upload image
+        <input type="file" id="imgSrc" name="imgSrc" accept="image/*">
+    </div>
+    <div>
+        @foreach (var item in Model.Genres)
+        {
+            <input name="genres" id="@item.Value" value="@item.Value" type="checkbox"> @item.Text
+        }
+    </div>
+    
+    <div>
+        <button>
+            <nav id="AddButton"> jjjjj</nav>
+        </button>
+
+    </div>
+    <input type="submit" class="btn">
+    
+</form>
+<script src="~/js/site.js" asp-append-version="true" type="module"></script>

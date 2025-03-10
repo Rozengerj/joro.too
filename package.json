@@ -1,0 +1,26 @@
+{
+  "name": "joro.too",
+  "version": "1.0.0",
+  "private": true,
+  "description": "packages for my webapp i guess",
+  "homepage": "https://github.com/Rozengerj/joro.too#readme",
+  "bugs": {
+    "url": "https://github.com/Rozengerj/joro.too/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rozengerj/joro.too.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "node": "^23.9.0",
+    "node.js": "^0.0.1-security",
+    "react-dom": "^19.0.0"
+  }
+}

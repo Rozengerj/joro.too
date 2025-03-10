@@ -14,13 +14,19 @@ public class VideoService
         this.context = context;
         vid = context.Set<Video>();
     }
-
-    public void AddVideo(string name, string vidsrc)
+    public async Task<bool> RemoveVideo(int id)
     {
-        var Video = new Video() { name = name, vidsrc = vidsrc, Comments = new List<Comment>()};
-        vid.AddAsync(Video);
-        context.SaveChangesAsync();
+        if (await vid.FindAsync(id) is null)
+        {
+            return false;
+        }
+        vid.Remove(await vid.FindAsync(id));
+        await context.SaveChangesAsync();
+        return true;
     }
-    
-    
+    public async Task UpdateVideo(Video video)
+    {
+        vid.Update(video);
+        await context.SaveChangesAsync();
+    }
 }

@@ -31,7 +31,7 @@ public class AdminController:Controller
         return View(model);
     }
     [HttpPost]
-    public async Task<IActionResult> AddMovie(string name, string desc, IFormFile imgSrc,  string[] genres, AddMediaModel model)
+    public async Task<IActionResult> AddMovie(string name, string desc, IFormFile img,  string[] genres, AddMediaModel model, IFormFile vid)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
@@ -48,13 +48,23 @@ public class AdminController:Controller
             }
         }
         // this thing
-        var imageUrl = await _cloudinary.UploadImageAsync(imgSrc);
-        //
-        
+        var imageUrl = await _cloudinary.UploadImageAsync(img);
         var genresreal = await _genreService.GetGenresById(genreIds);
-        
-        await _mediaService.AddMedia(name, imageUrl, true, genresreal, desc);
+        var vidsrc = await _cloudinary.UploadVideoAsync(vid);
+        var media = await _mediaService.AddMedia(name, imageUrl, true, genresreal, desc);
+        await _mediaService.AddMovie(media, vidsrc);
         return RedirectToAction("SearchResult","Media");
+    }
+
+    public async Task<IActionResult> AddShow()
+    {
+        var genres =  await _genreService.GetGenres();
+        AddMediaModel model = new AddMediaModel();
+        model.Genres = new List<SelectListItem>();
+        foreach (Genre item in genres)
+        {
+            model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });}
+        return View(model);
     }
     
 }

@@ -21,7 +21,7 @@ public class MediaService:IMediaService
         //mediagenerservice = new MediasGenresServices(context);
     }
 
-    public async Task AddMedia(string name, string coversrc, bool isShow, List<Genre> genres, string Desc)
+    public async Task<Media> AddMedia(string name, string coversrc, bool isShow, List<Genre> genres, string Desc)
     {
         
         var tempMedia = new Media(){Name = name, MediaImgSrc = coversrc, Description =Desc, IsShow = isShow, Rating = new List<decimal>()};
@@ -40,6 +40,7 @@ public class MediaService:IMediaService
         await db.AddAsync(tempMedia);
         await AddMediaGenresTable(tempMedia, genres);
         await context.SaveChangesAsync();
+        return tempMedia;
     }
     public async Task<bool> RemoveMedia(int mediaId)
     {
@@ -114,5 +115,40 @@ public class MediaService:IMediaService
     public async Task<Media> FindMediaById(int id)
     {
         return await db.Where(x => x.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task AddMovie(Media media, string vidsrc)
+    {
+        var video = new Video() { name = media.Name, vidsrc = vidsrc, Comments = new List<Comment>()};
+        await context.Video.AddAsync(video);
+        media.Movie = video;
+        await context.SaveChangesAsync();
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="media"></param>
+    /// <param name="vidData">item1 is the video source, and item2 is the episode name, dont worry about it just trust me on this one
+    /// </param>
+    /// <param name="seasonNames"></param>
+    public async Task AddShow(Media media, List<List<Tuple<string,string>>> vidData, List<string> seasonNames)
+    {
+        List<Season> seasons = new List<Season>();
+        for (int i = 1; i <= seasonNames.Count; i++)
+        {
+            var season = new Season() { Number = i, Episodes = new List<Video>(), Name = seasonNames[i - 1] };
+            var epsForThisSeason = new List<Video>();
+            await context.Seasons.AddAsync(season);
+            foreach (var vidinfo in vidData[i-1] )
+            {
+                epsForThisSeason.Add(new Video()
+                    { name = vidinfo.Item2, vidsrc = vidinfo.Item1, Comments = new List<Comment>() });
+            }
+            context.Video.AddRangeAsync(epsForThisSeason);
+            season.Episodes = epsForThisSeason;
+            seasons.Add(season);
+        }
+        media.Seasons = seasons;
+        await context.SaveChangesAsync();
     }
 }
