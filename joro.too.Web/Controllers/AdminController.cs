@@ -50,9 +50,10 @@ public class AdminController:Controller
         // this thing
         var imageUrl = await _cloudinary.UploadImageAsync(img);
         var genresreal = await _genreService.GetGenresById(genreIds);
-        var vidsrc = await _cloudinary.UploadVideoAsync(vid);
+        //var vidsrc = await _cloudinary.UploadVideoAsync(vid);
+        
         var media = await _mediaService.AddMedia(name, imageUrl, true, genresreal, desc);
-        await _mediaService.AddMovie(media, vidsrc);
+        //await _mediaService.AddMovie(media, vidsrc);
         return RedirectToAction("SearchResult","Media");
     }
 

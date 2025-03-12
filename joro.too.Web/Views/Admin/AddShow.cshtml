@@ -1,7 +1,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using joro.too.Entities
 @model AddMediaModel
-
+<link rel="stylesheet" href="~/css/Searchbar.css" asp-append-version="true" />
 
 <p> paragraph </p>
 <form method="post" enctype="multipart/form-data">
@@ -17,6 +17,7 @@
         Upload image
         <input type="file" id="imgSrc" name="imgSrc" accept="image/*">
     </div>
+    
     <div>
         @foreach (var item in Model.Genres)
         {
@@ -25,15 +26,12 @@
     </div>
     <div>
         <ol id="SeasonList">
-            
         </ol>
     </div>
-    
     <div>
-        <button>
-            <nav id="AddButton"> jjjjj</nav>
+        <button id="AddSeasonBtn">
+            Add Season
         </button>
-    
     </div>
     <input type="submit" class="btn">
     

@@ -16,7 +16,7 @@ namespace joro.too.Web
             // Add services to the container.
             //dbcontext setup
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
+            builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();
