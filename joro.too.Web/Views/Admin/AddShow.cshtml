@@ -3,7 +3,7 @@
 @model AddMediaModel
 
 
-
+<p> paragraph </p>
 <form method="post" enctype="multipart/form-data">
     <div>
         Name
@@ -23,14 +23,20 @@
             <input name="genres" id="@item.Value" value="@item.Value" type="checkbox"> @item.Text
         }
     </div>
+    <div>
+        <ol id="SeasonList">
+            
+        </ol>
+    </div>
     
     <div>
         <button>
             <nav id="AddButton"> jjjjj</nav>
         </button>
-
+    
     </div>
     <input type="submit" class="btn">
     
 </form>
-<script src="~/js/site.js" asp-append-version="true" type="module"></script>
+
+<script src="~/js/AddShowScript.jsx" asp-append-version="true" type="module"></script>
