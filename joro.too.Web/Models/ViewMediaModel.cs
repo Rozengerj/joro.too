@@ -12,7 +12,9 @@ public class ViewMediaModel
     public List<decimal> rating { get; set; }
     public List<ActorRoles> actors { get; set; }
     //showonly
-    public List<List<Video>>? EpisodesInSeasons { get; set; }
+    public List<List<VideoViewModel>>? EpisodesInSeasons { get; set; }
     public List<string>? SeasonsNames { get; set; }
+    //movieonly
+    public VideoViewModel? movie;
 
 }

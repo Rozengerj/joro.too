@@ -13,7 +13,8 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">joro.to</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -26,10 +27,13 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
                     <li style="align-self: end">
-                        <input type="text">
-                        <a asp-controller="Media" asp-action="SearchResult">
-                            search
-                        </a>
+                        <form asp-controller="Media" asp-action="SearchResult">
+                            <input name="name" id="name" type="text"
+                                   placeholder="Search for your favourite movies here">
+                            <input type="submit" class="btn">
+                                Search!
+                            
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -42,7 +46,7 @@
     </main>
 </div>
 
-<footer class="border-top footer text-muted">
+<footer class="border-top footer text-muted" style="position: absolute;bottom: 1em;width: 100%;">
     <div class="container">
         &copy; 2025 - joro.to - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
