@@ -144,7 +144,7 @@ public class MediaService:IMediaService
                 epsForThisSeason.Add(new Video()
                     { name = vidinfo.Item2, vidsrc = vidinfo.Item1, Comments = new List<Comment>() });
             }
-            context.Video.AddRangeAsync(epsForThisSeason);
+            await context.Video.AddRangeAsync(epsForThisSeason);
             season.Episodes = epsForThisSeason;
             seasons.Add(season);
         }

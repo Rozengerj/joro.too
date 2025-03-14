@@ -1,7 +1,6 @@
 $(document).ready(function () {
     //function that acts upon 
     let seasonsCount = 0;
-
     $(".widget button").button();
     $("#AddSeasonBtn").on("click", function (event) {
         let epcount = 0;
@@ -14,9 +13,11 @@ $(document).ready(function () {
             '         </label>'+          
             '         <div>' +
             '            <div class="AddEpisodeDiv">' +
-            '               <button class="AddEpisodeBtn'+seasonsCount+'">Add Episode</button>' +
+            '               <button class="AddEpisodeBtn'+ seasonsCount +'">Add Episode</button>' +
             '            </div>'+
             '         </div>' +
+            '            <input type="hidden" name="episode" id="99999s' + seasonsCount + '" value="_-_-_@_-_-_">' +
+            '            </input>'+
             '      </div>' +
             '   <button class="RemoveSeasonBtn">Remove Season</button> ' +
             '   </div>'+
@@ -25,24 +26,27 @@ $(document).ready(function () {
             console.log("does this run multiple times??")
             $(this).closest('.season').remove();
         });
-        console.log("COUNT UP")
+        //console.log("COUNT UP")
         let addepstring=".AddEpisodeBtn"+seasonsCount
         seasonsCount++;
-        console.log(addepstring)
+        //console.log(addepstring)
         $(addepstring).click(function (event) {
-            
             //$(this).closest('.input').remove();
             let seasonnum = $(this).closest('.helper').map(function(){
                 return this.id;
             }).get().join();
             console.log("are you gonna write shit in here four times i na row you fucking piece of shit")
             $(this).closest('.AddEpisodeDiv').append(
-                '      <div class="input-group">' +
+                '      <div class="input-group ep">' +
                 '         <input type="text" name="episode" id="'+ epcount + seasonnum + '" class="input" required="" placeholder="Input Episode Name Here">' +
-                '         <input type="file" name="episodevidsrc" id="'+ epcount + seasonnum + '">' +
-                '      <div>'
+                '         <input type="file" name="episodevidsrc" id="' + epcount + seasonnum + '">' +
+                '         <button class="RemoveEpisodeBtn">Remove Episode</button>'+
+                '      </div>'
             );
             epcount++;
+            $(".RemoveEpisodeBtn").on("click", function () {
+                $(this).closest(".ep").remove();
+            })
             }
             //document.getElementById()
         );
