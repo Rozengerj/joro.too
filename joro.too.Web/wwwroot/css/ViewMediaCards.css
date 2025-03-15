@@ -1,0 +1,256 @@
+.card-container {
+    width: stretch;
+    height: stretch;
+    position: relative;
+    border-radius: 15px;
+}
+
+.card-container::before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    inset: 0;
+    transform: translate3d(0, 0, 0) scale(0.95);
+    filter: blur(20px);
+}
+
+.card {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+.card .img-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: scale 0.6s, rotate 0.6s, filter 1s;
+}
+
+.card .img-content svg {
+    width: 50px;
+    height: 50px;
+    fill: #e8e8e8;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.card .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    color: #e8e8e8;
+    padding: 20px;
+    line-height: 1.5;
+    border-radius: 5px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(50px);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.card .content .heading {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.card:hover .content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card:hover .img-content {
+    scale: 2.5;
+    rotate: 30deg;
+    filter: blur(7px);
+}
+
+.card:hover .img-content svg {
+    fill: transparent;
+}
+
+
+
+
+
+
+table {
+    border: 0px solid #ccc;
+    border-collapse: collapse;
+    margin: 4%;
+    padding: 0;
+    width: 55%;
+    height: 100%;
+}
+
+table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+}
+
+table tr {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: .35em;
+    height: max-content;
+}
+
+table th,
+table td {
+    padding: .625em;
+    text-align: center;
+    height: max-content;
+}
+
+table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    height: max-content;
+    text-transform: uppercase;
+}
+
+@media screen and (max-width: 85em) {
+    table {
+        border: 0;
+        height: max-content;
+        width: max-content;
+    }
+
+    table caption {
+        font-size: 1.3em;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: 0;
+        height: max-content;
+    }
+
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    table td::before {
+        /*
+* aria-label has no advantage, it won't be read inside a table
+content: attr(aria-label);
+*/
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+}
+/* general styling */
+body {
+    font-family: "Open Sans", sans-serif;
+    line-height: 1.25;
+}
+
+.card2 {
+    width: 190px;
+    padding: 1.9rem 1.2rem;
+    text-align: center;
+    background: #2a2b38;
+}
+
+/*Inputs*/
+.field {
+    margin-top: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5em;
+    background-color: #1f2029;
+    border-radius: 4px;
+    padding: .5em 1em;
+}
+
+.input-icon {
+    height: 1em;
+    width: 1em;
+    fill: #ffeba7;
+}
+
+.input-field {
+    background: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: #d3d3d3;
+}
+
+/*Text*/
+.title {
+    margin-bottom: 1rem;
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #f5f5f5;
+}
+
+/*Buttons*/
+.btn {
+    margin: 1rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: .8em;
+    text-transform: uppercase;
+    padding: 0.6em 1.2em;
+    background-color: #ffeba7;
+    color: #5e6681;
+    box-shadow: 0 8px 24px 0 rgb(255 235 167 / 20%);
+    transition: all .3s ease-in-out;
+}
+
+.btn-link {
+    color: #f5f5f5;
+    display: block;
+    font-size: .75em;
+    transition: color .3s ease-out;
+}
+
+/*Hover & focus*/
+.field input:focus::placeholder {
+    opacity: 0;
+    transition: opacity .3s;
+}
+
+.btn:hover {
+    background-color: #5e6681;
+    color: #ffeba7;
+    box-shadow: 0 8px 24px 0 rgb(16 39 112 / 20%);
+}
+
+.btn-link:hover {
+    color: #ffeba7;
+}
