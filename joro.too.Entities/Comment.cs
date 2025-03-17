@@ -7,9 +7,11 @@ public class Comment
 {
     [Key]
     public int Id { get; set; }
-    public string text { get; set; }
+    public string Text { get; set; }
+    // ddz
     public int UserId { get; set; }
-    [ForeignKey(nameof(Video))]
-    public Video video { get; set; }
+    
+    public Episode Episode { get; set; }
+    [ForeignKey(nameof(Episode))]
     public int VideoId { get; set; }
 }

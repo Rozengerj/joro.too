@@ -7,12 +7,12 @@ namespace joro.too.Services.Services;
 public class VideoService
 {
     public MovieDbContext context;
-    public DbSet<Video> vid;
+    public DbSet<Episode> vid;
 
     public VideoService(MovieDbContext context)
     {
         this.context = context;
-        vid = context.Set<Video>();
+        vid = context.Set<Episode>();
     }
     public async Task<bool> RemoveVideo(int id)
     {
@@ -24,9 +24,9 @@ public class VideoService
         await context.SaveChangesAsync();
         return true;
     }
-    public async Task UpdateVideo(Video video)
+    public async Task UpdateVideo(Episode episode)
     {
-        vid.Update(video);
+        vid.Update(episode);
         await context.SaveChangesAsync();
     }
 }

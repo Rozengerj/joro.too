@@ -8,7 +8,7 @@ public class Genre
     [Key]
     public int Id {  get; set; }
     public string Type { get; set; }
+    public List<GenresMovies>? Movies { get; set; }
+    public List<GenresShows>? Shows { get; set; }
     
-    public List<MediaGenres>? Medias { get; set; }
-    public List<int>? MediasId { get; set; }
 }
