@@ -97,7 +97,17 @@ public class MediaService:IMediaService
         return avg / media.Rating.Count;
     }
 
-    public async Task<decimal> GetAvgRating(Media media)
+    public async Task<decimal> GetAvgRating(Movie media)
+    {
+        decimal avg = 0;
+        if (media.Rating.IsNullOrEmpty())
+        {
+            return 0;
+        }
+        media.Rating.ForEach(x=>avg+=x);
+        return avg / media.Rating.Count;
+    }
+    public async Task<decimal> GetAvgRating(Show media)
     {
         decimal avg = 0;
         if (media.Rating.IsNullOrEmpty())
@@ -115,20 +125,32 @@ public class MediaService:IMediaService
             return new Tuple<List<Show>, List<Movie>>(showTable.ToList(), movieTable.ToList());
         }
         HashSet<Movie> filteredMovies = new HashSet<Movie>();
+        HashSet<Show> filteredShows = new HashSet<Show>();
         var allMovies = movieTable.Include(x => x.Genres).ThenInclude(x => x.Genre).ToList();
         var allShows = showTable.Include(x => x.Genres).ThenInclude(x => x.Genre).ToList();
-        foreach (var item in allmedia)
+        foreach (var item in filteredMovies)
         { 
             var mediagenres = item.Genres.Select(x => x.Genre.Type).ToList();
             foreach (var item2 in genres)
             {
                 if (mediagenres.Contains(item2.Type))
                 {
-                    filtered.Add(item);
+                    filteredMovies.Add(item);
                 }
             }
         }
-        return filtered.ToList();
+        foreach (var item in filteredShows)
+        { 
+            var mediagenres = item.Genres.Select(x => x.Genre.Type).ToList();
+            foreach (var item2 in genres)
+            {
+                if (mediagenres.Contains(item2.Type))
+                {
+                    filteredShows.Add(item);
+                }
+            }
+        }
+        return new Tuple<List<Show>, List<Movie>>(filteredShows.ToList(), filteredMovies.ToList());
     }
     public async Task UpdateMedia(Movie media)
     {

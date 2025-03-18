@@ -44,31 +44,32 @@ namespace joro.too.Web.Controllers
             //Console.WriteLine(string.Join(", ",genreIds));
             List<Genre> genresfr = await _genreService.GetGenresById(genreIds);
             List<SearchResultModel> modellist = new List<SearchResultModel>();
-            List<Media> media = await _mediaService.GetMediasWithGenres(genresfr);
+            var media = await _mediaService.GetMediasWithGenres(genresfr);
             if (name != null)
             {
-                media = media.Where(x => x.Name.Contains(name)).ToList();
+                media.Item1.Where(x => x.Name.Contains(name)).ToList();
+                media.Item2.Where(x => x.Name.Contains(name)).ToList();
             }
 
             if (rating != null)
             {
-                media = media.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
+                media.Item1.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
+                media.Item2.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
             }
 
             if (IsShow == false && isMovie == false)
             {
-                foreach (var item in media)
-                {
-                    modellist.Add(new SearchResultModel()
-                    {
-                        name = item.Name,
-                        id = item.Id,
-                        imgsrc = item.MediaImgSrc,
-                        desc = item.Description
-                    });
-                }
+                modellist.AddRange(media.Item1.Select(
+                    x=>new SearchResultModel(){
+                        name=x.Name,
+                        desc = x.Description,
+                        imgsrc = x.MediaImgSrc,
+                        
+                        ));
+            }
 
-                return View(modellist);
+
+            return View(modellist);
             }
 
             //checks if its a show
