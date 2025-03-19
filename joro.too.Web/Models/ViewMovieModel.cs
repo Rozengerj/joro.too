@@ -2,7 +2,7 @@ using joro.too.Entities;
 
 namespace joro.too.Web.Models;
 
-public class ViewMediaModel
+public class ViewMovieModel
 {
     public int id { get; set; }
     public string name { get; set; }
@@ -11,10 +11,6 @@ public class ViewMediaModel
     public List<Genre> genres { get; set; } 
     public List<decimal> rating { get; set; }
     public List<ActorInGivenMediaModel> actors { get; set; }
-    //showonly
-    public List<List<VideoViewModel>>? EpisodesInSeasons { get; set; }
-    public List<string>? SeasonsNames { get; set; }
-    //movieonly
     public VideoViewModel? movie;
 
 }

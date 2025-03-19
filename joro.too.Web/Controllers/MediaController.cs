@@ -21,7 +21,7 @@ namespace joro.too.Web.Controllers
             _mediaService = mediaservice;
         }
 
-        public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model, 
+        public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model,
             string[] genres, bool IsShow, bool isMovie)
         {
             //this method is ugly and long and im sure it could be compacted by a lot but honestly if it works like this im not gonna touch it further except if i dont get drunk lmao
@@ -53,7 +53,7 @@ namespace joro.too.Web.Controllers
 
             if (rating != null)
             {
-                media.Item1.Where(x =>  _mediaService.GetAvgRating(x).Result >= rating).ToList();
+                media.Item1.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
                 media.Item2.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
             }
 
@@ -66,7 +66,7 @@ namespace joro.too.Web.Controllers
                         desc = x.Description,
                         imgsrc = x.MediaImgSrc,
                         id = x.Id
-                    })); 
+                    }));
                 modellist.AddRange(media.Item2.Select(
                     x => new SearchResultModel()
                     {
@@ -74,9 +74,10 @@ namespace joro.too.Web.Controllers
                         desc = x.Description,
                         imgsrc = x.MediaImgSrc,
                         id = x.Id
-                    })); 
+                    }));
                 return View(modellist);
             }
+
             //checks if its a show
             if (IsShow)
             {
@@ -90,8 +91,10 @@ namespace joro.too.Web.Controllers
                         desc = item.Description
                     });
                 }
+
                 return View(modellist);
             }
+
             foreach (var item in media.Item2)
             {
                 modellist.Add(new SearchResultModel()
@@ -102,6 +105,7 @@ namespace joro.too.Web.Controllers
                     desc = item.Description
                 });
             }
+
             return View(modellist);
         }
 
@@ -112,18 +116,20 @@ namespace joro.too.Web.Controllers
             var media = await _mediaService.FindShowById(id);
             if (!isShow)
             {
-               // media = _mediaService.FindMovieById(id);
+                var movie = _mediaService.FindMovieById(id);
+                var model = new ViewMovieModel()
+                {
+                    id = media.Id,
+                    genres = media.Genres.Select(x => x.Genre).ToList(),
+                    name = media.Name,
+                    rating = media.Rating,
+                    actors = media.Actors.Select(x => 
+                        new ActorInGivenMediaModel(){Name = x.Actor.Name, Id = x.Actor.Id, Roles = )}).ToList(),
+                    description = media.Description,
+                    imgsrc = media.MediaImgSrc
+                };
             }
-            var model = new ViewMediaModel()
-            {
-                id = media.Id, 
-                genres = media.Genres.Select(x => x.Genre).ToList(), 
-                name = media.Name,
-                rating = media.Rating, 
-                actors = media.Actors.ToList(), 
-                description = media.Description,
-                imgsrc = media.MediaImgSrc
-            };
+
             if (!media.IsShow)
             {
                 model.movie = new VideoViewModel()
@@ -138,6 +144,7 @@ namespace joro.too.Web.Controllers
                 };
                 return View("ViewMovie", media);
             }
+
             //for shows only
             model.SeasonsNames = new List<string>();
             model.EpisodesInSeasons = new List<List<VideoViewModel>>();
