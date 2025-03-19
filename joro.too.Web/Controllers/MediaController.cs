@@ -21,7 +21,7 @@ namespace joro.too.Web.Controllers
             _mediaService = mediaservice;
         }
 
-        public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model,
+        public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model, 
             string[] genres, bool IsShow, bool isMovie)
         {
             //this method is ugly and long and im sure it could be compacted by a lot but honestly if it works like this im not gonna touch it further except if i dont get drunk lmao
@@ -53,36 +53,46 @@ namespace joro.too.Web.Controllers
 
             if (rating != null)
             {
-                media.Item1.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
+                media.Item1.Where(x =>  _mediaService.GetAvgRating(x).Result >= rating).ToList();
                 media.Item2.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
             }
 
             if (IsShow == false && isMovie == false)
             {
                 modellist.AddRange(media.Item1.Select(
-                    x=>new SearchResultModel(){
-                        name=x.Name,
+                    x => new SearchResultModel()
+                    {
+                        name = x.Name,
                         desc = x.Description,
                         imgsrc = x.MediaImgSrc,
-                        
-                        ));
+                        id = x.Id
+                    })); 
+                modellist.AddRange(media.Item2.Select(
+                    x => new SearchResultModel()
+                    {
+                        name = x.Name,
+                        desc = x.Description,
+                        imgsrc = x.MediaImgSrc,
+                        id = x.Id
+                    })); 
+                return View(modellist);
             }
-
-
-            return View(modellist);
-            }
-
             //checks if its a show
             if (IsShow)
             {
-                media = media.Where(x => x.IsShow == true).ToList();
+                foreach (var item in media.Item1)
+                {
+                    modellist.Add(new SearchResultModel()
+                    {
+                        name = item.Name,
+                        id = item.Id,
+                        imgsrc = item.MediaImgSrc,
+                        desc = item.Description
+                    });
+                }
+                return View(modellist);
             }
-            else if (isMovie)
-            {
-                media = media.Where(x => x.IsShow == false).ToList();
-            }
-
-            foreach (var item in media)
+            foreach (var item in media.Item2)
             {
                 modellist.Add(new SearchResultModel()
                 {
@@ -92,14 +102,18 @@ namespace joro.too.Web.Controllers
                     desc = item.Description
                 });
             }
-
             return View(modellist);
         }
 
         [Route("id")]
-        public async Task<IActionResult> ViewMedia(int id)
+        [Route("isShow")]
+        public async Task<IActionResult> ViewMedia(int id, bool isShow)
         {
-            var media = await _mediaService.FindMediaById(id);
+            var media = await _mediaService.FindShowById(id);
+            if (!isShow)
+            {
+               // media = _mediaService.FindMovieById(id);
+            }
             var model = new ViewMediaModel()
             {
                 id = media.Id, 

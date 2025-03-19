@@ -35,7 +35,6 @@ public class MediaService:IMediaService
     }
     public async Task<bool> AddShow(string name, string coversrc, List<Genre> genres, string Desc,List<List<Tuple<string,string>>> vidData, List<string> seasonNames)
     {
-        
         var tempShow = new Show(){Name = name, MediaImgSrc = coversrc, Description =Desc, Rating = new List<decimal>()};
         
         await showTable.AddAsync(tempShow);
@@ -126,25 +125,25 @@ public class MediaService:IMediaService
         }
         HashSet<Movie> filteredMovies = new HashSet<Movie>();
         HashSet<Show> filteredShows = new HashSet<Show>();
-        var allMovies = movieTable.Include(x => x.Genres).ThenInclude(x => x.Genre).ToList();
-        var allShows = showTable.Include(x => x.Genres).ThenInclude(x => x.Genre).ToList();
-        foreach (var item in filteredMovies)
-        { 
+        var allMovies= movieTable.Include(x=> x.Genres).ThenInclude(x => x.Genre).ToList();   
+        var allShows  = showTable.Include(x => x.Genres).ThenInclude(x => x.Genre).ToList(); 
+        foreach (var item in allMovies)
+        {
             var mediagenres = item.Genres.Select(x => x.Genre.Type).ToList();
-            foreach (var item2 in genres)
+            foreach (var genre in genres)
             {
-                if (mediagenres.Contains(item2.Type))
+                if (mediagenres.Contains(genre.Type))
                 {
                     filteredMovies.Add(item);
                 }
             }
         }
-        foreach (var item in filteredShows)
+        foreach (var item in allShows)
         { 
             var mediagenres = item.Genres.Select(x => x.Genre.Type).ToList();
-            foreach (var item2 in genres)
+            foreach (var genre in genres)
             {
-                if (mediagenres.Contains(item2.Type))
+                if (mediagenres.Contains(genre.Type))
                 {
                     filteredShows.Add(item);
                 }
