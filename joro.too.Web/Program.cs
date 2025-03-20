@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using joro.too.Services.Services.IServices;
 using joro.too.Services.Services;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace joro.too.Web
 {
@@ -12,11 +13,21 @@ namespace joro.too.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
             // Add services to the container.
             //dbcontext setup
+            builder.Services.Configure<IISServerOptions>(options=>
+            {
+                // 1024MB
+                options.MaxRequestBodySize = 104857600;
+            });
+
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                // 1024MB
+                options.MultipartBodyLengthLimit = 104857600;
+            });
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
+            builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsNotSoAssConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();

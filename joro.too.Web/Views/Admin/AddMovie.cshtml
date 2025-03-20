@@ -1,4 +1,3 @@
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using joro.too.Entities
 @model AddMovieModel
 
@@ -6,25 +5,25 @@
 <form method="post" enctype="multipart/form-data">
     <div>
         Name
-        <input asp-for="@Model.name" name="name" id="name" type="text">
+        <input name="name" id="name" type="text">
     </div>
     <div>
         Description
-        <input asp-for="@Model.desc" name="desc" id="desc" type="text">
+        <input name="desc" id="desc" type="text">
     </div>
     <div style="float: right">
         Upload image
-        <input asp-for="@Model.img" type="file" id="img" name="img" accept="image/*">
+        <input type="file" id="img" name="img" accept="image/*">
     </div>
     <div>
         @foreach (var item in Model.Genres)
         {
-            <input asp-for="@Model.genres" name="genres" id="@item.Value" value="@item.Value" type="checkbox"> @item.Text
+            <input name="genres" id="@item.Value" value="@item.Value" type="checkbox"> @item.Text
         }
     </div>
     <div>
         Upload video
-        <input asp-for="@Model.vid" type="file" id="vid" name="vid" accept="video/*">
+        <input type="file" id="vid" name="vid" accept="video/*">
     </div>
     <input type="submit" class="btn">
     

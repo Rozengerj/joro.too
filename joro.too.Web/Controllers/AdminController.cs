@@ -33,10 +33,12 @@ public class AdminController : Controller
         return View(model);
     }
     [HttpPost]
-    public async Task<IActionResult> AddMovie(string name, string desc, IFormFile img, string[] genres, AddMovieModel model, IFormFile vid)
+    public async Task<IActionResult> AddMovie(string name, string desc, IFormFile img, string[] genres, IFormFile vid, AddMovieModel model)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
+        Console.WriteLine(name);
+        Console.WriteLine(desc);
         foreach (Genre item in list)
         {
             model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
@@ -56,7 +58,7 @@ public class AdminController : Controller
         await _mediaService.AddMovie(name, imageUrl, genresreal, desc, vidsrc);
         return RedirectToAction("SearchResult", "Media");
     }
-
+    [HttpGet]
     public async Task<IActionResult> AddShow()
     {
         var genres = await _genreService.GetGenres();
@@ -69,7 +71,7 @@ public class AdminController : Controller
         return View(model);
     }
     [HttpPost]
-    public async Task<IActionResult> AddShow(string name, string desc, IFormFile img, string[] genres, string[] season, string[] episode, IFormFile[] episodevidsrc)
+    public async Task<IActionResult> AddShow(string name, string desc, IFormFile img, string[] genres, string[] season, string[] episode, IFormFileCollection episodevidsrc)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
@@ -116,6 +118,22 @@ public class AdminController : Controller
         //Console.WriteLine(string.Join(", ", season));
         //Console.WriteLine("this is the bottom");
         await _mediaService.AddShow(name, imageUrl, genresreal, desc, episodesinfo, season.ToList());
+        return RedirectToAction("SearchResult", "Media");
+    }
+
+    public async Task<IActionResult> idktest()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [RequestSizeLimit(2147483647)]       //unit is bytes => 2GB
+    [RequestFormLimits(MultipartBodyLengthLimit = 2147483647)]
+    public async Task<IActionResult> idktest(string string1, string string2, IFormFile vid)
+    {
+        Console.WriteLine(string1);
+        Console.WriteLine(string2);
+        Console.WriteLine(vid);
         return RedirectToAction("SearchResult", "Media");
     }
 

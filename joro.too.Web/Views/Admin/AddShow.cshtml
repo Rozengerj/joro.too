@@ -1,9 +1,6 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@using joro.too.Entities
 @model AddMovieModel
 <link rel="stylesheet" href="~/css/Searchbar.css" asp-append-version="true" />
-
-<p> paragraph </p>
 <form method="post" enctype="multipart/form-data" asp-action="AddShow" asp-controller="Admin">
     <div>
         Name
@@ -34,7 +31,6 @@
         </button>
     </div>
     <input type="submit" class="btn">
-    
 </form>
 
 <script src="~/js/AddShowScript.js" asp-append-version="true" type="module"></script>
