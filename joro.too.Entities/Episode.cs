@@ -10,7 +10,7 @@ public class Episode
     public string name { get; set; }
     public string vidsrc { get; set; }
     [ForeignKey(nameof(Season))] 
-    public Guid SeasonId { get; set; }
+    public int SeasonId { get; set; }
 
     public Season Season { get; set; }
     public List<Comment>? Comments { get; set; }

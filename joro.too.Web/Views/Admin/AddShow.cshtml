@@ -1,10 +1,10 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using joro.too.Entities
-@model AddMediaModel
+@model AddMovieModel
 <link rel="stylesheet" href="~/css/Searchbar.css" asp-append-version="true" />
 
 <p> paragraph </p>
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" asp-action="AddShow" asp-controller="Admin">
     <div>
         Name
         <input name="name" id="name" type="text">

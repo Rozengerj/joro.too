@@ -24,7 +24,7 @@ public class AdminController : Controller
     public async Task<IActionResult> AddMovie()
     {
         var genres = await _genreService.GetGenres();
-        AddMediaModel model = new AddMediaModel();
+        AddMovieModel model = new AddMovieModel();
         model.Genres = new List<SelectListItem>();
         foreach (Genre item in genres)
         {
@@ -33,7 +33,7 @@ public class AdminController : Controller
         return View(model);
     }
     [HttpPost]
-    public async Task<IActionResult> AddMovie(string name, string desc, IFormFile img, string[] genres, AddMediaModel model, IFormFile vid)
+    public async Task<IActionResult> AddMovie(string name, string desc, IFormFile img, string[] genres, AddMovieModel model, IFormFile vid)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
@@ -53,16 +53,14 @@ public class AdminController : Controller
         var imageUrl = await _cloudinary.UploadImageAsync(img);
         var genresreal = await _genreService.GetGenresById(genreIds);
         var vidsrc = await _cloudinary.UploadVideoAsync(vid);
-
-        var media = await _mediaService.AddMedia(name, imageUrl, false, genresreal, desc);
-        await _mediaService.AddMovie(media, vidsrc);
+        await _mediaService.AddMovie(name, imageUrl, genresreal, desc, vidsrc);
         return RedirectToAction("SearchResult", "Media");
     }
 
     public async Task<IActionResult> AddShow()
     {
         var genres = await _genreService.GetGenres();
-        AddMediaModel model = new AddMediaModel();
+        AddMovieModel model = new AddMovieModel();
         model.Genres = new List<SelectListItem>();
         foreach (Genre item in genres)
         {
@@ -71,10 +69,12 @@ public class AdminController : Controller
         return View(model);
     }
     [HttpPost]
-    public async Task<IActionResult> AddShow(string name, string desc, IFormFile img, string[] genres, AddMediaModel model, string[] season, string[] episode, IFormFile[] episodevidsrc)
+    public async Task<IActionResult> AddShow(string name, string desc, IFormFile img, string[] genres, string[] season, string[] episode, IFormFile[] episodevidsrc)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
+        var model = new AddMovieModel();
+        model.Genres = new List<SelectListItem>();
         foreach (Genre item in list)
         {
             model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
@@ -90,8 +90,8 @@ public class AdminController : Controller
                 }
             }
         }
-
         // this thing
+        Console.WriteLine(name);
         List<List<Tuple<string, string>>> episodesinfo = new List<List<Tuple<string, string>>>();
         int counter = 0;
         foreach (var item in episode)
@@ -115,8 +115,7 @@ public class AdminController : Controller
         //Console.WriteLine(string.Join(", ", episode));
         //Console.WriteLine(string.Join(", ", season));
         //Console.WriteLine("this is the bottom");
-        var media = await _mediaService.AddMedia(name, imageUrl, true, genresreal, desc);
-        await _mediaService.AddShow(media, episodesinfo, season.ToList());
+        await _mediaService.AddShow(name, imageUrl, genresreal, desc, episodesinfo, season.ToList());
         return RedirectToAction("SearchResult", "Media");
     }
 

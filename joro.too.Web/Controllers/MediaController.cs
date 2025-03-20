@@ -113,44 +113,52 @@ namespace joro.too.Web.Controllers
         [Route("isShow")]
         public async Task<IActionResult> ViewMedia(int id, bool isShow)
         {
-            var media = await _mediaService.FindShowById(id);
             if (!isShow)
             {
-                var movie = _mediaService.FindMovieById(id);
+                var movie = await _mediaService.FindMovieById(id);
                 var model = new ViewMovieModel()
                 {
-                    id = media.Id,
-                    genres = media.Genres.Select(x => x.Genre).ToList(),
-                    name = media.Name,
-                    rating = media.Rating,
-                    actors = media.Actors.Select(x => 
-                        new ActorInGivenMediaModel(){Name = x.Actor.Name, Id = x.Actor.Id, Roles = )}).ToList(),
-                    description = media.Description,
-                    imgsrc = media.MediaImgSrc
+                    id = movie.Id,
+                    genres = movie.Genres.Select(x => x.Genre).ToList(),
+                    name = movie.Name,
+                    rating = movie.Rating,
+                    actors = movie.Actors.Select(x =>
+                        new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList(),
+                    description = movie.Description,
+                    imgsrc = movie.MediaImgSrc,
+                    movie = new VideoViewModel()
+                    {
+                        name = movie.Name, vidsrc = movie.vidsrc,
+                        comments = movie.Comments.Select(y =>
+                            new ViewCommentsModel()
+                            {
+                                username = y.Commenter.Name,
+                                comment = y.Text,
+                                id = y.Commenter.Id,
+                                pfpsrc = y.Commenter.Pfp
+                            }).ToList()
+                    }
                 };
+                return View("ViewMovie", model);
             }
 
-            if (!media.IsShow)
-            {
-                model.movie = new VideoViewModel()
-                {
-                    name = media.Movie.name, vidsrc = media.Movie.vidsrc,
-                    comments = media.Movie.Comments.Select(y =>
-                        new ViewCommentsModel()
-                        {
-                            user = "user",
-                            comment = y.text
-                        }).ToList()
-                };
-                return View("ViewMovie", media);
-            }
-
+            var show = await _mediaService.FindShowById(id);
             //for shows only
-            model.SeasonsNames = new List<string>();
-            model.EpisodesInSeasons = new List<List<VideoViewModel>>();
-            foreach (var season in media.Seasons)
+            var modelshow = new ViewShowModel()
             {
-                model.EpisodesInSeasons.Add(season.Episodes.Select(x =>
+                name = show.Name,
+                id = show.Id,
+                genres = show.Genres.Select(x => x.Genre).ToList(),
+                rating = show.Rating,
+                actors = show.Actors.Select(x =>
+                    new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList(),
+                imgsrc = show.MediaImgSrc
+            };
+            modelshow.SeasonsNames = new List<string>();
+            modelshow.EpisodesInSeasons = new List<List<VideoViewModel>>();
+            foreach (var season in show.Seasons)
+            {
+                modelshow.EpisodesInSeasons.Add(season.Episodes.Select(x =>
                     new VideoViewModel()
                     {
                         name = x.name,
@@ -158,14 +166,16 @@ namespace joro.too.Web.Controllers
                         comments = x.Comments.Select(y =>
                             new ViewCommentsModel()
                             {
-                                user = "user",
-                                comment = y.text
+                                username = y.Commenter.Name,
+                                comment = y.Text,
+                                id = y.Commenter.Id,
+                                pfpsrc = y.Commenter.Pfp
                             }).ToList()
                     }).ToList());
-                model.SeasonsNames.Add(season.Name);
+                modelshow.SeasonsNames.Add(season.Name);
             }
 
-            return View("ViewShow", media);
+            return View("ViewShow", modelshow);
         }
     }
 }

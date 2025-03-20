@@ -4,5 +4,5 @@ public class ActorInGivenMediaModel
 {
     public string Name;
     public int Id;
-    public List<string> Roles;
+    public string Role;
 }

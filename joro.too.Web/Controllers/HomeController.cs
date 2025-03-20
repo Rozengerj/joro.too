@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Diagnostics;
 using joro.too.Entities;
 using joro.too.Services.Services.IServices;
@@ -20,7 +21,9 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var recommendedMedia = await mediaService.GetMediasWithGenres(null);
+        var tempTuple = await mediaService.GetMediasWithGenres(null);
+        var recommendedMedia = new List<Media>();
+        recommendedMedia.AddRange(tempTuple.Item1); recommendedMedia.AddRange(tempTuple.Item2);
         recommendedMedia.Where(x=> !x.Rating.IsNullOrEmpty() && x.Rating.Average() > (decimal)7.5  ).ToList();
         Random k = new Random();
         HashSet<SearchResultModel> thething = new HashSet<SearchResultModel>();
