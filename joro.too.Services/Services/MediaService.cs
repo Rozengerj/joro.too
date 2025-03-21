@@ -170,6 +170,7 @@ public class MediaService:IMediaService
             GenresForMovies.Add(new GenresMovies(){Movie = media, MovieId = media.Id, Genre = item, GenreId = item.Id});
         }
         await context.GenresMovies.AddRangeAsync(GenresForMovies);
+        media.Genres = GenresForMovies;
         await context.SaveChangesAsync();
     }
     public async Task AddShowGenresTable(Show media, List<Genre> genres)
@@ -180,11 +181,17 @@ public class MediaService:IMediaService
             GenresForShows.Add(new GenresShows(){Show = media, ShowId = media.Id, Genre = item, GenreId = item.Id});
         }
         await context.GenresShows.AddRangeAsync(GenresForShows);
+        media.Genres = GenresForShows;
         await context.SaveChangesAsync();
     }
     public async Task<Movie> FindMovieById(int id)
     {
-        return await movieTable.Where(x => x.Id == id).FirstOrDefaultAsync();
+        return await movieTable
+            .Include(x=>x.Genres)
+            .ThenInclude(y=>y.Genre)
+            .Include(x=>x.Actors)
+            .ThenInclude(y=>y.)
+            .Where(x => x.Id == id).FirstOrDefaultAsync();
     }
     public async Task<Show> FindShowById(int id)
     {

@@ -9,4 +9,5 @@ public class SearchResultModel
     public string desc;
     public string imgsrc;
     public List<SelectListItem> Genres;
+    public bool isShow;
 }

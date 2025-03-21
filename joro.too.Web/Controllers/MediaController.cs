@@ -65,7 +65,8 @@ namespace joro.too.Web.Controllers
                         name = x.Name,
                         desc = x.Description,
                         imgsrc = x.MediaImgSrc,
-                        id = x.Id
+                        id = x.Id,
+                        isShow = true
                     }));
                 modellist.AddRange(media.Item2.Select(
                     x => new SearchResultModel()
@@ -73,7 +74,8 @@ namespace joro.too.Web.Controllers
                         name = x.Name,
                         desc = x.Description,
                         imgsrc = x.MediaImgSrc,
-                        id = x.Id
+                        id = x.Id,
+                        isShow = false
                     }));
                 return View(modellist);
             }
@@ -88,7 +90,8 @@ namespace joro.too.Web.Controllers
                         name = item.Name,
                         id = item.Id,
                         imgsrc = item.MediaImgSrc,
-                        desc = item.Description
+                        desc = item.Description,
+                        isShow = true
                     });
                 }
 
@@ -102,10 +105,10 @@ namespace joro.too.Web.Controllers
                     name = item.Name,
                     id = item.Id,
                     imgsrc = item.MediaImgSrc,
-                    desc = item.Description
+                    desc = item.Description,
+                    isShow = false
                 });
             }
-
             return View(modellist);
         }
 
@@ -141,17 +144,30 @@ namespace joro.too.Web.Controllers
                 };
                 return View("ViewMovie", model);
             }
-
             var show = await _mediaService.FindShowById(id);
             //for shows only
+            Console.WriteLine(id);
+            Console.WriteLine(isShow);
+            Console.WriteLine(show.Name);
+            var actors = new List<ActorInGivenMediaModel>();
+            if (show.Actors is not null)
+            {
+                actors = show.Actors.Select(x =>
+                                    new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList();
+            }
+
+            if (show.Genres is null)
+            {
+                Console.WriteLine("why are the genres null this shit is so ass what am i supposed to do");
+            }
+            //Console.WriteLine(string.Join(", ",show.Genres.Select(x=>x.Genre).ToList()));
             var modelshow = new ViewShowModel()
             {
                 name = show.Name,
                 id = show.Id,
                 genres = show.Genres.Select(x => x.Genre).ToList(),
                 rating = show.Rating,
-                actors = show.Actors.Select(x =>
-                    new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList(),
+                actors = actors,
                 imgsrc = show.MediaImgSrc
             };
             modelshow.SeasonsNames = new List<string>();

@@ -27,7 +27,7 @@ namespace joro.too.Web
                 options.MultipartBodyLengthLimit = 104857600;
             });
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsNotSoAssConnection")));
+            builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();

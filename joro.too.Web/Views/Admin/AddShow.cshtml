@@ -1,5 +1,5 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model AddMovieModel
+@model AddMediaModel
 <link rel="stylesheet" href="~/css/Searchbar.css" asp-append-version="true" />
 <form method="post" enctype="multipart/form-data" asp-action="AddShow" asp-controller="Admin">
     <div>
@@ -12,7 +12,7 @@
     </div>
     <div style="float: right">
         Upload image
-        <input type="file" id="imgSrc" name="imgSrc" accept="image/*">
+        <input type="file" id="img" name="img" accept="image/*">
     </div>
     
     <div>

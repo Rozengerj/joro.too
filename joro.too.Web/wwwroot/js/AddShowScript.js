@@ -38,7 +38,7 @@ $(document).ready(function () {
             console.log("are you gonna write shit in here four times i na row you fucking piece of shit")
             $(this).closest('.AddEpisodeDiv').append(
                 '      <div class="input-group ep">' +
-                '         <input type="text" name="episode" id="'+ epcount + seasonnum + '" class="input" required="" placeholder="Input Episode Name Here">' +
+                '         <input type="text" name="episode" id="'+ epcount + seasonnum + '" asp-validation-for="" class="input" required="" placeholder="Input Episode Name Here">' +
                 '         <input type="file" name="episodevidsrc" id="' + epcount + seasonnum + '" accept="video/*">' +
                 '         <button class="RemoveEpisodeBtn">Remove Episode</button>'+
                 '      </div>'
