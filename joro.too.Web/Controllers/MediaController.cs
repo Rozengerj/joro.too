@@ -22,7 +22,7 @@ namespace joro.too.Web.Controllers
         }
 
         public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model,
-            string[] genres, bool IsShow, bool isMovie)
+            string[] genres, bool isShow, bool isMovie)
         {
             //this method is ugly and long and im sure it could be compacted by a lot but honestly if it works like this im not gonna touch it further except if i dont get drunk lmao
             var genreIds = new List<int>();
@@ -57,7 +57,7 @@ namespace joro.too.Web.Controllers
                 media.Item2.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
             }
 
-            if (IsShow == false && isMovie == false)
+            if (isShow == false && isMovie == false)
             {
                 modellist.AddRange(media.Item1.Select(
                     x => new SearchResultModel()
@@ -81,7 +81,7 @@ namespace joro.too.Web.Controllers
             }
 
             //checks if its a show
-            if (IsShow)
+            if (isShow)
             {
                 foreach (var item in media.Item1)
                 {
@@ -161,7 +161,7 @@ namespace joro.too.Web.Controllers
                 Console.WriteLine("why are the genres null this shit is so ass what am i supposed to do");
             }
             //Console.WriteLine(string.Join(", ",show.Genres.Select(x=>x.Genre).ToList()));
-            var modelshow = new ViewShowModel()
+            ViewShowModel modelshow = new ViewShowModel()
             {
                 name = show.Name,
                 id = show.Id,

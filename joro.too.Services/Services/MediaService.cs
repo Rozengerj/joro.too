@@ -37,25 +37,35 @@ public class MediaService:IMediaService
     {
         var tempShow = new Show(){Name = name, MediaImgSrc = coversrc, Description =Desc, Rating = new List<decimal>()};
         
-        await showTable.AddAsync(tempShow);
-        await AddShowGenresTable(tempShow, genres);
+        
         List<Season> seasons = new List<Season>();
         for (int i = 1; i <= seasonNames.Count; i++)
         {
             var season = new Season() { Number = i, Episodes = new List<Episode>(), Name = seasonNames[i - 1] };
             var epsForThisSeason = new List<Episode>();
-            await context.Seasons.AddAsync(season);
+            Console.WriteLine(vidData.Count);
+            Console.WriteLine(vidData[i-1].Count);
+            for (int j = 0; j < vidData[i-1].Count; j++)
+            {
+                var episode = new Episode() { name = vidData[i-1][j].Item2, vidsrc = vidData[i-1][j].Item1, Comments = new List<Comment>(), Season = season, SeasonId = season.Id};
+                                await context.Episodes.AddAsync(episode);
+                                epsForThisSeason.Add(episode);
+                                Console.WriteLine(vidData[i-1][j].Item2+" name");
+                                Console.WriteLine(vidData[i-1][j].Item1+" vidsrc");
+                                Console.WriteLine(season.Id+" seasonId");
+            }
             foreach (var vidinfo in vidData[i-1] )
             {
-                epsForThisSeason.Add(new Episode()
-                    { name = vidinfo.Item2, vidsrc = vidinfo.Item1, Comments = new List<Comment>() });
+                
             }
-            await context.Episodes.AddRangeAsync(epsForThisSeason);
             season.Episodes = epsForThisSeason;
             seasons.Add(season);
+            //await context.Seasons.AddAsync(season);
         }
         tempShow.Seasons = seasons;
-        await context.SaveChangesAsync();
+        await showTable.AddAsync(tempShow);
+        await AddShowGenresTable(tempShow, genres);
+        //await context.SaveChangesAsync();
         return true;
     }
     public async Task<bool> RemoveMedia(Movie movie)
@@ -78,7 +88,6 @@ public class MediaService:IMediaService
         await context.SaveChangesAsync();
         return true;
     }
-
     public async Task<decimal> UpdateRating(int newRating, Movie media)
     {
         media.Rating.Add(newRating);
@@ -95,7 +104,6 @@ public class MediaService:IMediaService
         media.Rating.ForEach(x=>avg+=x);
         return avg / media.Rating.Count;
     }
-
     public async Task<decimal> GetAvgRating(Movie media)
     {
         decimal avg = 0;
@@ -116,7 +124,6 @@ public class MediaService:IMediaService
         media.Rating.ForEach(x=>avg+=x);
         return avg / media.Rating.Count;
     }
-
     public async Task<Tuple<List<Show>, List<Movie>>> GetMediasWithGenres(List<Genre> genres)
     {
         if (genres.IsNullOrEmpty())
@@ -171,7 +178,7 @@ public class MediaService:IMediaService
         }
         await context.GenresMovies.AddRangeAsync(GenresForMovies);
         media.Genres = GenresForMovies;
-        await context.SaveChangesAsync();
+        //await context.SaveChangesAsync();
     }
     public async Task AddShowGenresTable(Show media, List<Genre> genres)
     {
@@ -190,11 +197,19 @@ public class MediaService:IMediaService
             .Include(x=>x.Genres)
             .ThenInclude(y=>y.Genre)
             .Include(x=>x.Actors)
-            .ThenInclude(y=>y.)
+            .ThenInclude(y=>y.Actor)
+            .Include(x=>x.Comments)
             .Where(x => x.Id == id).FirstOrDefaultAsync();
     }
     public async Task<Show> FindShowById(int id)
     {
-        return await showTable.Where(x => x.Id == id).FirstOrDefaultAsync();
+        return await showTable.Include(x=>x.Genres)
+            .ThenInclude(y=>y.Genre)
+            .Include(x=>x.Actors)
+            .ThenInclude(y=>y.Actor)
+            .Include(x=>x.Seasons)
+            .ThenInclude(x=>x.Episodes)
+            .ThenInclude(x=>x.Comments)
+            .Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 }

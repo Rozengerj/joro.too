@@ -116,7 +116,8 @@ public class AdminController : Controller
             var tempList = new List<Tuple<string, string>>();
             if (item != "_-_-_@_-_-_")
             {
-                var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
+                //var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
+                var vidurl = "https//:google.com";
                 Console.WriteLine("uploaded video "+counter);
                 tempList.Add(new Tuple<string, string>(item, vidurl));
                 counter++;

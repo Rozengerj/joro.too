@@ -12,5 +12,7 @@ public class Comment
     public User Commenter { get; set; }
     [ForeignKey(nameof(User))]
     public int UserId { get; set; }
-    
+    public Movie Movie { get; set; }
+    [ForeignKey(nameof(Movie))]
+    public int MovieId { get; set; }
 }
