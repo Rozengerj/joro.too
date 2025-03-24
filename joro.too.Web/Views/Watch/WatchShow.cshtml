@@ -1,4 +1,141 @@
-@page
-@model joro.too.Web.Views.Watch.WatchShow
+@model WatchShowModel
+<style>
+    .mainthingie {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #000;
 
+    }
 
+    .video-container {
+        width: 80%;
+        height: 90vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    video {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+    }
+
+    /* Optional: Add some basic controls styling */
+    /*video::-webkit-media-controls {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+</style>
+<link rel="stylesheet" href="~/css/styles.min.css" asp-append-version="true"/>
+<p style="align-self: center; position: absolute;" class="textoutline">
+    You're Watching @Model.name
+</p>
+<div id="epsiodes-content" style="position: fixed; top: 60px;bottom: 0;width: 300px;right: 0;background: #0a0d1a">
+    <div class="seasons-block seasons-block-max">
+        <div class="detail-seasons">
+            <div class="detail-infor">
+                <div class="ss-choice">
+                    <div class="ssc-list">
+                        <div class="ssc-button">
+                            <div class="scc-label">List of Episodes</div>
+                            <div id="Seasons" class="textoutline scc-name">
+                                <select id="SeasonList">
+                                    @for (int j = 0; j < @Model.seasonsNames.Count; j++)
+                                    {
+                                        <option value="@j">@Model.seasonsNames[j]</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="textoutline ss-list">
+                    @for (int i = 0; i < @Model.seasonsNames.Count; i++)
+                    {
+                        @if (i == 0)
+                        {
+                            <div id="season-@i">
+                                @foreach (var episode in @Model.episodesInSeasons[i])
+                                {
+                                    <li>
+                                        <button id="@episode.name" value="@episode.vidsrc"
+                                                class="episodebutton ssl-item ep-item">@episode.name</button>
+                                    </li>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="season-@i" style="display: none;">
+                                @foreach (var episode in @Model.episodesInSeasons[i])
+                                {
+                                    <li>
+                                        <button id="@episode.name" value="@episode.vidsrc"
+                                                class="episodebutton ssl-item ep-item">@episode.name</button>
+                                    </li>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--
+<div>
+    <div id="Seasons" class="textoutline">
+        <select id="SeasonList">
+            @for (int j = 0; j < @Model.seasonsNames.Count; j++)
+            {
+                <option value="@j">@Model.seasonsNames[j]</option>
+            }
+        </select>
+    </div>
+    <ul class="textoutline">
+        @for (int i = 0; i < @Model.seasonsNames.Count; i++)
+        {
+            @if (i == 0)
+            {
+                <div id="season-@i">
+                    @foreach (var episode in @Model.episodesInSeasons[i])
+                    {
+                        <li>
+                            <button id="@episode.name" value="@episode.vidsrc"
+                                    class="episodebutton">@episode.name</button>
+                        </li>
+                    }
+                </div>
+            }
+            else
+            {
+                <div id="season-@i" style="display: none;">
+                    @foreach (var episode in @Model.episodesInSeasons[i])
+                    {
+                        <li>
+                            <button id="@episode.name" value="@episode.vidsrc"
+                                    class="episodebutton">@episode.name</button>
+                        </li>
+                    }
+                </div>
+            }
+        }
+    </ul>
+</div>
+-->
+<div class="video-container mainthingie">
+    <iframe class="vidplayer" width="100%" height="100%" src="" title="" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <!--video controls>
+    <THis is where the video will go eventually>
+    <source src="https://www.youtube.com/embed/DwQ3MdubVbI" type="video/mp4">
+    </video-->
+</div>
+<script src="~/js/SelectSeasonAndEpisode.js" asp-append-version="true" type="module"></script>

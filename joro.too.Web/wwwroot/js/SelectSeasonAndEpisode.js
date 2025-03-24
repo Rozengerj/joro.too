@@ -7,7 +7,10 @@ $(document).ready(function () {
         let selectedep = $("#SeasonList").find("option:selected").val();
         let thingstr = "#season-" + selectedep;
         $(thingstr).show();
-       
         prevselectedep = thingstr;
     });
+    $(".episodebutton").on("click", function (event) {
+        $(".vidplayer").attr("src",$(this).val());
+        $(".vidplayer").attr("title",$(this).text());
+    })
 });

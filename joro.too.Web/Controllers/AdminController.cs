@@ -6,6 +6,7 @@ using joro.too.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace joro.too.Web.Controllers;
 
@@ -111,26 +112,32 @@ public class AdminController : Controller
         // this thing
         List<List<Tuple<string, string>>> episodesinfo = new List<List<Tuple<string, string>>>();
         int counter = 0;
+        int episodeCounter = 1;
+        var tempList = new List<Tuple<string, string>>();
         foreach (var item in episode)
         {
-            var tempList = new List<Tuple<string, string>>();
             if (item != "_-_-_@_-_-_")
             {
-                //var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
-                var vidurl = "https//:google.com";
+                
+                var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
                 Console.WriteLine("uploaded video "+counter);
+                if (item.Trim().IsNullOrEmpty())
+                {
+                    tempList.Add(new Tuple<string, string>("episode "+episodeCounter, vidurl));
+                    counter++;
+                    episodeCounter++;
+                    continue;
+                }
                 tempList.Add(new Tuple<string, string>(item, vidurl));
                 counter++;
                 continue;
             }
-
+            Console.WriteLine("Added Episodes For Season");
             episodesinfo.Add(tempList);
-
+            episodeCounter = 1;
+            tempList = new List<Tuple<string, string>>();
         }
-
-        
         var genresreal = await _genreService.GetGenresById(genreIds);
-
         //Console.WriteLine("this is the top");
         //Console.WriteLine(string.Join(", ", episode));
         //Console.WriteLine(string.Join(", ", season));

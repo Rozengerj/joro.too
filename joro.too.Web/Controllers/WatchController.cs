@@ -1,4 +1,5 @@
 using joro.too.Services.Services.IServices;
+using joro.too.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace joro.too.Web.Controllers;
@@ -12,9 +13,39 @@ public class WatchController:Controller
         _genreService = genreService;
         _mediaService = mediaservice;
     }
-
     public async Task<IActionResult> WatchMovie()
     {
         return View();
+    }
+    [Route("showId")]
+    public async Task<IActionResult> WatchShow(int showId)
+    {
+        var show = await _mediaService.FindShowById(showId);
+        WatchShowModel model = new WatchShowModel()
+        {
+            name = show.Name,
+            id = show.Id,
+        };
+        model.seasonsNames = new List<string>();
+        model.episodesInSeasons = new List<List<VideoViewModel>>();
+        foreach (var season in show.Seasons)
+        {
+            model.episodesInSeasons.Add(season.Episodes.Select(x =>
+                new VideoViewModel()
+                {
+                    name = x.name,
+                    vidsrc = x.vidsrc,
+                    comments = x.Comments.Select(y =>
+                        new ViewCommentsModel()
+                        {
+                            username = y.Commenter.Name,
+                            comment = y.Text,
+                            id = y.Commenter.Id,
+                            pfpsrc = y.Commenter.Pfp
+                        }).ToList()
+                }).ToList());
+            model.seasonsNames.Add(season.Name);
+        }
+        return View(model);
     }
 }

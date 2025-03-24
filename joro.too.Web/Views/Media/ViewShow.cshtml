@@ -1,37 +1,55 @@
 @model ViewShowModel
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
-
-<img src="@Model.imgsrc" alt="if you can read this either something has gone horribly wrong with the server or youre just reading through my ugly html">
-<h2>
-    @Model.name;
+<img src="@Model.imgsrc"
+     alt="if you can read this either something has gone horribly wrong with the server or youre just reading through my ugly html">
+<h2 class="textoutline">
+    @Model.name
 </h2>
-<p>
+<p class="textoutline">
     @Model.description
 </p>
-<div id="Seasons">
-<select id="SeasonList">
-    @for (int j = 0; j < @Model.SeasonsNames.Count; j++)
-    {
-        <option value="@j">@Model.SeasonsNames[j]</option>
-    }
-</select>
+<a asp-action="WatchShow" asp-controller="Watch" asp-route-showId="@Model.id">Start Watching Now</a>
+<div id="Seasons" class="textoutline">
+    <select id="SeasonList">
+        @for (int j = 0; j < @Model.SeasonsNames.Count; j++)
+        {
+            <option value="@j">@Model.SeasonsNames[j]</option>
+        }
+    </select>
 </div>
-<ul>
-    @for(int i =0;i<@Model.SeasonsNames.Count;i++)
+<ul class="textoutline">
+    @for (int i = 0; i < @Model.SeasonsNames.Count; i++)
     {
-        <div class="season+@i">
-            @foreach (var episode in @Model.EpisodesInSeasons[i])
-            {
-                <li>
-                    @episode.name
-                </li>
-            }
-        </div>
+        @if (i == 0)
+        {
+            <div id="season-@i">
+                @foreach (var episode in @Model.EpisodesInSeasons[i])
+                {
+                    <li>
+                        @episode.name
+                    </li>
+                }
+            </div>
+        }
+        else
+        {
+            <div id="season-@i" style="display: none;">
+                @foreach (var episode in @Model.EpisodesInSeasons[i])
+                {
+                    <li>
+                        @episode.name
+                    </li>
+                }
+            </div>
+        }
     }
 </ul>
-
-
-
-
+<ul>
+    @foreach (var actor in Model.actors)
+    {
+        <li>
+            @actor.Name - @actor.Role
+        </li>
+    }
+</ul>
 <script src="~/js/SelectSeasonScript.js" asp-append-version="true" type="module"></script>
-

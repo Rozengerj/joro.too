@@ -146,16 +146,15 @@ namespace joro.too.Web.Controllers
             }
             var show = await _mediaService.FindShowById(id);
             //for shows only
-            Console.WriteLine(id);
-            Console.WriteLine(isShow);
-            Console.WriteLine(show.Name);
+            //Console.WriteLine(id);
+            //Console.WriteLine(isShow);
+            //Console.WriteLine(show.Name);
             var actors = new List<ActorInGivenMediaModel>();
             if (show.Actors is not null)
             {
                 actors = show.Actors.Select(x =>
                                     new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList();
             }
-
             if (show.Genres is null)
             {
                 Console.WriteLine("why are the genres null this shit is so ass what am i supposed to do");

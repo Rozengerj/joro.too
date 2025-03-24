@@ -28,7 +28,7 @@ public class CloudinaryService
         var uploadParams = new ImageUploadParams 
         {
             File = new FileDescription(file.FileName, stream),
-            Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
+            Transformation = new Transformation().Width(324).Height(480).Crop("fill").Gravity("face")
         }; 
         var uploadResult = await _cloudinary.UploadAsync(uploadParams); 
         if (uploadResult == null || uploadResult.SecureUrl == null) 

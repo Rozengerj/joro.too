@@ -1,7 +1,7 @@
 Views
   Admin
-    AddMovie -- will be able to add a movie --func done (mostly)
-    AddShow -- will be able to add a show, with its seasons and episodes
+    AddMovie -- will be able to add a movie --func done
+    AddShow -- will be able to add a show, with its seasons and episodes --func done (and most of the design also)
     EditShow -- changing info about the show
     EditMovie changing info about the movie
     AddActor -- adding an actor and their roles in shows
@@ -12,14 +12,27 @@ Views
     ViewShowPage -- ^^ same shit as above but tweaked html since im -- func done
     ViewActor -- displays info about  actor and what roles they've played in which media
   Watch
-    WatchMovie -- has comments
+    WatchMovie -- has comments --mostly finished
     WatchShow -- has comments
   Home
     Index -- has a search bar and randomly picked recommendations -- func done
   Login
     login shit
 
-  i want the test videos that i upload to be less than 100mb so that i have sufficient space for everything (i want at least 500mb of video space so that upload testers can test the program as it is)
+  TODO
+    Add Actor image to the tables
+    Seed a show and a movie to the program so that i dont have to redo this shit on multiple places
+    Create 2 different Comment thingies since i hate zdravka and this will suck ass (i can do it the other way but it really doessent matter to be quite honest)
+    FIX DESIGN (for later)
+    ADD EDIT THINGIES
+    IMPLEMENT LOGINS
+    ADD COMMENTS AND SHIT
+
+
+
+
+
+
    using main background color #2a2733
    probably going to use some greenish or purplish secondary color, saturated
 
@@ -28,6 +41,9 @@ Views
 also this is completely not related to the project but
 
 I WANT TO DO STUFF AND PLAY STUFF AND OTHER STUFF LIKE THAT
+
+
+
 
 
 what ill do     --   when should i do it --    how much do i want to do it
