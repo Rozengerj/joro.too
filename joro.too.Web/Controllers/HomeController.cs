@@ -21,8 +21,11 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
+        SortedList nums = new SortedList();
+        SortedList<int, int> hui = new SortedSet<int, int>();
+        nums.Add(2);
         var tempTuple = await mediaService.GetMediasWithGenres(null);
-        var recommendedMedia = new List<Media>();
+        var recommendedMedia = new List<IMedia>();
         recommendedMedia.AddRange(tempTuple.Item1); recommendedMedia.AddRange(tempTuple.Item2);
         recommendedMedia.Where(x=> !x.Rating.IsNullOrEmpty() && x.Rating.Average() > (decimal)7.5  ).ToList();
         Random k = new Random();

@@ -6,6 +6,7 @@ using joro.too.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging;
 
 namespace joro.too.Web.Controllers
@@ -46,24 +47,32 @@ namespace joro.too.Web.Controllers
             List<Genre> genresfr = await _genreService.GetGenresById(genreIds);
             List<SearchResultModel> modellist = new List<SearchResultModel>();
             var media = await _mediaService.GetMediasWithGenres(genresfr);
-            List<Media> allmedias = new List<Media>();
+            List<IMedia> allmedias = new List<IMedia>();
             allmedias.AddRange(media.Item1);
             allmedias.AddRange(media.Item2);
             Console.WriteLine("------------------------------------------------------------");
             foreach (var item in allmedias)
             {
-                Console.WriteLine(((Show)item).Description);
-                Console.WriteLine(((Show)item).Name);
- 
+                Console.WriteLine(item.Description);
+                Console.WriteLine(item.Name);
+                Console.WriteLine(name);
+                Console.WriteLine();
             } 
-            if (name != string.Empty)
+            if (!name.IsNullOrEmpty())
             {
-                //allmedias=allmedias.Where(x => x.Name.Equals(name)).ToList();
+                allmedias=allmedias.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();
             }
 
-            if (rating != null)
+            if (rating < 0)
             {
-                allmedias.Where(x => x.Rating.Average()>=rating).ToList();
+                allmedias.Where(x =>
+                {
+                    if (!x.Rating.ToList().IsNullOrEmpty())
+                    {
+                         return x.Rating.Average() >= rating;
+                    }
+                    return false;
+                }).ToList();
             }
 
             if (isShow == false && isMovie == false)

@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace joro.too.Entities;
 
-public class Movie:Media
+public class Movie:IMedia
 {
     [Key] public int Id { get; set; }
     public string Name { get; set; }

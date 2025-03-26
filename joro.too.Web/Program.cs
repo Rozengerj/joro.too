@@ -28,7 +28,7 @@ namespace joro.too.Web
             });
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<MovieDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsNotSoAssConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();

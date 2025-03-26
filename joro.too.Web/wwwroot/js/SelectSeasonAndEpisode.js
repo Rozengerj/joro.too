@@ -1,5 +1,8 @@
 $(document).ready(function () {
     let prevselectedep = "#season-0"
+    let firststr = $(this).closest(".episodebutton").get().val();
+    console.log(firststr);
+    $(".vidplayer").attr("src",firststr);
     //$(prevselectedep).hide();
     $("#Seasons").change(function (event) {
         $(prevselectedep).hide();
