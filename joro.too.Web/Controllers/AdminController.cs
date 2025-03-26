@@ -33,7 +33,6 @@ public class AdminController : Controller
         {
             model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
         }
-
         return View(model);
     }
 
@@ -49,7 +48,6 @@ public class AdminController : Controller
         {
             model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
         }
-
         foreach (SelectListItem li in model.Genres)
         {
             if (genres.Contains(li.Value))
@@ -58,7 +56,6 @@ public class AdminController : Controller
                 genreIds.Add(int.Parse(li.Value));
             }
         }
-
         // this thing
         var imageUrl = await _cloudinary.UploadImageAsync(img);
         var genresreal = await _genreService.GetGenresById(genreIds);
@@ -77,15 +74,13 @@ public class AdminController : Controller
         {
             model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
         }
-
         return View(model);
     }
 
     [HttpPost]
     [RequestSizeLimit(2147483647)] //unit is bytes => 2GB
     [RequestFormLimits(MultipartBodyLengthLimit = 2147483647)]
-    public async Task<IActionResult> AddShow(string name, string desc,  string[] genres, IFormFile img,  string[] season,
-        string[] episode, IFormFileCollection episodevidsrc, AddMediaModel model)
+    public async Task<IActionResult> AddShow(string name, string desc,  string[] genres, IFormFile img,  string[] season, string[] episode, IFormFileCollection episodevidsrc, AddMediaModel model)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
@@ -108,7 +103,6 @@ public class AdminController : Controller
                 }
             }
         }
-
         // this thing
         List<List<Tuple<string, string>>> episodesinfo = new List<List<Tuple<string, string>>>();
         int counter = 0;
@@ -118,7 +112,6 @@ public class AdminController : Controller
         {
             if (item != "_-_-_@_-_-_")
             {
-                
                 var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
                 Console.WriteLine("uploaded video "+counter);
                 if (item.Trim().IsNullOrEmpty())

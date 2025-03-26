@@ -32,6 +32,7 @@ namespace joro.too.Web.Controllers
                 model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
             }
 
+            Console.WriteLine(name);
             foreach (SelectListItem li in model.Genres)
             {
                 if (genres.Contains(li.Value))
@@ -45,21 +46,29 @@ namespace joro.too.Web.Controllers
             List<Genre> genresfr = await _genreService.GetGenresById(genreIds);
             List<SearchResultModel> modellist = new List<SearchResultModel>();
             var media = await _mediaService.GetMediasWithGenres(genresfr);
-            if (name != null)
+            List<Media> allmedias = new List<Media>();
+            allmedias.AddRange(media.Item1);
+            allmedias.AddRange(media.Item2);
+            Console.WriteLine("------------------------------------------------------------");
+            foreach (var item in allmedias)
             {
-                media.Item1.Where(x => x.Name.Contains(name)).ToList();
-                media.Item2.Where(x => x.Name.Contains(name)).ToList();
+                Console.WriteLine(((Show)item).Description);
+                Console.WriteLine(((Show)item).Name);
+ 
+            } 
+            if (name != string.Empty)
+            {
+                //allmedias=allmedias.Where(x => x.Name.Equals(name)).ToList();
             }
 
             if (rating != null)
             {
-                media.Item1.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
-                media.Item2.Where(x => _mediaService.GetAvgRating(x).Result >= rating).ToList();
+                allmedias.Where(x => x.Rating.Average()>=rating).ToList();
             }
 
             if (isShow == false && isMovie == false)
             {
-                modellist.AddRange(media.Item1.Select(
+                modellist.AddRange(allmedias.Where(x=>x is Show).Select(
                     x => new SearchResultModel()
                     {
                         name = x.Name,
@@ -68,7 +77,7 @@ namespace joro.too.Web.Controllers
                         id = x.Id,
                         isShow = true
                     }));
-                modellist.AddRange(media.Item2.Select(
+                modellist.AddRange(allmedias.Where(x=>x is Movie).Select(
                     x => new SearchResultModel()
                     {
                         name = x.Name,
@@ -83,7 +92,7 @@ namespace joro.too.Web.Controllers
             //checks if its a show
             if (isShow)
             {
-                foreach (var item in media.Item1)
+                foreach (var item in allmedias.Where(x=>x is Show))
                 {
                     modellist.Add(new SearchResultModel()
                     {
@@ -98,7 +107,7 @@ namespace joro.too.Web.Controllers
                 return View(modellist);
             }
 
-            foreach (var item in media.Item2)
+            foreach (var item in allmedias.Where(x=>x is Movie))
             {
                 modellist.Add(new SearchResultModel()
                 {

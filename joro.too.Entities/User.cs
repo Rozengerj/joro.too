@@ -13,5 +13,4 @@ public class User:IdentityUser
     public List<Comment>? Comments { get; set; }
     [ForeignKey(nameof(Comment))]
     public List<int>? CommentsId { get; set; }
-    
 }

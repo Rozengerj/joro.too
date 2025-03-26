@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace joro.too.Web.Views.Admin;
+namespace joro.too.Web.Views.Account;
 
-public class idktest : PageModel
+public class Register : PageModel
 {
     public void OnGet()
     {
