@@ -8,10 +8,10 @@
 <p class="textoutline">
     @Model.description
 </p>
-<a asp-action="WatchShow" asp-controller="Watch" asp-route-showId="@Model.id">Start Watching Now</a>
+<a  asp-action="WatchShow" asp-controller="Watch" asp-route-showId="@Model.id" >Start Watching Now</a>
 <div id="Seasons" class="textoutline">
     <select id="SeasonList">
-        @for (int j = 0; j < @Model.SeasonsNames.Count; j++)
+        @for (int j = 0; j < Model.SeasonsNames.Count; j++)
         {
             <option value="@j">@Model.SeasonsNames[j]</option>
         }
@@ -23,7 +23,7 @@
         @if (i == 0)
         {
             <div id="season-@i">
-                @foreach (var episode in @Model.EpisodesInSeasons[i])
+                @foreach (var episode in Model.EpisodesInSeasons[i])
                 {
                     <li>
                         @episode.name
@@ -52,4 +52,5 @@
         </li>
     }
 </ul>
+<a asp-action="EditShow" asp-controller="Admin" asp-route-showiddd="@Model.id" class="buttons"> Edit Show</a>
 <script src="~/js/SelectSeasonScript.js" asp-append-version="true" type="module"></script>

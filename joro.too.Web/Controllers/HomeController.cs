@@ -4,6 +4,7 @@ using joro.too.Entities;
 using joro.too.Services.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using joro.too.Web.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,17 +14,23 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private IMediaService mediaService;
-    public HomeController(ILogger<HomeController> logger,IMediaService _mediaService)
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    public HomeController(ILogger<HomeController> logger,IMediaService _mediaService
+    //,UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager
+    )
     {
         _logger = logger;
         mediaService = _mediaService;
+        
+        //_userManager = userManager;
+        //_signInManager = signInManager;
+        //_roleManager = roleManager;
     }
 
     public async Task<IActionResult> Index()
     {
-        SortedList nums = new SortedList();
-        SortedList<int, int> hui = new SortedSet<int, int>();
-        nums.Add(2);
         var tempTuple = await mediaService.GetMediasWithGenres(null);
         var recommendedMedia = new List<IMedia>();
         recommendedMedia.AddRange(tempTuple.Item1); recommendedMedia.AddRange(tempTuple.Item2);

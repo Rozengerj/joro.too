@@ -14,6 +14,8 @@ public class LoginViewModel
     
     [Display(Name = "Remember me?")] 
     public bool RememberMe {get; set;}
+    [Required]
+    public string UserName { get; set; }
 }
 
 public class RegisterViewModel
@@ -30,4 +32,6 @@ public class RegisterViewModel
     [DataType(DataType.Password)]
     [Compare("Password", ErrorMessage = "The passwords do not match.")]
     public string ConfirmPassword { get; set; }
+    [Required]
+    public string UserName { get; set; }
 }

@@ -26,11 +26,14 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
-                    <li style="align-self: end">
+                    <li style="align-self: center;right: -76%;position: relative;">
                         <form asp-controller="Media" asp-action="SearchResult">
                             <input name="name" id="name" type="text" placeholder="Search for your favourite movies here"/>
                             <input type="submit" class="btn" hidden="hidden">
                         </form>
+                    </li>
+                    <li>
+                        <a class="nav-link text-dark" asp-action="Login" asp-controller="Account">Login</a>
                     </li>
                 </ul>
             </div>

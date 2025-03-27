@@ -1,0 +1,55 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model EditShowModel
+<link rel="stylesheet" href="~/css/Searchbar.css" asp-append-version="true"/>
+<form method="post" enctype="multipart/form-data" asp-action="EditShowFunc" asp-controller="Admin">
+
+    <div>
+        Name
+        <input name="name" id="name" asp-for="Name" type="text">
+    </div>
+    <div>
+        Description
+        <input name="desc" id="desc" asp-for="Description" type="text">
+    </div>
+    <div style="float: right">
+        Upload image
+        <input type="file" id="img" name="img" accept="image/*">
+    </div>
+
+    <div>
+        @foreach (var item in Model.Genres)
+        {
+            <input name="genres" id="@item.Value" value="@item.Value" type="checkbox" checked="@item.Selected">
+            @item.Text
+        }
+    </div>
+    <div>
+        <ol id="SeasonList" style="display: flex; flex-wrap: wrap; list-style-type: none; float: unset">
+            @for (int i = 0; i < @Model.SeasonNames.Count; i++)
+            {
+                <li class="season">
+                    <div class="form-container helper">
+                        <div class="input-group">
+                            @Model.SeasonNames[i]
+                            <a asp-action="" asp-for-id="@Model.SeasonIds[i]"></a>
+                            @for (int j = 0; j < @Model.Episodes[i].Count; j++)
+                            {
+                                @Model.Episodes[i][j].name
+                                <a asp-action="" asp-for-id="@Model.Episodes[i][j].id"></a>
+                            }
+                        </div>
+                    </div>
+                </li>
+            }
+        </ol>
+    </div>
+    <div>
+        <button id="AddSeasonBtn">
+
+        </button>
+    </div>
+    <input type="submit" asp-action="EditShow" class="btn">
+</form>
+
+<script src="~/js/AddShowScript.js" asp-append-version="true" type="module"></script>
+

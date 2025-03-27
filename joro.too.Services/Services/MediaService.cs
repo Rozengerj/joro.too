@@ -215,23 +215,24 @@ public class MediaService : IMediaService
     public async Task<Movie> FindMovieById(int id)
     {
         return await movieTable
-            .Include(x => x.Genres)
-            .ThenInclude(y => y.Genre)
             .Include(x => x.Actors)
             .ThenInclude(y => y.Actor)
             .Include(x => x.Comments)
+            .Include(x => x.Genres)
+            .ThenInclude(y => y.Genre)
             .Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 
     public async Task<Show> FindShowById(int id)
     {
-        return await showTable.Include(x => x.Genres)
-            .ThenInclude(y => y.Genre)
+        return await showTable
             .Include(x => x.Actors)
             .ThenInclude(y => y.Actor)
             .Include(x => x.Seasons)
             .ThenInclude(x => x.Episodes)
             .ThenInclude(x => x.Comments)
+            .Include(x => x.Genres)
+            .ThenInclude(y => y.Genre)
             .Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 }

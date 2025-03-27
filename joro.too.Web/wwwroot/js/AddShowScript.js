@@ -16,7 +16,7 @@ $(document).ready(function () {
             '               <button class="AddEpisodeBtn'+ seasonsCount +'">Add Episode</button>' +
             '            </div>'+
             '         </div>' +
-            '            <input type="hidden" name="episode" id="99999s' + seasonsCount + '" value="_-_-_@_-_-_">' +
+            '            <input type="hidden" name="episode" id="99999s' + seasonsCount + '" value="_-_-_|_-_-_">' +
             '            </input>'+
             '      </div>' +
             '   <button class="RemoveSeasonBtn">Remove Season</button> ' +

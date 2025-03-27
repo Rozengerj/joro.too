@@ -26,9 +26,9 @@ namespace joro.too.Web
                 // 1024MB
                 options.MultipartBodyLengthLimit = 104857600;
             });
-            builder.Services.AddControllersWithViews();
+            
             builder.Services.AddDbContext<MovieDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsNotSoAssConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();
@@ -48,6 +48,7 @@ namespace joro.too.Web
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
             builder.Services.AddRazorPages();
+            builder.Services.AddControllersWithViews();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
