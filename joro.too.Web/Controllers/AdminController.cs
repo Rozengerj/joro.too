@@ -149,7 +149,7 @@ public class AdminController : Controller
         return RedirectToAction("SearchResult", "Media");
     }
     
-    [Route("showiddd")]
+    
     public async Task<IActionResult> EditShow(int showiddd)
     {
         var show = await _mediaService.FindShowById(showiddd);

@@ -4,7 +4,7 @@
     <ul style="flex-wrap: wrap; list-style-type: none; float: unset" class="list-group list-group-horizontal ">
         @foreach(var item in Model)
         {
-            <a asp-action="ViewMedia" asp-route-id="@item.id" asp-route-isShow="@item.isShow" asp>
+            <a asp-action="ViewMedia" asp-route-id="@item.id" asp-route-isShow="@item.isShow">
                 <li style="margin: 0.5em">
                     <div height="100em">
                         <div class="card-container">

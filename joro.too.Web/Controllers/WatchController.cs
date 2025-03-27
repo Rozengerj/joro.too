@@ -17,8 +17,6 @@ public class WatchController:Controller
     {
         return View();
     }
-    [HttpGet]
-    [Route("showId")]
     public async Task<IActionResult> WatchShow(int showId)
     {
         var show = await _mediaService.FindShowById(showId);

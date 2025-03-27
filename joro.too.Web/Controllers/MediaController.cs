@@ -130,7 +130,7 @@ namespace joro.too.Web.Controllers
             return View(modellist);
         }
         
-        [Route("isShow"),Route("id")]
+        
         public async Task<IActionResult> ViewMedia(int id, bool isShow)
         {
             if (!isShow)
