@@ -179,15 +179,65 @@ public class MediaService : IMediaService
         movieTable.Update(media);
         await context.SaveChangesAsync();
     }
-
-    public async Task UpdateMedia(Show media,List<List<Tuple<string, string>>> vidData, List<string> seasonNames)
+/// <summary>
+/// 
+/// </summary>
+/// <param name="media"></param>
+/// Required; otherwise you cant update the media duh
+/// <param name="vidData"></param>
+/// if you submit this you must definitely submit also seasonNames
+/// <param name="seasonNames"></param>
+/// if you submit this you must definitely submit also vidData
+/// <param name="newGenres"></param>
+/// only required if you need new genres for some reason
+    public async Task UpdateMedia(Show media,List<List<Tuple<string, string>>>? vidData, List<string>? seasonNames, List<Genre>? newGenres, List<Actor>? actors, List<string>? actorRoles)
     {
+        if (!actors.IsNullOrEmpty())
+        {
+            await AddShowActorsTable(media, actors, actorRoles);
+        }
+        if (!newGenres.IsNullOrEmpty())
+        {
+            await DeleteGenreTable(media);
+            await AddShowGenresTable(media, newGenres);
+        }
         //go here
+        if (vidData.IsNullOrEmpty() && seasonNames.IsNullOrEmpty())
+        {
+            showTable.Update(media);
+            await context.SaveChangesAsync();
+            return;
+        }
+        List<Season> seasons = new List<Season>();
+        for (int i = 0; i < seasonNames.Count; i++)
+        {
+            var season = new Season() { Number = media.Seasons.Count+i, Episodes = new List<Episode>(), Name = seasonNames[i] };
+            var epsForThisSeason = new List<Episode>();
+            foreach (var vidinfo in vidData[i])
+            {
+                var episode = new Episode()
+                {
+                    name = vidinfo.Item1, vidsrc = vidinfo.Item2, Comments = new List<Comment>(), Season = season,
+                    SeasonId = season.Id
+                };
+                await context.Episodes.AddAsync(episode);
+                epsForThisSeason.Add(episode);
+            }
+            season.Episodes = epsForThisSeason;
+            seasons.Add(season);
+            await context.Seasons.AddAsync(season);
+        }
+        media.Seasons.AddRange(seasons);
         showTable.Update(media);
         await context.SaveChangesAsync();
     }
 
-    public async Task AddMovieGenresTable(Movie media, List<Genre> genres)
+    private async Task DeleteGenreTable(Show media)
+    {
+        context.GenresShows.RemoveRange(media.Genres);
+    }
+
+    private async Task AddMovieGenresTable(Movie media, List<Genre> genres)
     {
         List<GenresMovies> GenresForMovies = new List<GenresMovies>();
         foreach (var item in genres)
@@ -201,7 +251,7 @@ public class MediaService : IMediaService
         await context.SaveChangesAsync();
     }
 
-    public async Task AddShowGenresTable(Show media, List<Genre> genres)
+    private async Task AddShowGenresTable(Show media, List<Genre> genres)
     {
         List<GenresShows> GenresForShows = new List<GenresShows>();
         foreach (var item in genres)
@@ -210,6 +260,19 @@ public class MediaService : IMediaService
         }
         await context.GenresShows.AddRangeAsync(GenresForShows);
         media.Genres = GenresForShows;
+        await context.SaveChangesAsync();
+    }
+    private async Task AddShowActorsTable(Show media, List<Actor> actors, List<string> roles)
+    {
+        List<ActorRolesShows> ActorsForShows = new List<ActorRolesShows>();
+        int counter = 0;
+        foreach (var item in actors)
+        {
+            ActorsForShows.Add(new ActorRolesShows() { Show = media, ShowId = media.Id, Actor = item, ActorId = item.Id, Role = roles[counter]});
+            counter++;
+        }
+        await context.ActorsRolesShows.AddRangeAsync(ActorsForShows);
+        media.Actors = ActorsForShows;
         await context.SaveChangesAsync();
     }
 

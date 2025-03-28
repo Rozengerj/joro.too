@@ -148,8 +148,8 @@ public class AdminController : Controller
         await _mediaService.AddShow(name, imageUrl, genresreal, desc, episodesinfo, season.ToList());
         return RedirectToAction("SearchResult", "Media");
     }
-    
-    
+
+
     public async Task<IActionResult> EditShow(int showiddd)
     {
         var show = await _mediaService.FindShowById(showiddd);
@@ -158,12 +158,14 @@ public class AdminController : Controller
         {
             if (show.Genres.Select(x => x.Genre).Contains(item))
             {
-                Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type, Selected = true});
+                Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type, Selected = true });
                 Console.WriteLine("do i go in here please");
                 continue;
             }
-            Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type});
+
+            Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
         }
+
         List<List<VideoViewModel>> episodes = new List<List<VideoViewModel>>();
         episodes = show.Seasons.Select(x => x.Episodes).Select(x => x.Select(x => new VideoViewModel()
         {
@@ -192,10 +194,15 @@ public class AdminController : Controller
         };
         return View(editShowModel);
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> EditShow(string name, string desc, string[] genres, IFormFile img, string oldstring, string[] season,
-        string[] episode, IFormFileCollection episodevidsrc, AddMediaModel model, int id)
+    public async Task<IActionResult> EditShow(int id, string name, string desc, string[] genres, IFormFile? img,
+        string oldstring,
+        string[]? season,
+        string[]? episode,
+        IFormFileCollection? episodevidsrc, AddMediaModel model,
+        string[]? actornames,
+        string[]? actorRoles)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
@@ -212,6 +219,7 @@ public class AdminController : Controller
             await _cloudinary.DeleteImage(oldstring);
             imageUrl = await _cloudinary.UploadImageAsync(img);
         }
+
         if (genres is not null)
         {
             foreach (SelectListItem li in model.Genres)
@@ -224,44 +232,59 @@ public class AdminController : Controller
             }
         }
         List<List<Tuple<string, string>>> episodesinfo = new List<List<Tuple<string, string>>>();
-        int counter = 0;
-        int episodeCounter = 1;
-        var tempList = new List<Tuple<string, string>>();
-        foreach (var item in episode)
+        if (season.IsNullOrEmpty())
         {
-            if (item != "_-_-_|_-_-_")
+            int counter = 0;
+            int episodeCounter = 1;
+            var tempList = new List<Tuple<string, string>>();
+            foreach (var item in episode)
             {
-                var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
-                Console.WriteLine("uploaded video " + counter);
-                if (item.Trim().IsNullOrEmpty())
+                if (item != "_-_-_|_-_-_")
                 {
-                    tempList.Add(new Tuple<string, string>("episode " + episodeCounter, vidurl));
+                    var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
+                    Console.WriteLine("uploaded video " + counter);
+                    if (item.Trim().IsNullOrEmpty())
+                    {
+                        tempList.Add(new Tuple<string, string>("episode " + episodeCounter, vidurl));
+                        counter++;
+                        episodeCounter++;
+                        continue;
+                    }
+                    tempList.Add(new Tuple<string, string>(item, vidurl));
                     counter++;
-                    episodeCounter++;
                     continue;
                 }
-
-                tempList.Add(new Tuple<string, string>(item, vidurl));
-                counter++;
-                continue;
+                Console.WriteLine("Added Episodes For Season");
+                episodesinfo.Add(tempList);
+                episodeCounter = 1;
+                tempList = new List<Tuple<string, string>>();
             }
-
-            Console.WriteLine("Added Episodes For Season");
-            episodesinfo.Add(tempList);
-            episodeCounter = 1;
-            tempList = new List<Tuple<string, string>>();
         }
 
-        var user = await _mediaService.FindShowById(id);
-        user.Name = name;
-        user.Description = desc;
-        user.MediaImgSrc = imageUrl;
-        user.Seasons.Add();
-        var genresreal = await _genreService.GetGenresById(genreIds);
+        if (season.IsNullOrEmpty())
+        {
+            season = new string[1];
+        }
+
+        if (actorRoles.IsNullOrEmpty())
+        {
+            actorRoles = new string[1];
+        }
+        var media = await _mediaService.FindShowById(id);
+        media.Name = name;
+        media.Description = desc;
+        media.MediaImgSrc = imageUrl;
+        var actorsReal = actornames.Select(x => new Actor()
+        {
+            Name = x
+        }).ToList();
+        
+        var genresReal = await _genreService.GetGenresById(genreIds);
+        await _mediaService.UpdateMedia(media, episodesinfo, season.ToList(), genresReal, actorsReal, actorRoles.ToList());
         //Console.WriteLine("this is the top");
         //Console.WriteLine(string.Join(", ", episode));
         //Console.WriteLine(string.Join(", ", season));
         //Console.WriteLine("this is the bottom");
-        return RedirectToAction("ViewMedia", "Media",new { id = model.Id ,IsShow=true });
+        return RedirectToAction("ViewMedia", "Media", new { id = id, IsShow = true });
     }
 }

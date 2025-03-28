@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="~/css/Searchbar.css" asp-append-version="true"/>
 <form method="post" enctype="multipart/form-data" asp-action="EditShow" asp-controller="Admin" asp-route-model="22">
 
+    <input name="Id" id="Id" asp-for="Id" type="hidden">
+    
     <div>
         Name
         <input name="name" id="name" asp-for="Name" type="text">
@@ -31,11 +33,11 @@
                     <div class="form-container helper">
                         <div class="input-group">
                             @Model.SeasonNames[i]
-                            <a asp-action="" asp-for-id="@Model.SeasonIds[i]"></a>
+                            <a asp-action="EditSeason" asp-for-id="@Model.SeasonIds[i]"></a>
                             @for (int j = 0; j < @Model.Episodes[i].Count; j++)
                             {
                                 @Model.Episodes[i][j].name
-                                <a asp-action="" asp-for-id="@Model.Episodes[i][j].id"></a>
+                                <a asp-action="EditEpisode" asp-for-id="@Model.Episodes[i][j].id"></a>
                             }
                         </div>
                     </div>
@@ -43,6 +45,7 @@
             }
         </ol>
     </div>
+    
     <div>
         <button id="AddSeasonBtn">
 
