@@ -59,5 +59,11 @@ public class CloudinaryService
         } 
         //Console.WriteLine("minalo e qvno vid");
         return uploadResult.SecureUrl.ToString();
-    } 
+    }
+
+    public async Task<bool> DeleteImage(string imgsrc)
+    {
+        var whatever = await _cloudinary.DestroyAsync(new DeletionParams(imgsrc.Substring(62, 20)));
+        return true;
+    }
 }

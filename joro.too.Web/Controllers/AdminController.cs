@@ -192,10 +192,76 @@ public class AdminController : Controller
         };
         return View(editShowModel);
     }
+    
     [HttpPost]
-    public async Task<IActionResult> EditShowFunc(EditShowModel model)
+    public async Task<IActionResult> EditShow(string name, string desc, string[] genres, IFormFile img, string oldstring, string[] season,
+        string[] episode, IFormFileCollection episodevidsrc, AddMediaModel model, int id)
     {
-        Console.WriteLine("if you actually go in here i will be so so pissed you would not believe your eyes");
+        List<int> genreIds = new List<int>();
+        var list = await _genreService.GetGenres();
+
+        model.Genres = new List<SelectListItem>();
+        foreach (Genre item in list)
+        {
+            model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
+        }
+
+        var imageUrl = oldstring;
+        if (!img.FileName.IsNullOrEmpty())
+        {
+            await _cloudinary.DeleteImage(oldstring);
+            imageUrl = await _cloudinary.UploadImageAsync(img);
+        }
+        if (genres is not null)
+        {
+            foreach (SelectListItem li in model.Genres)
+            {
+                if (genres.Contains(li.Value))
+                {
+                    li.Selected = true;
+                    genreIds.Add(int.Parse(li.Value));
+                }
+            }
+        }
+        List<List<Tuple<string, string>>> episodesinfo = new List<List<Tuple<string, string>>>();
+        int counter = 0;
+        int episodeCounter = 1;
+        var tempList = new List<Tuple<string, string>>();
+        foreach (var item in episode)
+        {
+            if (item != "_-_-_|_-_-_")
+            {
+                var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
+                Console.WriteLine("uploaded video " + counter);
+                if (item.Trim().IsNullOrEmpty())
+                {
+                    tempList.Add(new Tuple<string, string>("episode " + episodeCounter, vidurl));
+                    counter++;
+                    episodeCounter++;
+                    continue;
+                }
+
+                tempList.Add(new Tuple<string, string>(item, vidurl));
+                counter++;
+                continue;
+            }
+
+            Console.WriteLine("Added Episodes For Season");
+            episodesinfo.Add(tempList);
+            episodeCounter = 1;
+            tempList = new List<Tuple<string, string>>();
+        }
+
+        var user = await _mediaService.FindShowById(id);
+        user.Name = name;
+        user.Description = desc;
+        user.MediaImgSrc = imageUrl;
+        user.Seasons.Add();
+        var genresreal = await _genreService.GetGenresById(genreIds);
+        //Console.WriteLine("this is the top");
+        //Console.WriteLine(string.Join(", ", episode));
+        //Console.WriteLine(string.Join(", ", season));
+        //Console.WriteLine("this is the bottom");
         return RedirectToAction("ViewMedia", "Media",new { id = model.Id ,IsShow=true });
     }
 }

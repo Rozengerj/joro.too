@@ -180,8 +180,9 @@ public class MediaService : IMediaService
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateMedia(Show media)
+    public async Task UpdateMedia(Show media,List<List<Tuple<string, string>>> vidData, List<string> seasonNames)
     {
+        //go here
         showTable.Update(media);
         await context.SaveChangesAsync();
     }
