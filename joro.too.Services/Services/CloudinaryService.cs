@@ -61,7 +61,7 @@ public class CloudinaryService
         return uploadResult.SecureUrl.ToString();
     }
 
-    public async Task<bool> DeleteImage(string imgsrc)
+    public async Task<bool> DeleteFile(string imgsrc)
     {
         var whatever = await _cloudinary.DestroyAsync(new DeletionParams(imgsrc.Substring(62, 20)));
         return true;

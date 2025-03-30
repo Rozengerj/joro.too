@@ -1,5 +1,6 @@
 using CloudinaryDotNet;
 using joro.too.DataAccess;
+using joro.too.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using joro.too.Services.Services.IServices;
@@ -32,6 +33,9 @@ namespace joro.too.Web
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();
+            builder.Services.AddScoped<IEpisodeService, EpisodeService>();
+            builder.Services.AddScoped<ISeasonService, SeasonService>();
+            
             //cloudinary setup
             builder.Services.AddScoped<CloudinaryService>();
             var CloudinarySettings = builder.Configuration.GetSection("Cloudinary").Get<CloudinarySettings>();

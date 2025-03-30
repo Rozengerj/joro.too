@@ -4,7 +4,6 @@
 <form method="post" enctype="multipart/form-data" asp-action="EditShow" asp-controller="Admin" asp-route-model="22">
 
     <input name="Id" id="Id" asp-for="Id" type="hidden">
-    
     <div>
         Name
         <input name="name" id="name" asp-for="Name" type="text">
@@ -33,11 +32,11 @@
                     <div class="form-container helper">
                         <div class="input-group">
                             @Model.SeasonNames[i]
-                            <a asp-action="EditSeason" asp-for-id="@Model.SeasonIds[i]"></a>
+                            <a asp-action="EditSeason" asp-route-id="@Model.SeasonIds[i]"></a>
+                            <a asp-action="RemoveSeason" asp-route-id="@Model.SeasonIds[i]" asp-route-showId="@Model.Id"></a>
                             @for (int j = 0; j < @Model.Episodes[i].Count; j++)
                             {
                                 @Model.Episodes[i][j].name
-                                <a asp-action="EditEpisode" asp-for-id="@Model.Episodes[i][j].id"></a>
                             }
                         </div>
                     </div>
@@ -51,7 +50,15 @@
 
         </button>
     </div>
-    <input type="submit" asp-action="EditShow" class="btn">
+    
+    <div>
+        <button id="AddActor">
+            
+        </button>
+    </div>
+    <div id="ActorsList">
+    </div>
+    <input type="submit" class="btn">
 </form>
 
 <script src="~/js/AddShowScript.js" asp-append-version="true" type="module"></script>

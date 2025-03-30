@@ -15,13 +15,17 @@ public class AdminController : Controller
 {
     private readonly IGenreService _genreService;
     private readonly IMediaService _mediaService;
+    private readonly ISeasonService _seasonService;
+    private readonly IEpisodeService _episodeService;
     private CloudinaryService _cloudinary;
 
-    public AdminController(IGenreService genreService, IMediaService mediaservice, CloudinaryService cloudinary)
+    public AdminController(IGenreService genreService, IMediaService mediaservice, CloudinaryService cloudinary, ISeasonService seasonService, IEpisodeService episodeService)
     {
         _genreService = genreService;
         _mediaService = mediaservice;
         _cloudinary = cloudinary;
+        _seasonService = seasonService;
+        _episodeService = episodeService;
     }
 
     public async Task<IActionResult> AddMovie()
@@ -201,7 +205,7 @@ public class AdminController : Controller
         string[]? season,
         string[]? episode,
         IFormFileCollection? episodevidsrc, AddMediaModel model,
-        string[]? actornames,
+        string[]? actorNames,
         string[]? actorRoles)
     {
         List<int> genreIds = new List<int>();
@@ -216,7 +220,7 @@ public class AdminController : Controller
         var imageUrl = oldstring;
         if (!img.FileName.IsNullOrEmpty())
         {
-            await _cloudinary.DeleteImage(oldstring);
+            await _cloudinary.DeleteFile(oldstring);
             imageUrl = await _cloudinary.UploadImageAsync(img);
         }
 
@@ -274,7 +278,7 @@ public class AdminController : Controller
         media.Name = name;
         media.Description = desc;
         media.MediaImgSrc = imageUrl;
-        var actorsReal = actornames.Select(x => new Actor()
+        var actorsReal = actorNames.Select(x => new Actor()
         {
             Name = x
         }).ToList();
@@ -287,4 +291,76 @@ public class AdminController : Controller
         //Console.WriteLine("this is the bottom");
         return RedirectToAction("ViewMedia", "Media", new { id = id, IsShow = true });
     }
+
+    public async Task<IActionResult> RemoveSeason(int id, int showId)
+    {
+        await _seasonService.RemoveSeason(id);
+        return RedirectToAction("EditShow", "Admin", showId);
+    }
+    public async Task<IActionResult> EditSeason(int id)
+    {
+        Season s = await _seasonService.FindSeasonById(id);
+        EditSeasonModel model = new EditSeasonModel()
+        {
+            name = s.Name,
+            id = s.Id,
+            episodes = s.Episodes.Select(x => new VideoViewModel()
+                {
+                    id = x.Id,
+                    name = x.name,
+                    vidsrc = x.vidsrc
+                }
+            ).ToList()
+        };
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditSeason(int id, string name, IFormFileCollection episodeFiles, string[] episodeNames)
+    {
+        Season season = await _seasonService.FindSeasonById(id);
+        List<string> episodeVidSrcs = new List<string>();
+        foreach (var episode in episodeFiles)
+        {
+            episodeVidSrcs.Add(await _cloudinary.UploadVideoAsync(episode) );
+        }
+
+        await _seasonService.AddEpisdesToSeason(season, episodeNames.ToList(), episodeVidSrcs);
+        season.Name = name;
+        await _seasonService.UpdateSeason(season);
+        return RedirectToAction("EditShow", "Admin", season.Id);
+    }
+
+    public async Task<IActionResult> RemoveEpisdes(int id, int seasonId)
+    {
+        await _episodeService.RemoveEpisode(id);
+        return RedirectToAction("EditSeason", "Admin", seasonId);
+    }
+
+    public async Task<IActionResult> EditEpisdes(int id)
+    {
+        Episode ep = await _episodeService.FindEpisodeById(id);
+        VideoViewModel model = new VideoViewModel()
+        {
+            name = ep.name,
+            id = ep.Id,
+            vidsrc = ep.vidsrc
+        };
+        return View(model);
+        
+    }
+    [HttpPost]
+    public async Task<IActionResult> EditEpisdes(int id, string name, string oldVidSrc, IFormFile vid)
+    {
+        Episode ep = await _episodeService.FindEpisodeById(id);
+        ep.name = name;
+        if (!vid.FileName.IsNullOrEmpty())
+        {
+            await _cloudinary.DeleteFile(oldVidSrc);
+            ep.vidsrc = await _cloudinary.UploadVideoAsync(vid);
+        }
+        await _episodeService.UpdateEpisode(ep);
+        return RedirectToAction("EditShow", "Admin", ep.SeasonId);
+    }
+    
 }
