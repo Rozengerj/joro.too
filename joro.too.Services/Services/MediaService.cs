@@ -206,13 +206,18 @@ public class MediaService : IMediaService
             await AddShowGenresTable(media, newGenres);
         }
 
+        var hui = "ne sum bul tuk";
         //go here
-        if (vidData.IsNullOrEmpty() && seasonNames.IsNullOrEmpty())
+        if (!seasonNames.IsNullOrEmpty())
         {
             showTable.Update(media);
             await context.SaveChangesAsync();
+            hui = "VLQZOH ????????????????";
             return;
+            
         }
+
+        Console.WriteLine(hui);
 
         List<Season> seasons = new List<Season>();
         for (int i = 0; i < seasonNames.Count; i++)

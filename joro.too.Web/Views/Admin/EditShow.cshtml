@@ -1,3 +1,4 @@
+@using joro.too.Entities
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model EditShowModel
 <link rel="stylesheet" href="~/css/Searchbar.css" asp-append-version="true"/>
@@ -32,10 +33,13 @@
                     <div class="form-container helper">
                         <div class="input-group">
                             @Model.SeasonNames[i]
-                            <a asp-action="EditSeason" asp-route-id="@Model.SeasonIds[i]"></a>
-                            <a asp-action="RemoveSeason" asp-route-id="@Model.SeasonIds[i]" asp-route-showId="@Model.Id"></a>
+                            <a asp-action="EditSeason" asp-route-sId="@Model.SeasonIds[i]" class="buttons btn btn-warning">Edit Season</a>
+                            <a asp-action="RemoveSeason" asp-route-id="@Model.SeasonIds[i]" asp-route-showId="@Model.Id" class="buttons btn btn-danger">Remove Season</a>
                             @for (int j = 0; j < @Model.Episodes[i].Count; j++)
                             {
+                                
+                                <p>Episode @j</p>
+                                
                                 @Model.Episodes[i][j].name
                             }
                         </div>
@@ -47,19 +51,20 @@
     
     <div>
         <button id="AddSeasonBtn">
-
+            Add Seaskon
         </button>
     </div>
     
     <div>
         <button id="AddActor">
-            
+            Add Actor
         </button>
     </div>
     <div id="ActorsList">
     </div>
-    <input type="submit" class="btn">
+    <input type="submit" class="btn" value="hui">
 </form>
 
 <script src="~/js/AddShowScript.js" asp-append-version="true" type="module"></script>
+<script src="~/js/AddActors.js" asp-append-version="true" type="module"></script>
 

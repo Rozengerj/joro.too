@@ -1,0 +1,18 @@
+@model EditSeasonModel
+<form method="post" asp-action="EditSeason">
+    <input type="hidden" id="id" name="id", value="@Model.id">
+    Chnage name
+    <input type="text" name="name" id="name" asp-for="name">
+    @foreach (var ep in Model.episodes)
+    {
+        <div class="EpisodeList">
+            @ep.name
+            <a asp-action="EditEpisode" asp-route-id="@ep.id" class="buttons btn-warning">Edit Episode</a>
+            <a asp-action="RemoveEpisode" asp-route-id="@ep.id" asp-route-seasonId="@Model.id" class="buttons btn-danger">Remove Episode</a>
+            
+        </div>
+    }
+    <input type="submit">submit</input>
+</form>
+
+<script src=""></script>

@@ -32,7 +32,7 @@ public class SeasonService:ISeasonService
     }
     public async Task<Season> FindSeasonById(int id)
     {
-        return await s.FindAsync(id);
+        return await s.Include(x => x.Episodes).ThenInclude(y => y.Comments).ThenInclude(z=>z.Commenter).Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 
     public Task AddEpisdesToSeason(Season season, List<string> episodeNames, List<string> episodeVidSrcs)

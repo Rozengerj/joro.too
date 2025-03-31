@@ -18,5 +18,4 @@ $(document).ready(function () {
             console.log("does this run multiple times??")
             $(this).closest('.actor').remove();
         }); 
-    });
-}
+    })});

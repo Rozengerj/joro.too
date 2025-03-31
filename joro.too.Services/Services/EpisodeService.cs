@@ -33,6 +33,6 @@ public class EpisodeService : IEpisodeService
 
     public async Task<Episode> FindEpisodeById(int id)
     {
-        return await vid.FindAsync(id);
+        return await vid.Include(x=>x.Comments).ThenInclude(y=>y.Commenter).Where(x=>x.Id==id).FirstOrDefaultAsync();
     }
 }
