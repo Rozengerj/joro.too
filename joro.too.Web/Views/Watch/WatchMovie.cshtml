@@ -1,4 +1,4 @@
-@model joro.too.Web.Views.Watch.WatchMovie
+@model WatchMovieModel
 <style>
     .mainthingie {
         margin: 0;
@@ -32,10 +32,10 @@
     }
 </style>
 <p style="align-self: center; position: absolute;" class="textoutline">
-    You're Watching One Piece The Movie 13: "Gold"
+    You're Watching @Model.name
 </p>
 <div class="video-container mainthingie">
-    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/JymUCQ-RwQk?list=PLfn2CRrvE7cDo3BLMvq4KCelj6QNmX8OK" title="Final Abhorrent Dream Remake (Instrumental)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe width="100%" height="100%" src="@Model.vidSrc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       <!--video controls>
         <THis is where the video will go eventually>
         <source src="https://www.youtube.com/embed/DwQ3MdubVbI" type="video/mp4">

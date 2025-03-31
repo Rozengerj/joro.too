@@ -1,5 +1,6 @@
 using joro.too.Entities;
 using joro.too.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,39 +8,43 @@ namespace joro.too.Web.Controllers;
 
 public class AccountController : Controller
 {
-    
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    
-    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
+        RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
     }
+
     public IActionResult Login() => View();
-    
+
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
-            
+            return View(model);
+        }
+        var user = await _userManager.FindByNameAsync(model.UserName);
+        if (user != null)
+        {
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
             }
-            ModelState.AddModelError("", "Invalid login attempt.");
         }
-
-        Console.WriteLine("shittings");
+        ModelState.AddModelError("", "Invalid login");
         return View(model);
     }
-    
+
     public IActionResult Register() => View();
+
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
@@ -49,7 +54,7 @@ public class AccountController : Controller
         {
             var user = new User { UserName = model.UserName, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
-            Console.WriteLine(String.Join(", ",result.Errors.Select(e => e.Description)));
+            Console.WriteLine(String.Join(", ", result.Errors.Select(e => e.Description)));
             if (result.Succeeded)
             {
                 Console.WriteLine("regisetred nicely");
@@ -57,6 +62,7 @@ public class AccountController : Controller
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
@@ -74,7 +80,7 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
-    
+
     public IActionResult AccessDenied()
     {
         return View();

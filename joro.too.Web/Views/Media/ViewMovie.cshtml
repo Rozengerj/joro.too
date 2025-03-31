@@ -1,6 +1,21 @@
-@page
-@model joro.too.Web.Views.Media.ViewMovie
+@model ViewMovieModel
 
-@{
-    Layout = null;
-}
+<img src="@Model.imgsrc"
+     alt="if you can read this either something has gone horribly wrong with the server or youre just reading through my ugly html">
+<h2 class="textoutline">
+    @Model.name
+</h2>
+<p class="textoutline">
+    @Model.description
+</p>
+<a  asp-action="WatchMovie" asp-controller="Watch" asp-route-movieId="@Model.id" >Start Watching Now</a>
+<ul>
+    @foreach (var actor in Model.actors)
+    {
+        <li>
+            @actor.Name - @actor.Role
+        </li>
+    }
+</ul>
+<a asp-action="EditMovie" asp-controller="Admin" asp-route-showiddd="@Model.id" class="buttons"> Edit Show</a>
+<script src="~/js/SelectSeasonScript.js" asp-append-version="true" type="module"></script>

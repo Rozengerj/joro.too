@@ -29,7 +29,10 @@ html {
 body {
   margin-bottom: 60px;
 }
-
+main{
+    background-image: url("../background.jpg");
+    background-position: top;
+}
 
 /* From Uiverse.io by gharsh11032000 */
 

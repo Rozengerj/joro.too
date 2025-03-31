@@ -13,9 +13,22 @@ public class WatchController:Controller
         _genreService = genreService;
         _mediaService = mediaservice;
     }
-    public async Task<IActionResult> WatchMovie()
+    public async Task<IActionResult> WatchMovie(int movieId)
     {
-        return View();
+        var movie = await _mediaService.FindMovieById(movieId);
+        WatchMovieModel model = new WatchMovieModel()
+        {
+            name = movie.Name,
+            vidSrc = movie.vidsrc,
+            Comments = movie.Comments.Select(y => new ViewCommentsModel()
+            {
+                username = y.Commenter.Name,
+                comment = y.Text,
+                id = y.Commenter.Id,
+                pfpsrc = y.Commenter.Pfp
+            }).ToList()
+        };
+        return View(model);
     }
     public async Task<IActionResult> WatchShow(int showId)
     {

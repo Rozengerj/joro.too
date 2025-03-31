@@ -1,5 +1,6 @@
 using CloudinaryDotNet;
 using joro.too.DataAccess;
+using joro.too.Entities;
 using joro.too.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +30,7 @@ namespace joro.too.Web
             });
             
             builder.Services.AddDbContext<MovieDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsNotSoAssConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();
@@ -44,7 +45,7 @@ namespace joro.too.Web
             var cloudinary = new Cloudinary(acc);
             builder.Services.AddSingleton(cloudinary);
             //identity setup
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<MovieDbContext>()
+            builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<MovieDbContext>()
                 .AddDefaultTokenProviders();
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -107,12 +108,12 @@ namespace joro.too.Web
 
         public static async Task CreateAdmin(IServiceProvider serviceProvider)
         {
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             var adminEmail = "admin@admin.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
-                var user = new IdentityUser { UserName = "admin@admin.com", Email = adminEmail };
+                var user = new User { UserName = "admin@admin.com", Email = adminEmail };
                 var result = await userManager.CreateAsync(user, "AdminPassword123!");
                 if (result.Succeeded)
                 {

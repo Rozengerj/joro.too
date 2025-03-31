@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace joro.too.DataAccess
 {
-    public class MovieDbContext:IdentityDbContext<IdentityUser>
+    public class MovieDbContext:IdentityDbContext<User>
     {
         public MovieDbContext(DbContextOptions<MovieDbContext> options) :base(options)
         {

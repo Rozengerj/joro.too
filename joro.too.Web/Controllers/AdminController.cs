@@ -331,9 +331,9 @@ public class AdminController : Controller
         List<string> episodeVidSrcs = new List<string>();
         foreach (var episode in episodeFiles)
         {
-            episodeVidSrcs.Add(await _cloudinary.UploadVideoAsync(episode) );
+            episodeVidSrcs.Add(await _cloudinary.UploadVideoAsync(episode));
         }
-
+        Console.WriteLine(string.Join(", ", episodeFiles.Select(x => x.FileName)));
         await _seasonService.AddEpisdesToSeason(season, episodeNames.ToList(), episodeVidSrcs);
         season.Name = name;
         await _seasonService.UpdateSeason(season);
@@ -345,7 +345,7 @@ public class AdminController : Controller
         var ep = await _episodeService.FindEpisodeById(id);
         await _cloudinary.DeleteFile(ep.vidsrc);
         await _episodeService.RemoveEpisode(id);
-        return RedirectToAction("EditSeason", "Admin", new{id=seasonId});
+        return RedirectToAction("EditSeason", "Admin", new{sId=seasonId});
     }
 
     public async Task<IActionResult> EditEpisode(int id)
@@ -374,7 +374,7 @@ public class AdminController : Controller
         }
         await _episodeService.UpdateEpisode(ep);
         
-        return RedirectToAction("EditSeason", "Admin", new {id = ep.SeasonId} );
+        return RedirectToAction("EditSeason", "Admin", new {sId = ep.SeasonId} );
     }
 
     public async Task<IActionResult> RemoveShow(int id)

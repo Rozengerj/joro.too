@@ -1,18 +1,23 @@
 @model EditSeasonModel
-<form method="post" asp-action="EditSeason">
+<form method="post" enctype="multipart/form-data" asp-action="EditSeason" xmlns="http://www.w3.org/1999/html">
     <input type="hidden" id="id" name="id", value="@Model.id">
     Chnage name
     <input type="text" name="name" id="name" asp-for="name">
+    <div class="EpisodeList">
     @foreach (var ep in Model.episodes)
     {
-        <div class="EpisodeList">
+        <div>
             @ep.name
             <a asp-action="EditEpisode" asp-route-id="@ep.id" class="buttons btn-warning">Edit Episode</a>
             <a asp-action="RemoveEpisode" asp-route-id="@ep.id" asp-route-seasonId="@Model.id" class="buttons btn-danger">Remove Episode</a>
             
         </div>
     }
+    </div>
+    <div>
+    <button id="AddEpisode" class="buttons btn">Add Episode</button>
+    </div>
     <input type="submit">submit</input>
 </form>
 
-<script src=""></script>
+<script src="~/js/AddEpisodeScript.js" asp-append-version="true" type="module"></script>

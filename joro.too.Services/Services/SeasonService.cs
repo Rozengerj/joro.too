@@ -37,6 +37,7 @@ public class SeasonService:ISeasonService
 
     public Task AddEpisdesToSeason(Season season, List<string> episodeNames, List<string> episodeVidSrcs)
     {
+        Console.WriteLine(string.Join(", ", episodeNames));
         List<Episode> episodes = new List<Episode>();
         for (int i = 0; i < episodeNames.Count; i++)
         {

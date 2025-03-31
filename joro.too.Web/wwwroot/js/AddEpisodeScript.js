@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let epcount = 0;
-    $("").on("click", function () {
+    $("#AddEpisode").on("click", function () {
             $(".EpisodeList").append(
                 '      <div class="input-group ep">' +
                 '         <input type="text" name="episodeNames" id="' + epcount + '" asp-validation-for="" class="input" required="" placeholder="Input Episode Name Here">' +
@@ -12,4 +12,4 @@ $(document).ready(function () {
                 $(this).closest(".ep").remove();
             });
     });
-}
+});

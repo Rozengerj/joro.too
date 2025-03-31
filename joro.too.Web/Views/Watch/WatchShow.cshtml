@@ -41,11 +41,11 @@
         <div class="detail-seasons">
             <div class="detail-infor">
                 <div class="ss-choice">
-                    <div class="ssc-list">
+                    <div class="ssc-list textoutline">
                         <div class="ssc-button">
                             <div class="scc-label">List of Episodes</div>
-                            <div id="Seasons" class="textoutline scc-name">
-                                <select id="SeasonList">
+                            <div id="Seasons" class="scc-name">
+                                <select id="SeasonList" style=" background: #0a0d1a">
                                     @for (int j = 0; j < Model.seasonsNames.Count; j++)
                                     {
                                         <option value="@j">@Model.seasonsNames[j]</option>

@@ -1,5 +1,5 @@
 @model VideoViewModel
-<form method="post" asp-action="EditEpisode">
+<form method="post" enctype="multipart/form-data" asp-action="EditEpisode">
     <input type="hidden" id="id" name="id" asp-for="id">
     <input type="hidden" id="oldVidSrc" name="oldVidSrc" asp-for="vidsrc">
     <input type="text" asp-for="name" id="name" name="name">
