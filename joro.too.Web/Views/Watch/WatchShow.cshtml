@@ -77,11 +77,11 @@
                         }
                         else
                         {
-                            <div id="season-@i" style="display: none;">
+                            <div id="season-@i" style="display: none; ">
                                 @foreach (var episode in @Model.episodesInSeasons[i])
                                 {
                                     <li>
-                                        <button id="@episode.name" value="@episode.vidsrc"
+                                        <button style="width: 100%;" id="@episode.name" value="@episode.vidsrc"
                                                 class="episodebutton ssl-item ep-item">@episode.name</button>
                                     </li>
                                 }

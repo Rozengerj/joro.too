@@ -68,7 +68,7 @@ public class AdminController : Controller
         var genresreal = await _genreService.GetGenresById(genreIds);
         var vidsrc = await _cloudinary.UploadVideoAsync(vid);
         await _mediaService.AddMovie(name, imageUrl, genresreal, desc, vidsrc);
-        return RedirectToAction("SearchResult", "Media");
+        return RedirectToAction("SearchResult", "Search");
     }
 
     [HttpGet]
@@ -150,7 +150,7 @@ public class AdminController : Controller
         //Console.WriteLine(string.Join(", ", season));
         //Console.WriteLine("this is the bottom");
         await _mediaService.AddShow(name, imageUrl, genresreal, desc, episodesinfo, season.ToList());
-        return RedirectToAction("SearchResult", "Media");
+        return RedirectToAction("SearchResult", "Search");
     }
 
 
@@ -290,7 +290,7 @@ public class AdminController : Controller
         //Console.WriteLine(string.Join(", ", episode));
         //Console.WriteLine(string.Join(", ", season));
         //Console.WriteLine("this is the bottom");
-        return RedirectToAction("ViewMedia", "Media", new { id = id, IsShow = true });
+        return RedirectToAction("ViewMedia", "Search", new { id = id, IsShow = true });
     }
 
     public async Task<IActionResult> RemoveSeason(int id, int showId)
@@ -368,8 +368,10 @@ public class AdminController : Controller
     {
         Episode ep = await _episodeService.FindEpisodeById(id);
         ep.name = name;
+        Console.WriteLine(vid.FileName);
         if (vid is not null)
         {
+            Console.WriteLine("Does this go here at all");
             await _cloudinary.DeleteFile(oldVidSrc);
             ep.vidsrc = await _cloudinary.UploadVideoAsync(vid);
         }
@@ -391,7 +393,7 @@ public class AdminController : Controller
 
         await _cloudinary.DeleteFile(show.MediaImgSrc);
         await _seasonService.RemoveSeason(id);
-        return RedirectToAction("SearchResult", "Media");
+        return RedirectToAction("SearchResult", "Search");
     }
     
 }

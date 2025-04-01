@@ -1,6 +1,6 @@
-@using joro.too.Entities
-@model AddMediaModel
+@model EditMovieModel
 <form method="post" enctype="multipart/form-data">
+    <input type="hidden" id="oldimgsrc" value="@Model.imgsrc" name="oldimgsrc">
     <div>
         Name
         <input name="name" id="name" type="text">
@@ -16,7 +16,8 @@
     <div>
         @foreach (var item in Model.Genres)
         {
-            <input name="genres" id="@item.Value" value="@item.Value" type="checkbox"> @item.Text
+            <input name="genres" id="@item.Value" value="@item.Value" type="checkbox">
+            @item.Text
         }
     </div>
     <div>
@@ -24,6 +25,6 @@
         <input type="file" id="vid" name="vid" accept="video/*">
     </div>
     <input type="submit" class="btn">
-    
-</form>
 
+</form>
+<script src="~/js/AddActors.js" asp-append-version="true" type="module"></script>

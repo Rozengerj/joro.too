@@ -11,17 +11,18 @@ using NuGet.Packaging;
 
 namespace joro.too.Web.Controllers
 {
-    public class MediaController : Controller
+    public class SearchController : Controller
     {
         private readonly IGenreService _genreService;
         private readonly IMediaService _mediaService;
 
-        public MediaController(IGenreService genreService, IMediaService mediaservice)
+        public SearchController(IGenreService genreService, IMediaService mediaservice)
         {
             _genreService = genreService;
             _mediaService = mediaservice;
         }
-
+        
+        //[HttpPut]
         public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model,
             string[] genres, bool isShow, bool isMovie)
         {
@@ -50,7 +51,7 @@ namespace joro.too.Web.Controllers
             List<IMedia> allmedias = new List<IMedia>();
             allmedias.AddRange(media.Item1);
             allmedias.AddRange(media.Item2);
-            Console.WriteLine("------------------------------------------------------------");
+            //Console.WriteLine("------------------------------------------------------------");
             foreach (var item in allmedias)
             {
                 Console.WriteLine(item.Description);
@@ -63,7 +64,7 @@ namespace joro.too.Web.Controllers
                 allmedias=allmedias.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();
             }
 
-            if (rating < 0)
+            if (rating > 0)
             {
                 allmedias.Where(x =>
                 {
@@ -129,8 +130,6 @@ namespace joro.too.Web.Controllers
             }
             return View(modellist);
         }
-        
-        
         public async Task<IActionResult> ViewMedia(int id, bool isShow)
         {
             if (!isShow)
@@ -206,7 +205,6 @@ namespace joro.too.Web.Controllers
                     }).ToList());
                 modelshow.SeasonsNames.Add(season.Name);
             }
-
             return View("ViewShow", modelshow);
         }
     }

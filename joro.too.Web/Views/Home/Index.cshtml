@@ -6,7 +6,7 @@
 <div class="text-center textoutline">
     <h1 class="display-4">Welcome to Joro</h1>
     <p>Dive deep into your favourite shows now</p>
-    <form asp-action="SearchResult" asp-controller="Media">
+    <form>
         <div class="group">
             <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
                 <g>
@@ -23,8 +23,9 @@
                 placeholder="Search..."
                 name="name"
             />
-            <input type="submit" class="btn" hidden="hidden">
+            <input asp-action="SearchResult" asp-controller="Search" type="submit" class="btn" hidden="hidden">
         </div>
     </form>
-
+     ...Or you can go through our favourite recommendations!
 </div>
+<script src="~/js/SearchResultScript.js" asp-append-version="true" type="module"></script>

@@ -63,7 +63,11 @@ public class CloudinaryService
 
     public async Task<bool> DeleteFile(string imgsrc)
     {
-        var whatever = await _cloudinary.DestroyAsync(new DeletionParams(imgsrc.Substring(62, 20)));
-        return true;
+        var deleteParams = new DelResParams(){
+            PublicIds = new List<string>{imgsrc.Substring(62, 20)},
+            Type = "upload",
+            ResourceType = ResourceType.Video};
+        var result = _cloudinary.DeleteResources(deleteParams);
+        return result.DeletedCounts.Count>0;
     }
 }

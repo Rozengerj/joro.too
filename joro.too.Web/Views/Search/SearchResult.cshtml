@@ -1,4 +1,8 @@
-﻿@model List<SearchResultModel>
+﻿@using joro.too.Services.Services
+@using joro.too.Services.Services.IServices
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<SearchResultModel>
+@inject IGenreService _GenreService
 <link rel="stylesheet" href="~/css/ViewMediaCards.css" asp-append-version="true"/>
 <div class="container-fluid" style="display: flex; max-width: 1920px">
     <ul style="flex-wrap: wrap; list-style-type: none; float: unset" class="list-group list-group-horizontal ">
@@ -34,15 +38,18 @@
 
     <div float="right" style="margin-right: 2%">
         <!-- From Uiverse.io by alexruix -->
-        <div class="card2" box-sizing="border-box">
+        <div class="card2 textoutline" box-sizing="border-box">
             <h4 class="title">Log In!</h4>
             <form>
                 <div class="field">
                     <ul style="flex-wrap: wrap; list-style-type: none">
-                        @for (int j = 0; j < 6; j++)
+                        <li>
+                            Genres
+                        </li>
+                        @foreach (var genre in await _GenreService.GetGenres())
                         {
                             <li>
-                                <input type="checkbox"> fliter @j
+                                <input name="genre" type="checkbox"> @genre.Type
 
                             </li>
                         }
@@ -50,15 +57,11 @@
                 </div>
                 <div class="field">
                     Rating
-                    <input type="text" class="input-field"></input>
+                    <input type="number" name="rating" id="rating" class="input-field"></input>
                 </div>
-                <button class="btn" type="submit">Login</button>
+                <button asp-action="SearchResult" class="btn" type="submit">Search!</button>
                 <a href="#" class="btn-link">Forgot your password?</a>
-
             </form>
-
         </div>
-
-
     </div>
 </div>
