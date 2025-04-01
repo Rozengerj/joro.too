@@ -1,4 +1,9 @@
+@using joro.too.Entities
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.IdentityModel.Tokens
 @model WatchShowModel
+@inject SignInManager<User> signInManager;
 <style>
     .mainthingie {
         margin: 0;
@@ -138,4 +143,37 @@
     <source src="https://www.youtube.com/embed/DwQ3MdubVbI" type="video/mp4">
     </video-->
 </div>
+<div>
+    Write a Comment!
+    <form>
+        <input type="text" id="text" name="text">
+        <input type="hidden" value="@User">
+        <input type="submit">
+    </form>
+</div>
+<div class="comment-inline">
+    @if (Model.comments.IsNullOrEmpty())
+    {
+        <p>There are no comments yet... Be the first one to share your thoughts!</p>
+    }
+    else
+    {
+        foreach (var comment in Model.comments)
+        {
+            <Ul>
+                @for (int i = 0; i < 15; i++)
+                {
+                    <li>
+                            
+                    </li>
+                    <a asp-action="DeleteComment" asp-controller="Admin" asp-route-id="@comment.id">
+                    </a>
+                }
+            </ul>
+        }
+    }
+
+
+</div>
+
 <script src="~/js/SelectSeasonAndEpisode.js" asp-append-version="true" type="module"></script>

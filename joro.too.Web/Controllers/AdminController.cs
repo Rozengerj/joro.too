@@ -282,7 +282,8 @@ public class AdminController : Controller
         {
             Name = x
         }).ToList();
-        
+        Console.WriteLine(string.Join(", ",actorsReal.Select(x=>x.Name)));
+        Console.WriteLine(string.Join(", ",actorRoles));
         var genresReal = await _genreService.GetGenresById(genreIds);
         await _mediaService.UpdateMedia(media, episodesinfo, season.ToList(), genresReal, actorsReal, actorRoles.ToList());
         //Console.WriteLine("this is the top");

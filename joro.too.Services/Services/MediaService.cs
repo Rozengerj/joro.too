@@ -197,6 +197,7 @@ public class MediaService : IMediaService
     {
         if (!actors.IsNullOrEmpty())
         {
+            //Console.WriteLine("I am here in the method for addisn ShowActorTables");
             await AddShowActorsTable(media, actors, actorRoles);
         }
 
@@ -214,7 +215,6 @@ public class MediaService : IMediaService
             await context.SaveChangesAsync();
             hui = "VLQZOH ????????????????";
             return;
-            
         }
 
         Console.WriteLine(hui);
@@ -298,11 +298,12 @@ public class MediaService : IMediaService
             ActorsForShows.Add(new ActorRolesShows()
                 { Show = media, ShowId = media.Id, Actor = prevactor, ActorId = prevactor.Id, Role = roles[counter] });
             counter++;
-            await context.ActorsRolesShows.AddRangeAsync(ActorsForShows);
-            await context.Actors.AddRangeAsync(actorsSet);
-            media.Actors = ActorsForShows;
-            await context.SaveChangesAsync();
+            
         }
+        await context.ActorsRolesShows.AddRangeAsync(ActorsForShows);
+        await context.Actors.AddRangeAsync(actorsSet);
+        media.Actors = ActorsForShows;
+        await context.SaveChangesAsync();
     }
 
     public async Task<Movie> FindMovieById(int id)
