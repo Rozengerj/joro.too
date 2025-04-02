@@ -33,12 +33,13 @@ namespace joro.too.Web
                // options.Timeout = TimeSpan.FromSeconds(10);
             });
             builder.Services.AddDbContext<MovieDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsNotSoAssConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();
             builder.Services.AddScoped<IEpisodeService, EpisodeService>();
             builder.Services.AddScoped<ISeasonService, SeasonService>();
+            builder.Services.AddScoped<IUserService, UserServices>();
             
             //cloudinary setup
             builder.Services.AddScoped<CloudinaryService>();
@@ -48,7 +49,8 @@ namespace joro.too.Web
             var cloudinary = new Cloudinary(acc);
             builder.Services.AddSingleton(cloudinary);
             //identity setup
-            builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<MovieDbContext>()
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<MovieDbContext>()
                 .AddDefaultTokenProviders();
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -81,11 +83,11 @@ namespace joro.too.Web
                 var services = scope.ServiceProvider;
                 await CreateRoles(services);
             }
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //    await CreateAdmin(services);
-            //}
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await CreateAdmin(services);
+            }
 
             app.MapControllerRoute(
                 name: "default",
@@ -111,12 +113,12 @@ namespace joro.too.Web
 
         public static async Task CreateAdmin(IServiceProvider serviceProvider)
         {
-            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var adminEmail = "admin@admin.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
-                var user = new User { UserName = "admin@admin.com", Email = adminEmail };
+                var user = new IdentityUser { UserName = "admin@admin.com", Email = adminEmail };
                 var result = await userManager.CreateAsync(user, "AdminPassword123!");
                 if (result.Succeeded)
                 {

@@ -28,7 +28,7 @@ public class MediaService : IMediaService
     public async Task<bool> AddMovie(string name, string coversrc, List<Genre> genres, string Desc, string vidsrc)
     {
         var tempMovie = new Movie()
-            { Name = name, MediaImgSrc = coversrc, Description = Desc, Rating = new List<decimal>(), vidsrc = vidsrc };
+            { Name = name, MediaImgSrc = coversrc, Description = Desc, RatedCount = 0, RatingsSum = 0, VidSrc = vidsrc };
 
         await movieTable.AddAsync(tempMovie);
         await AddMovieGenresTable(tempMovie, genres);
@@ -40,9 +40,7 @@ public class MediaService : IMediaService
         List<List<Tuple<string, string>>> vidData, List<string> seasonNames)
     {
         var tempShow = new Show()
-            { Name = name, MediaImgSrc = coversrc, Description = Desc, Rating = new List<decimal>() };
-
-
+            { Name = name, MediaImgSrc = coversrc, Description = Desc, RatedCount = 0, RatingsSum = 0 };
         List<Season> seasons = new List<Season>();
         for (int i = 1; i <= seasonNames.Count; i++)
         {
@@ -95,46 +93,21 @@ public class MediaService : IMediaService
         return true;
     }
 
-    public async Task<decimal> UpdateRating(int newRating, Movie media)
+    public async Task<decimal> UpdateRating(int newRating, IMedia media)
     {
-        media.Rating.Add(newRating);
+        media.RatingsSum+=newRating;
+        media.RatedCount++;
         await context.SaveChangesAsync();
-        decimal avg = 0;
-        media.Rating.ForEach(x => avg += x);
-        return avg / media.Rating.Count;
+        return media.RatingsSum / media.RatedCount;
     }
-
-    public async Task<decimal> UpdateRating(int newRating, Show media)
+    
+    public async Task<decimal> GetAvgRating(IMedia media)
     {
-        media.Rating.Add(newRating);
-        await context.SaveChangesAsync();
-        decimal avg = 0;
-        media.Rating.ForEach(x => avg += x);
-        return avg / media.Rating.Count;
-    }
-
-    public async Task<decimal> GetAvgRating(Movie media)
-    {
-        decimal avg = 0;
-        if (media.Rating.IsNullOrEmpty())
+        if (media.RatedCount==0)
         {
-            return 0;
+            return -1;
         }
-
-        media.Rating.ForEach(x => avg += x);
-        return avg / media.Rating.Count;
-    }
-
-    public async Task<decimal> GetAvgRating(Show media)
-    {
-        decimal avg = 0;
-        if (media.Rating.IsNullOrEmpty())
-        {
-            return 0;
-        }
-
-        media.Rating.ForEach(x => avg += x);
-        return avg / media.Rating.Count;
+        return media.RatingsSum / media.RatedCount;
     }
 
     public async Task<Tuple<List<Show>, List<Movie>>> GetMediasWithGenres(List<Genre> genres)

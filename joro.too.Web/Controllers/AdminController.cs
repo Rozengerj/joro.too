@@ -181,7 +181,7 @@ public class AdminController : Controller
                     comment = y.Text,
                     id = y.Id,
                     pfpsrc = y.Commenter.Pfp,
-                    username = y.Commenter.Name
+                    username = y.Commenter.UserName
                 }
             ).ToList()
         }).ToList()).ToList();

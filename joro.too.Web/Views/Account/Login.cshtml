@@ -2,8 +2,10 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model LoginViewModel
-@inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 
 <h2>Login</h2>
 @if (SignInManager.IsSignedIn(User))

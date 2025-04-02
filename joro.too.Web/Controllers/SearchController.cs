@@ -68,9 +68,9 @@ namespace joro.too.Web.Controllers
             {
                 allmedias.Where(x =>
                 {
-                    if (!x.Rating.ToList().IsNullOrEmpty())
+                    if (x.RatedCount != 0)
                     {
-                         return x.Rating.Average() >= rating;
+                        return x.RatingsSum / x.RatedCount >= rating;
                     }
                     return false;
                 }).ToList();
@@ -140,18 +140,18 @@ namespace joro.too.Web.Controllers
                     id = movie.Id,
                     genres = movie.Genres.Select(x => x.Genre).ToList(),
                     name = movie.Name,
-                    rating = movie.Rating,
+                    rating = await _mediaService.GetAvgRating(movie),
                     actors = movie.Actors.Select(x =>
                         new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList(),
                     description = movie.Description,
                     imgsrc = movie.MediaImgSrc,
                     movie = new VideoViewModel()
                     {
-                        name = movie.Name, vidsrc = movie.vidsrc,
+                        name = movie.Name, vidsrc = movie.VidSrc,
                         comments = movie.Comments.Select(y =>
                             new ViewCommentsModel()
                             {
-                                username = y.Commenter.Name,
+                                username = y.Commenter.UserName,
                                 comment = y.Text,
                                 id = y.Commenter.Id,
                                 pfpsrc = y.Commenter.Pfp
@@ -176,12 +176,13 @@ namespace joro.too.Web.Controllers
                 Console.WriteLine("why are the genres null this shit is so ass what am i supposed to do");
             }
             //Console.WriteLine(string.Join(", ",show.Genres.Select(x=>x.Genre).ToList()));
+            
             ViewShowModel modelshow = new ViewShowModel()
             {
                 name = show.Name,
                 id = show.Id,
                 genres = show.Genres.Select(x => x.Genre).ToList(),
-                rating = show.Rating,
+                rating = await _mediaService.GetAvgRating(show),
                 actors = actors,
                 imgsrc = show.MediaImgSrc
             };
@@ -197,7 +198,7 @@ namespace joro.too.Web.Controllers
                         comments = x.Comments.Select(y =>
                             new ViewCommentsModel()
                             {
-                                username = y.Commenter.Name,
+                                username = y.Commenter.UserName,
                                 comment = y.Text,
                                 id = y.Commenter.Id,
                                 pfpsrc = y.Commenter.Pfp

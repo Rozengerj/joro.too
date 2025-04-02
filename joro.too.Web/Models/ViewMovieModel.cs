@@ -8,8 +8,8 @@ public class ViewMovieModel
     public string name { get; set; }
     public string description { get; set; }
     public string imgsrc { get; set; }
-    public List<Genre> genres { get; set; } 
-    public List<decimal> rating { get; set; }
+    public List<Genre> genres { get; set; }
+    public decimal rating { get; set; }
     public List<ActorInGivenMediaModel> actors { get; set; }
     public VideoViewModel? movie;
 

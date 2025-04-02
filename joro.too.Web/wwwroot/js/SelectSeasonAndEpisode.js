@@ -12,9 +12,9 @@ $(document).ready(function () {
         prevselectedep = thingstr;
     });
     $(".episodebutton").on("click", function (event) {
-        $(".episodebutton").css("background-color","#423952");
+        $(".episodebutton").css("background-color","#221932");
         $(".vidplayer").attr("src",$(this).val());
         $(".vidplayer").attr("title",$(this).text());
-        $(this).css("background-color","#625972");
+        $(this).css("background-color","#524962");
     })
 });

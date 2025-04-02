@@ -9,9 +9,11 @@ public class Show:IMedia
     [Key] public int Id { get; set; }
     public string Name { get; set; }
     public List<Season> Seasons { get; set; }
-    public List<decimal>? Rating { get; set; }
-    public List<GenresShows> Genres { get; set; }
-    public List<ActorRolesShows>? Actors { get; set; }
     public string MediaImgSrc { get; set; }
     public string Description { get; set; }
+    public List<GenresShows> Genres { get; set; }
+    public List<ActorRolesShows>? Actors { get; set; }
+    public long RatingsSum { get; set; }
+    public int RatedCount { get; set; }
+    
 }

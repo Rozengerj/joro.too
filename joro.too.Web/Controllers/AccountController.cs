@@ -1,4 +1,5 @@
 using joro.too.Entities;
+using joro.too.Services.Services.IServices;
 using joro.too.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -8,16 +9,18 @@ namespace joro.too.Web.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IUserService _userService;
 
-    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
-        RoleManager<IdentityRole> roleManager)
+    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+        RoleManager<IdentityRole> roleManager, IUserService userService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
+        _userService = userService;
     }
 
     public IActionResult Login() => View();
@@ -30,15 +33,25 @@ public class AccountController : Controller
         {
             return View(model);
         }
-        var user = await _userManager.FindByNameAsync(model.UserName);
-        if (user != null)
+        else
         {
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+            Console.WriteLine(model.UserName);
+            // dolu tuka 
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            
+            if (user is null)
+            {
+                TempData["Error"] = "User not found";
+                return View(model);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, false, false);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
             }
         }
+
         ModelState.AddModelError("", "Invalid login");
         return View(model);
     }
@@ -79,6 +92,16 @@ public class AccountController : Controller
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
+    }
+
+    public async Task<IActionResult> WriteComment(string text, int mediaId, bool isShow)
+    {
+        await _userService.WriteComment(text, await _userManager.GetUserAsync(User));
+        if (isShow)
+        {
+            return RedirectToAction("WatchMovie", "Watch", new { movieId = mediaId });
+        }
+        return RedirectToAction("WatchShow", "Watch", new {showId = mediaId});
     }
 
     public IActionResult AccessDenied()

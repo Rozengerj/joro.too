@@ -34,7 +34,7 @@ public class HomeController : Controller
         var tempTuple = await mediaService.GetMediasWithGenres(null);
         var recommendedMedia = new List<IMedia>();
         recommendedMedia.AddRange(tempTuple.Item1); recommendedMedia.AddRange(tempTuple.Item2);
-        recommendedMedia.Where(x=> !x.Rating.IsNullOrEmpty() && x.Rating.Average() > (decimal)7.5  ).ToList();
+        recommendedMedia.Where(x=>x.RatedCount>0).Where(x => (x.RatingsSum/x.RatedCount)>7).ToList();
         Random k = new Random();
         HashSet<SearchResultModel> thething = new HashSet<SearchResultModel>();
         if (recommendedMedia.IsNullOrEmpty())

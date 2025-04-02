@@ -19,10 +19,10 @@ public class WatchController:Controller
         WatchMovieModel model = new WatchMovieModel()
         {
             name = movie.Name,
-            vidSrc = movie.vidsrc,
+            vidSrc = movie.VidSrc,
             Comments = movie.Comments.Select(y => new ViewCommentsModel()
             {
-                username = y.Commenter.Name,
+                username = y.Commenter.UserName,
                 comment = y.Text,
                 id = y.Commenter.Id,
                 pfpsrc = y.Commenter.Pfp
@@ -50,7 +50,7 @@ public class WatchController:Controller
                     comments = x.Comments.Select(y =>
                         new ViewCommentsModel()
                         {
-                            username = y.Commenter.Name,
+                            username = y.Commenter.UserName,
                             comment = y.Text,
                             id = y.Commenter.Id,
                             pfpsrc = y.Commenter.Pfp

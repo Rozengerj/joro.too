@@ -6,5 +6,6 @@ public interface IMedia
     public string Name { get; set; }
     public string Description { get; set; }
     public string MediaImgSrc { get; set; }
-    public List<decimal> Rating { get; set; }
+    public long RatingsSum { get; set; }
+    public int RatedCount { get; set; }
 }
