@@ -10,19 +10,34 @@ public class UserServices : IUserService
 {
     public MovieDbContext context;
     public DbSet<Comment> comments;
+
     public UserServices(MovieDbContext context)
     {
         this.context = context;
         comments = context.Set<Comment>();
     }
 
-    public async Task WriteComment(string text, IdentityUser user)
+    public async Task WriteComment(string text, User user, int mediaId, bool isShow)
     {
-        await comments.AddAsync(new Comment()
-        {
-            Text = text,
-            UserId = user.Id
-        });
+        //if (isShow)
+        //{
+            await comments.AddAsync(new Comment()
+            {
+                Text = text,
+                UserId = user.Id,
+                EpisodeId = mediaId,
+                Commenter = user
+            });
+            await context.SaveChangesAsync();
+            return;
+        //}
+       // await comments.AddAsync(new Comment()
+       // {
+        //    Text = text,
+        //    UserId = user.Id,
+        //    MovieId = mediaId,
+        //    Commenter = user
+        //});
         await context.SaveChangesAsync();
     }
 
@@ -32,5 +47,4 @@ public class UserServices : IUserService
         comments.Remove(comment);
         await context.SaveChangesAsync();
     }
-    
 }

@@ -10,8 +10,9 @@ public class Comment
     public int Id { get; set; }
     public string Text { get; set; }
     // ddz
-    
+    public User Commenter { get; set; }
     [ForeignKey(nameof(User))]
+    [MaxLength(450)]
     public string UserId { get; set; }
     public Movie? Moviee { get; set; }
     [ForeignKey(nameof(Movie))]

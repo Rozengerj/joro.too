@@ -285,6 +285,7 @@ public class MediaService : IMediaService
             .Include(x => x.Actors)
             .ThenInclude(y => y.Actor)
             .Include(x => x.Comments)
+            .ThenInclude(y=>y.Commenter)
             .Include(x => x.Genres)
             .ThenInclude(y => y.Genre)
             .Where(x => x.Id == id).FirstOrDefaultAsync();
@@ -298,6 +299,7 @@ public class MediaService : IMediaService
             .Include(x => x.Seasons)
             .ThenInclude(x => x.Episodes)
             .ThenInclude(x => x.Comments)
+            .ThenInclude(y=>y.Commenter)
             .Include(x => x.Genres)
             .ThenInclude(y => y.Genre)
             .Where(x => x.Id == id).FirstOrDefaultAsync();

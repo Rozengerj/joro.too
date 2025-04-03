@@ -153,7 +153,7 @@ namespace joro.too.Web.Controllers
                             {
                                 username = y.Commenter.UserName,
                                 comment = y.Text,
-                                id = y.Commenter.Id,
+                                id = y.Id,
                                 pfpsrc = y.Commenter.Pfp
                             }).ToList()
                     }
@@ -200,7 +200,7 @@ namespace joro.too.Web.Controllers
                             {
                                 username = y.Commenter.UserName,
                                 comment = y.Text,
-                                id = y.Commenter.Id,
+                                id = y.Id,
                                 pfpsrc = y.Commenter.Pfp
                             }).ToList()
                     }).ToList());

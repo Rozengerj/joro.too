@@ -1,9 +1,10 @@
 @using joro.too.Entities
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.CodeAnalysis
 @using Microsoft.IdentityModel.Tokens
 @model WatchShowModel
-@inject SignInManager<IdentityUser> signInManager;
+@inject SignInManager<User> signInManager;
 <style>
     .mainthingie {
         margin: 0;
@@ -72,6 +73,7 @@
                                         <button style="width: 100% !important;" id="@episode.name"
                                                 value="@episode.vidsrc"
                                                 class="episodebutton ssl-item ep-item">@episode.name</button>
+                                        
                                     </li>
                                 }
                             </div>
@@ -168,14 +170,18 @@
 
 </div>
 <div class="comment-inline">
-    @if (Model.comments.IsNullOrEmpty())
+    @if (Model.episodesInSeasons.IsNullOrEmpty())
     {
         <p>There are no comments yet... Be the first one to share your thoughts!</p>
     }
     else
     {
-        foreach (var comment in Model.comments)
+        foreach (var season in Model.episodesInSeasons)
         {
+            foreach (var comments in season.Select(x=>x.comments))
+            {
+                
+            }
             <Ul>
                 @for (int i = 0; i < 15; i++)
                 {

@@ -24,7 +24,7 @@ public class WatchController:Controller
             {
                 username = y.Commenter.UserName,
                 comment = y.Text,
-                id = y.Commenter.Id,
+                id = y.Id,
                 pfpsrc = y.Commenter.Pfp
             }).ToList()
         };
@@ -52,7 +52,7 @@ public class WatchController:Controller
                         {
                             username = y.Commenter.UserName,
                             comment = y.Text,
-                            id = y.Commenter.Id,
+                            id = y.Id,
                             pfpsrc = y.Commenter.Pfp
                         }).ToList()
                 }).ToList());

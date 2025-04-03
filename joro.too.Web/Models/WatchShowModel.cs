@@ -8,5 +8,4 @@ public class WatchShowModel
     public string name { get; set; }
     public List<List<VideoViewModel>> episodesInSeasons { get; set; }
     public List<string>? seasonsNames { get; set; }
-    public List<ViewCommentsModel>? comments { get; set; }
 }

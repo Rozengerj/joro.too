@@ -9,12 +9,12 @@ namespace joro.too.Web.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserService _userService;
 
-    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
         RoleManager<IdentityRole> roleManager, IUserService userService)
     {
         _userManager = userManager;
@@ -96,7 +96,7 @@ public class AccountController : Controller
 
     public async Task<IActionResult> WriteComment(string text, int mediaId, bool isShow)
     {
-        await _userService.WriteComment(text, await _userManager.GetUserAsync(User));
+        await _userService.WriteComment(text, await _userManager.GetUserAsync(User), mediaId, isShow);
         if (isShow)
         {
             return RedirectToAction("WatchMovie", "Watch", new { movieId = mediaId });
