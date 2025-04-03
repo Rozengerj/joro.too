@@ -5901,8 +5901,6 @@ ul.color-list li:nth-of-type(7n+6) a {
   height:100px
 }
 .user-avatar {
-  width:100%;
-  padding-bottom:100%;
   border-radius:50%;
   overflow:hidden;
   display:inline-block;

@@ -149,24 +149,7 @@
 </div>
 <p> Comments </p>
 <div>
-    @if (signInManager.IsSignedIn(User))
-    {
-        <div>
-            Write a Comment!
-            <form asp-action="WriteComment" asp-controller="Account">
-                <input type="text" id="text" name="text">
-                <input type="hidden" value="@User">
-                <input type="hidden">
-                <input type="submit" >
-            </form >
-        </div>
-    }
-    else
-    {
-        <div>
-        You must be <a asp-action="Login" asp-controller="Account">logged in</a> to post comments.
-        </div>
-    }
+    
 
 </div>
 <div class="comment-inline">
@@ -176,24 +159,46 @@
     }
     else
     {
-        foreach (var season in Model.episodesInSeasons)
+        //episodes in season
+        foreach (var episodesInSeason in Model.episodesInSeasons)
         {
-            foreach (var comments in season.Select(x=>x.comments))
+            int counter = 0;
+            foreach (var comments in episodesInSeason.Select(x=>x.comments))
             {
-                
-            }
-            <Ul>
-                @for (int i = 0; i < 15; i++)
+                var episodeId =episodesInSeason.Select(x => x.id).ToList()[counter];
+                if (signInManager.IsSignedIn(User))
                 {
-                    <li class="cw_l-line">
-                        <img class="user-avatar user-avatar-img" src="@comment.pfpsrc">
-                        @comment.username
-                        @comment.comment
-                    </li>
-                    <a asp-action="DeleteComment" asp-controller="Admin" asp-route-id="@comment.id">
-                    </a>
+                    <div style="display: none" class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62,10) allcoments">
+                        Write a Comment!
+                        <form asp-action="WriteComment" asp-controller="Account">
+                            <input type="text" id="text" name="text">
+                            <input type="hidden" name="mediaId" value="@episodeId">
+                            <input type="hidden" name="isShow" value="true">
+                            <input type="submit" >
+                        </form >
+                    </div>
                 }
-            </ul>
+                else
+                {
+                    <div>
+                        You must be <a asp-action="Login" asp-controller="Account">logged in</a> to post comments.
+                    </div>
+                }
+                <div style="display: none" class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62,10) allcoments">
+                    Test Test Test ep number in season  = @counter
+                    @foreach (var comment in comments)
+                    {
+                        <li class="cw_l-line">
+                            <img class="user-avatar user-avatar-img" src="https://i.pinimg.com/236x/0a/cd/cb/0acdcbbf369c8fa0c4ab235767041bf4.jpg">
+                            @comment.username
+                            @comment.comment
+                        </li>
+                        <a asp-action="DeleteComment" asp-controller="Admin" asp-route-id="@comment.id">
+                        </a>
+                    }
+                </div>
+                counter++;
+            }
         }
     }
 

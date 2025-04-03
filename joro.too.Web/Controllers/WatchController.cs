@@ -54,7 +54,8 @@ public class WatchController:Controller
                             comment = y.Text,
                             id = y.Id,
                             pfpsrc = y.Commenter.Pfp
-                        }).ToList()
+                        }).ToList(),
+                    id=x.Id
                 }).ToList());
             model.seasonsNames.Add(season.Name);
         }

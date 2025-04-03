@@ -21,6 +21,8 @@ public class UserServices : IUserService
     {
         //if (isShow)
         //{
+        Console.WriteLine(mediaId);
+        Console.WriteLine(isShow);
             await comments.AddAsync(new Comment()
             {
                 Text = text,
