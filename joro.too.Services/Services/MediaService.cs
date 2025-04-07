@@ -13,7 +13,6 @@ public class MediaService : IMediaService
 {
     public MovieDbContext context;
     public DbSet<Movie> movieTable;
-
     public DbSet<Show> showTable;
 
     //public MediasGenresServices mediagenerservice;

@@ -15,11 +15,13 @@ namespace joro.too.Web.Controllers
     {
         private readonly IGenreService _genreService;
         private readonly IMediaService _mediaService;
+        private readonly IActorService _actorService;
 
-        public SearchController(IGenreService genreService, IMediaService mediaservice)
+        public SearchController(IGenreService genreService, IMediaService mediaservice, IActorService actorService)
         {
             _genreService = genreService;
             _mediaService = mediaservice;
+            _actorService = actorService;
         }
         
         //[HttpPut]
@@ -207,6 +209,27 @@ namespace joro.too.Web.Controllers
                 modelshow.SeasonsNames.Add(season.Name);
             }
             return View("ViewShow", modelshow);
+        }
+
+        public async Task<IActionResult> ViewActors(string name)
+        {
+            var actors = await _actorService.GetActorsByName(name);
+            List<ViewActorsModel> model = actors.Select(x => new ViewActorsModel()
+            {
+                Name = x.Name, Id = x.Id,
+                Roles = x.RolesInMovies.Select(y => new ActorRolesModel()
+                {
+                    Role = y.Role,
+                    isShow = false,
+                    Id = y.MovieId
+                }).ToList().AddRange
+                (x.RolesInShows.Select(z => new ActorRolesModel()
+                {
+                    Role = z.Role,
+                    isShow = true,
+                    Id = z.ShowId
+                }).ToList())
+            }).ToList();
         }
     }
 }

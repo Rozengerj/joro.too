@@ -99,9 +99,9 @@ public class AccountController : Controller
         await _userService.WriteComment(text, await _userManager.GetUserAsync(User), mediaId, isShow);
         if (isShow)
         {
-            return RedirectToAction("WatchMovie", "Watch", new { movieId = mediaId });
+            return RedirectToAction("WatchShow", "Watch", new { movieId = mediaId });
         }
-        return RedirectToAction("WatchShow", "Watch", new {showId = mediaId});
+        return RedirectToAction("WatchMovie","Watch", new {showId = mediaId});
     }
 
     public IActionResult AccessDenied()

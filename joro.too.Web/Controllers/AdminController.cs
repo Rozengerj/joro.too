@@ -17,15 +17,17 @@ public class AdminController : Controller
     private readonly IMediaService _mediaService;
     private readonly ISeasonService _seasonService;
     private readonly IEpisodeService _episodeService;
+    private readonly IActorService _actorService;
     private CloudinaryService _cloudinary;
 
-    public AdminController(IGenreService genreService, IMediaService mediaservice, CloudinaryService cloudinary, ISeasonService seasonService, IEpisodeService episodeService)
+    public AdminController(IGenreService genreService, IMediaService mediaservice, CloudinaryService cloudinary, ISeasonService seasonService, IEpisodeService episodeService, IActorService actorService)
     {
         _genreService = genreService;
         _mediaService = mediaservice;
         _cloudinary = cloudinary;
         _seasonService = seasonService;
         _episodeService = episodeService;
+        _actorService = actorService;
     }
 
     public async Task<IActionResult> AddMovie()
@@ -379,7 +381,6 @@ public class AdminController : Controller
         
         return RedirectToAction("EditSeason", "Admin", new {sId = ep.SeasonId} );
     }
-
     public async Task<IActionResult> RemoveShow(int id)
     {
         var show = await _mediaService.FindShowById(id);
@@ -394,6 +395,68 @@ public class AdminController : Controller
         await _cloudinary.DeleteFile(show.MediaImgSrc);
         await _seasonService.RemoveSeason(id);
         return RedirectToAction("SearchResult", "Search");
+    }
+
+    public async Task<IActionResult> AddActor()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddActor(string name)
+    {
+        await _actorService.AddActor(name);
+        return RedirectToAction("ViewActors", "Search");
+    }
+
+    public async Task<IActionResult> AddRoleToActor()
+    {
+        var tempTuple = await _mediaService.GetMediasWithGenres(null);
+        var recommendedMedia = new List<IMedia>();
+        recommendedMedia.AddRange(tempTuple.Item1); recommendedMedia.AddRange(tempTuple.Item2);
+        List<ActorInGivenMediaModel> model = recommendedMedia.Select(x => new ActorInGivenMediaModel()
+        {
+            Name = x.Name,
+            Id = x.Id
+        }).ToList();
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddRoleToActor(string role, int actorId, int mediaId, bool isShow)
+    {
+        IMedia media;
+        if (isShow)
+        {
+            media = await _mediaService.FindShowById(mediaId);
+        }
+        else
+        {
+            media = await _mediaService.FindMovieById(mediaId);
+        }
+        await _actorService.AddRoleToActor(actorId, role, media);
+        return RedirectToAction("ViewActors", "Search");
+    }
+
+    public async Task<IActionResult> EditActor(int actorId)
+    {
+        var actor = await  _actorService.FindActorById(actorId);
+        var model = new EditActorModel()
+        {
+            Name = actor.Name,
+            Id = actor.Id,
+            Roles = actor.RolesInMovies.Select(x => x.Role).ToList()
+        };
+        model.Roles.AddRange(actor.RolesInShows.Select(x => x.Role).ToList());
+        return View(model);
+    }
+    public async Task<IActionResult> EditActor(string[] removedRoles, string name, int id)
+    {
+        var actor = await _actorService.FindActorById(id);
+        await _actorService.RemoveRolesFromActor(removedRoles, id);
+        actor.Name = name;
+        await _actorService.UpdateActor(actor);
+        return RedirectToAction("ViewActors", "Search");
     }
     
 }
