@@ -231,15 +231,17 @@ namespace joro.too.Web.Controllers
             {
                 model[i].Roles.AddRange(actors[i].RolesInMovies.Select(x => new ActorRolesModel()
                 {
-                    Id = x.MovieId,
+                    MediaId = x.MovieId,
                     isShow = false,
-                    Role = x.Role
+                    Role = x.Role,
+                    MediaName = x.Movie.Name
                 }));
                 model[i].Roles.AddRange(actors[i].RolesInShows.Select(x => new ActorRolesModel()
                 {
-                    Id = x.ShowId,
+                    MediaId = x.ShowId,
                     isShow = true,
-                    Role = x.Role
+                    Role = x.Role,
+                    MediaName = x.Show.Name
                 }));
             }
             return View(model);

@@ -1,8 +1,25 @@
+@using System.Runtime.Serialization
+@using CloudinaryDotNet.Actions
 @model List<ViewActorsModel>
 <ul>
     @foreach (var actor in Model)
     {
-        
-        
+        <li>
+            @actor.Name 
+            who played as:
+            @foreach (var role in actor.Roles)
+           {
+               <div>
+                   @role.Role in <a asp-action="ViewMedia" asp-route-id="@role.MediaId" asp-route-isShow="@role.isShow">@role.MediaName</a>
+               </div>
+           }
+           Edit Actor
+           <a asp-action="EditActor" asp-controller="Admin" asp-route-id="@actor.Id">Edit actor</a>
+           <a asp-action="AddRoleToActor" asp-controller="Admin" asp-route-actorId="@actor.Id">Edit actor</a>
+           <a asp-action="RemoveActor" asp-controller="Admin" >Edit actor</a>
+            
+        </li>
     }
+    
+    
 </ul>
