@@ -23,9 +23,9 @@ namespace joro.too.Web.Controllers
             _mediaService = mediaservice;
             _actorService = actorService;
         }
-        
+
         //[HttpPut]
-        public async Task<IActionResult> SearchResult(string name, decimal rating, SearchResultModel model,
+        public async Task<IActionResult> SearchResult(string name, float rating, SearchResultModel model,
             string[] genres, bool isShow, bool isMovie)
         {
             //this method is ugly and long and im sure it could be compacted by a lot but honestly if it works like this im not gonna touch it further except if i dont get drunk lmao
@@ -60,12 +60,13 @@ namespace joro.too.Web.Controllers
                 Console.WriteLine(item.Name);
                 Console.WriteLine(name);
                 Console.WriteLine();
-            } 
-            if (!name.IsNullOrEmpty())
-            {
-                allmedias=allmedias.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();
             }
 
+            if (!name.IsNullOrEmpty())
+            {
+                allmedias = allmedias.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();
+            }
+            Console.WriteLine(rating);
             if (rating > 0)
             {
                 allmedias.Where(x =>
@@ -74,13 +75,14 @@ namespace joro.too.Web.Controllers
                     {
                         return x.RatingsSum / x.RatedCount >= rating;
                     }
+
                     return false;
                 }).ToList();
             }
 
             if (isShow == false && isMovie == false)
             {
-                modellist.AddRange(allmedias.Where(x=>x is Show).Select(
+                modellist.AddRange(allmedias.Where(x => x is Show).Select(
                     x => new SearchResultModel()
                     {
                         name = x.Name,
@@ -89,7 +91,7 @@ namespace joro.too.Web.Controllers
                         id = x.Id,
                         isShow = true
                     }));
-                modellist.AddRange(allmedias.Where(x=>x is Movie).Select(
+                modellist.AddRange(allmedias.Where(x => x is Movie).Select(
                     x => new SearchResultModel()
                     {
                         name = x.Name,
@@ -104,7 +106,7 @@ namespace joro.too.Web.Controllers
             //checks if its a show
             if (isShow)
             {
-                foreach (var item in allmedias.Where(x=>x is Show))
+                foreach (var item in allmedias.Where(x => x is Show))
                 {
                     modellist.Add(new SearchResultModel()
                     {
@@ -119,7 +121,7 @@ namespace joro.too.Web.Controllers
                 return View(modellist);
             }
 
-            foreach (var item in allmedias.Where(x=>x is Movie))
+            foreach (var item in allmedias.Where(x => x is Movie))
             {
                 modellist.Add(new SearchResultModel()
                 {
@@ -130,8 +132,10 @@ namespace joro.too.Web.Controllers
                     isShow = false
                 });
             }
+            Console.WriteLine(rating);
             return View(modellist);
         }
+
         public async Task<IActionResult> ViewMedia(int id, bool isShow)
         {
             if (!isShow)
@@ -162,6 +166,7 @@ namespace joro.too.Web.Controllers
                 };
                 return View("ViewMovie", model);
             }
+
             var show = await _mediaService.FindShowById(id);
             //for shows only
             //Console.WriteLine(id);
@@ -171,14 +176,15 @@ namespace joro.too.Web.Controllers
             if (show.Actors is not null)
             {
                 actors = show.Actors.Select(x =>
-                                    new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList();
+                    new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList();
             }
+
             if (show.Genres is null)
             {
                 Console.WriteLine("why are the genres null this shit is so ass what am i supposed to do");
             }
             //Console.WriteLine(string.Join(", ",show.Genres.Select(x=>x.Genre).ToList()));
-            
+
             ViewShowModel modelshow = new ViewShowModel()
             {
                 name = show.Name,
@@ -208,28 +214,35 @@ namespace joro.too.Web.Controllers
                     }).ToList());
                 modelshow.SeasonsNames.Add(season.Name);
             }
+
             return View("ViewShow", modelshow);
         }
 
         public async Task<IActionResult> ViewActors(string name)
         {
             var actors = await _actorService.GetActorsByName(name);
+
             List<ViewActorsModel> model = actors.Select(x => new ViewActorsModel()
             {
                 Name = x.Name, Id = x.Id,
-                Roles = x.RolesInMovies.Select(y => new ActorRolesModel()
-                {
-                    Role = y.Role,
-                    isShow = false,
-                    Id = y.MovieId
-                }).ToList().AddRange
-                (x.RolesInShows.Select(z => new ActorRolesModel()
-                {
-                    Role = z.Role,
-                    isShow = true,
-                    Id = z.ShowId
-                }).ToList())
+                Roles = new List<ActorRolesModel>()
             }).ToList();
+            for (int i = 0; i < actors.Count; i++)
+            {
+                model[i].Roles.AddRange(actors[i].RolesInMovies.Select(x => new ActorRolesModel()
+                {
+                    Id = x.MovieId,
+                    isShow = false,
+                    Role = x.Role
+                }));
+                model[i].Roles.AddRange(actors[i].RolesInShows.Select(x => new ActorRolesModel()
+                {
+                    Id = x.ShowId,
+                    isShow = true,
+                    Role = x.Role
+                }));
+            }
+            return View(model);
         }
     }
 }

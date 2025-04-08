@@ -17,13 +17,14 @@ public class HomeController : Controller
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    public HomeController(ILogger<HomeController> logger,IMediaService _mediaService
-    //,UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager
+
+    public HomeController(ILogger<HomeController> logger, IMediaService _mediaService
+        //,UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager
     )
     {
         _logger = logger;
         mediaService = _mediaService;
-        
+
         //_userManager = userManager;
         //_signInManager = signInManager;
         //_roleManager = roleManager;
@@ -33,32 +34,40 @@ public class HomeController : Controller
     {
         var tempTuple = await mediaService.GetMediasWithGenres(null);
         var recommendedMedia = new List<IMedia>();
-        recommendedMedia.AddRange(tempTuple.Item1); recommendedMedia.AddRange(tempTuple.Item2);
-        recommendedMedia.Where(x=>x.RatedCount>0).Where(x => (x.RatingsSum/x.RatedCount)>7).ToList();
+        recommendedMedia.AddRange(tempTuple.Item1);
+        recommendedMedia.AddRange(tempTuple.Item2);
+        recommendedMedia.Where(x => x.RatedCount > 0).Where(x => (x.RatingsSum / x.RatedCount) > 9).ToList();
         Random k = new Random();
-        HashSet<SearchResultModel> thething = new HashSet<SearchResultModel>();
+        HashSet<string> thething = new HashSet<string>();
+        List<SearchResultModel> model = new List<SearchResultModel>();
         if (recommendedMedia.IsNullOrEmpty())
         {
             return View();
         }
+
         for (int i = 0; i < 10; i++)
         {
             var currmedia = recommendedMedia[k.Next(0, recommendedMedia.Count)];
-            thething.Add(new SearchResultModel()
+            if (thething.Add(currmedia.Name))
             {
-                name = currmedia.Name,
-                id = currmedia.Id,
-                desc = currmedia.Description,
-                Genres = new List<SelectListItem>(),
-                imgsrc = currmedia.MediaImgSrc
-            });
+                model.Add(new SearchResultModel()
+                {
+                    name = currmedia.Name,
+                    id = currmedia.Id,
+                    desc = currmedia.Description,
+                    Genres = new List<SelectListItem>(),
+                    imgsrc = currmedia.MediaImgSrc
+                });
+            }
         }
-        return View(thething);
-    }   
+        return View(model);
+    }
+
     public IActionResult Privacy()
     {
         return View();
     }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

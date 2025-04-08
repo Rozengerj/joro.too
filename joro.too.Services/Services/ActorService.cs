@@ -4,6 +4,7 @@ using joro.too.DataAccess;
 using joro.too.Entities;
 using joro.too.Services.Services.IServices;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace joro.too.Services.Services;
 
@@ -74,6 +75,11 @@ public class ActorService:IActorService
 
     public async Task<List<Actor>> GetActorsByName(string name)
     {
+        if (name.IsNullOrEmpty())
+        {
+            return ac.Include(x => x.RolesInMovies).ThenInclude(y => y.Movie)
+                .Include(x => x.RolesInShows).ThenInclude(y => y.Show).ToList();
+        }
         return ac.Include(x => x.RolesInMovies).ThenInclude(y => y.Movie)
             .Include(x => x.RolesInShows).ThenInclude(y => y.Show)
             .Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();

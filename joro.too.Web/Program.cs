@@ -40,6 +40,7 @@ namespace joro.too.Web
             builder.Services.AddScoped<IEpisodeService, EpisodeService>();
             builder.Services.AddScoped<ISeasonService, SeasonService>();
             builder.Services.AddScoped<IUserService, UserServices>();
+            builder.Services.AddScoped<IActorService, ActorService>();
             
             //cloudinary setup
             builder.Services.AddScoped<CloudinaryService>();
