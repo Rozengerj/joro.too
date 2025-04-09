@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/joro.to.styles.css" asp-append-version="true"/>
 </head>
-<body style="background: #2a2733">
+<body style="background: #2a2733; margin-bottom: 0px">
 <header style="background: #423952">
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow">
         <div class="container-fluid">
@@ -63,8 +63,8 @@
         </div>
     </nav>
 </header>
-<div style="background: #2a2733;">
-    <main role="main">
+<div style="background: #2a2733; min-height: 94vh;">
+    <main role="main" style="min-height: inherit">
         @RenderBody()
     </main>
 </div>

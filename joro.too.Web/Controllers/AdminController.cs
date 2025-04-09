@@ -504,11 +504,13 @@ public class AdminController : Controller
         {
             Name = actor.Name,
             Id = actor.Id,
-            Roles = actor.RolesInMovies.Select(x => x.Role).ToList()
+            Roles = new List<string>()
         };
+        model.Roles.AddRange(actor.RolesInMovies.Select(x => x.Role).ToList());
         model.Roles.AddRange(actor.RolesInShows.Select(x => x.Role).ToList());
         return View(model);
     }
+    [HttpPost]
     public async Task<IActionResult> EditActor(string[] removedRoles, string name, int id, IFormFile? newImage)
     {
         var actor = await _actorService.FindActorById(id);

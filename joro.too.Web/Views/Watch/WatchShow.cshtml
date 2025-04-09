@@ -73,7 +73,7 @@
                                         <button style="width: 100% !important;" id="@episode.name"
                                                 value="@episode.vidsrc"
                                                 class="episodebutton ssl-item ep-item">@episode.name</button>
-                                        
+
                                     </li>
                                 }
                             </div>
@@ -149,7 +149,7 @@
 </div>
 <p> Comments </p>
 <div>
-    
+
 
 </div>
 <div class="comment-inline">
@@ -163,45 +163,54 @@
         foreach (var episodesInSeason in Model.episodesInSeasons)
         {
             int counter = 0;
-            foreach (var comments in episodesInSeason.Select(x=>x.comments))
+            foreach (var comments in episodesInSeason.Select(x => x.comments))
             {
-                var episodeId =episodesInSeason.Select(x => x.id).ToList()[counter];
+                var episodeId = episodesInSeason.Select(x => x.id).ToList()[counter];
                 if (signInManager.IsSignedIn(User))
                 {
-                    <div style="display: none" class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62,10) allcoments">
+                    <div style="display: none"
+                         class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62, 10) allcoments">
                         Write a Comment!
                         <form asp-action="WriteComment" asp-controller="Account">
                             <input type="text" id="text" name="text">
                             <input type="hidden" name="mediaId" value="@episodeId">
                             <input type="hidden" name="isShow" value="true">
-                            <input type="submit" >
-                        </form >
+                            <input type="submit">
+                        </form>
                     </div>
                 }
                 else
                 {
-                    <div>
+                    <div style="display: none"
+                         class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62, 10) allcoments">
                         You must be <a asp-action="Login" asp-controller="Account">logged in</a> to post comments.
                     </div>
                 }
-                <div style="display: none" class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62,10) allcoments">
-                    Test Test Test ep number in season  = @counter
+
+                <div style="display: none"
+                     class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62, 10) allcoments">
                     @foreach (var comment in comments)
                     {
                         <li class="cw_l-line">
-                            <img class="user-avatar user-avatar-img" src="https://i.pinimg.com/236x/0a/cd/cb/0acdcbbf369c8fa0c4ab235767041bf4.jpg">
+                            <img class="user-avatar user-avatar-img" src="@comment.pfpsrc">
                             @comment.username
                             @comment.comment
                         </li>
                         <a asp-action="DeleteComment" asp-controller="Admin" asp-route-id="@comment.id">
                         </a>
                     }
+                    @if (comments.IsNullOrEmpty())
+                    {
+                        <p>There are no comments yet... Be the first one to share your thoughts!</p>
+                    }
                 </div>
                 counter++;
             }
         }
     }
-
+    <div>
+        hiddent text
+    </div>
 
 </div>
 
