@@ -48,15 +48,17 @@ public class HomeController : Controller
         for (int i = 0; i < 10; i++)
         {
             var currmedia = recommendedMedia[k.Next(0, recommendedMedia.Count)];
-            if (thething.Add(currmedia.Name))
+            if(thething.Add(currmedia.Name))
             {
+                bool isShow = currmedia is Show;
                 model.Add(new SearchResultModel()
                 {
                     name = currmedia.Name,
                     id = currmedia.Id,
                     desc = currmedia.Description,
                     Genres = new List<SelectListItem>(),
-                    imgsrc = currmedia.MediaImgSrc
+                    imgsrc = currmedia.MediaImgSrc,
+                    isShow = isShow
                 });
             }
         }

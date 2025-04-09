@@ -5,7 +5,7 @@ namespace joro.too.Services.Services.IServices;
 
 public interface IActorService
 {
-    public Task<int> AddActor(string name);
+    public Task<int> AddActor(string name, string imgsrc);
     public Task AddRoleToActor(int actorId, string role, IMedia media);
     public Task RemoveRolesFromActor(string[] roles, int actorId);
     public Task<Actor> FindActorById(int id);

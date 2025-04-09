@@ -29,13 +29,26 @@ namespace joro.too.Web.Controllers
             string[] genres, bool isShow, bool isMovie)
         {
             //this method is ugly and long and im sure it could be compacted by a lot but honestly if it works like this im not gonna touch it further except if i dont get drunk lmao
-            var genreIds = new List<int>();
+            List<int> genreIds = new List<int>();
+            var list = await _genreService.GetGenres();
             model.Genres = new List<SelectListItem>();
-            foreach (Genre item in await _genreService.GetGenres())
+            foreach (Genre item in list)
             {
                 model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
             }
-
+            if (genres is not null)
+            {
+                foreach (SelectListItem li in model.Genres)
+                {
+                    if (genres.Contains(li.Value))
+                    {
+                        li.Selected = true;
+                        genreIds.Add(int.Parse(li.Value));
+                    }
+                }
+            }
+            Console.WriteLine(string.Join(", ", genreIds));
+            Console.WriteLine(rating);
             Console.WriteLine(name);
             foreach (SelectListItem li in model.Genres)
             {
@@ -50,6 +63,7 @@ namespace joro.too.Web.Controllers
             List<Genre> genresfr = await _genreService.GetGenresById(genreIds);
             List<SearchResultModel> modellist = new List<SearchResultModel>();
             var media = await _mediaService.GetMediasWithGenres(genresfr);
+            Console.WriteLine(string.Join(", ",genresfr.Select(x=>x.Type)));
             List<IMedia> allmedias = new List<IMedia>();
             allmedias.AddRange(media.Item1);
             allmedias.AddRange(media.Item2);
@@ -69,13 +83,14 @@ namespace joro.too.Web.Controllers
             Console.WriteLine(rating);
             if (rating > 0)
             {
-                allmedias.Where(x =>
+                allmedias = allmedias.Where(x =>
                 {
+                    //Console.WriteLine(x.RatingsSum / x.RatedCount);
                     if (x.RatedCount != 0)
                     {
                         return x.RatingsSum / x.RatedCount >= rating;
                     }
-
+                    
                     return false;
                 }).ToList();
             }

@@ -1,4 +1,4 @@
-@model EditActorModel
+
 @if (!User.IsInRole("Admin"))
 {
     <h1 class="text-center textoutline">
@@ -11,4 +11,7 @@
 }
 else
 {
+    <a asp-action="AddActor">Add Actor</a>
+    <a asp-action="AddMovie">Add Movie</a>
+    <a asp-action="AddShow">Add Show</a>
 }

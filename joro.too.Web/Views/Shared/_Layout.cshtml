@@ -1,5 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using joro.too.Entities
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html lang="en">
+@inject SignInManager<User> SignInManager
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -33,8 +37,27 @@
                         </form>
                     </li>
                     <li>
-                        <a class="nav-link text-dark" asp-action="Login" asp-controller="Account">Login</a>
+                        <a class="nav-link text-dark" asp-action="Login" asp-controller="Account">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <div>
+                                    Log out
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    Login
+                                </div>
+                            }
+                        </a>
                     </li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a class="nav-link text-dark" asp-action="AdminActions" asp-controller="Admin">Admin Page</a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>

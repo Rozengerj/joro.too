@@ -49,15 +49,14 @@
                         @foreach (var genre in await _GenreService.GetGenres())
                         {
                             <li>
-                                <input name="genre" type="checkbox"> @genre.Type
-
+                                <input name="genres" id="@genre.Id"  value="@genre.Id" type="checkbox"> @genre.Type
                             </li>
                         }
                     </ul>
                 </div>
                 <div class="field">
                     Rating
-                    <input type="number" name="rating" id="rating" class="input-field"></input>
+                    <input type="number" name="rating" id="rating" class="input-field" min="1" max="10" step=".1"></input>
                 </div>
                 <button asp-action="SearchResult" class="btn" type="submit">Search!</button>
                 <a href="#" class="btn-link">Forgot your password?</a>

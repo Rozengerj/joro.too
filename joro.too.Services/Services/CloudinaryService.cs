@@ -38,7 +38,31 @@ public class CloudinaryService
         } 
         //Console.WriteLine("minalo e qvno");
         return uploadResult.SecureUrl.ToString();
-    } public async Task<string> UploadVideoAsync(IFormFile file) 
+    } 
+    public async Task<string> UploadPfpAsync(IFormFile file) 
+    {
+        if (file == null || file.Length == 0)
+        {
+            //Console.WriteLine("ma to izobshto ne pravi nishto tuka");
+            return null;
+        }
+            
+        using var stream = file.OpenReadStream(); 
+        var uploadParams = new ImageUploadParams 
+        {
+            File = new FileDescription(file.FileName, stream),
+            Transformation = new Transformation().Width(100).Height(100).Crop("fill").Gravity("face")
+        }; 
+        var uploadResult = await _cloudinary.UploadAsync(uploadParams); 
+        if (uploadResult == null || uploadResult.SecureUrl == null) 
+        {
+            //Console.WriteLine("liniq 36 neshto nz");
+            return null; 
+        } 
+        //Console.WriteLine("minalo e qvno");
+        return uploadResult.SecureUrl.ToString();
+    } 
+    public async Task<string> UploadVideoAsync(IFormFile file) 
     {
         if (file == null || file.Length == 0)
         {
@@ -61,12 +85,21 @@ public class CloudinaryService
         return uploadResult.SecureUrl.ToString();
     }
 
-    public async Task<bool> DeleteFile(string imgsrc)
+    public async Task<bool> DeleteVideoAsync(string vidsrc)
+    {
+        var deleteParams = new DelResParams(){
+            PublicIds = new List<string>{vidsrc.Substring(62, 20)},
+            Type = "upload",
+            ResourceType = ResourceType.Video};
+        var result = _cloudinary.DeleteResources(deleteParams);
+        return result.DeletedCounts.Count>0;
+    }
+    public async Task<bool> DeleteImageAsync(string imgsrc)
     {
         var deleteParams = new DelResParams(){
             PublicIds = new List<string>{imgsrc.Substring(62, 20)},
             Type = "upload",
-            ResourceType = ResourceType.Video};
+            ResourceType = ResourceType.Image};
         var result = _cloudinary.DeleteResources(deleteParams);
         return result.DeletedCounts.Count>0;
     }

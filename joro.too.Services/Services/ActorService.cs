@@ -19,9 +19,9 @@ public class ActorService:IActorService
         ac = context.Set<Actor>();
     }
 
-    public async Task<int> AddActor(string name)
+    public async Task<int> AddActor(string name, string imgsrc)
     {
-        var idk = await ac.AddAsync(new Actor() { Name = name });
+        var idk = await ac.AddAsync(new Actor() { Name = name , imgsrc = imgsrc, RolesInMovies = new List<ActorRolesMovies>(), RolesInShows = new List<ActorRolesShows>()});
         await context.SaveChangesAsync();
         return idk.Entity.Id;
     }
