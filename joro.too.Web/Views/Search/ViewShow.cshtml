@@ -1,49 +1,73 @@
 @model ViewShowModel
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
-<img src="@Model.imgsrc"
-     alt="if you can read this either something has gone horribly wrong with the server or youre just reading through my ugly html">
-<h2 class="textoutline">
-    @Model.name
-</h2>
-<p class="textoutline">
-    @Model.description
-</p>
-<a  asp-action="WatchShow" asp-controller="Watch" asp-route-showId="@Model.id" >Start Watching Now</a>
-<div id="Seasons" class="textoutline">
-    <select id="SeasonList">
-        @for (int j = 0; j < Model.SeasonsNames.Count; j++)
+<div style="display: flex">
+    <img src="@Model.imgsrc"
+         alt="if you can read this either something has gone horribly wrong with the server or youre just reading through my ugly html"
+         style="margin-top: 2.5vh; margin-left: 2.5vh">
+    <div style="position: relative; text-align: center; top: 35px; left: 10vw">
+        <h1 class="textoutline">
+            @Model.name
+        </h1>
+        <p class="textoutline">
+            @Model.description
+        </p>
+        <div style="justify-content: center; display: flex;">
+            <p class="textoutline" style="position: absolute; ">Genres</p>
+            @foreach (var genre in Model.genres)
+            {
+                <div style="margin-left: 1em; margin: 1em" class="textoutline">
+                    @genre.Type
+                </div>
+            }
+        </div>
+        <a asp-action="WatchShow" asp-controller="Watch" asp-route-showId="@Model.id">Start Watching Now</a>
+        @if (User.IsInRole("Admin"))
         {
-            <option value="@j">@Model.SeasonsNames[j]</option>
+            <a asp-action="EditShow" asp-controller="Admin" asp-route-showiddd="@Model.id" class="buttons">Edit Show</a>
         }
-    </select>
+    </div>
 </div>
-<ul class="textoutline">
-    @for (int i = 0; i < @Model.SeasonsNames.Count; i++)
-    {
-        @if (i == 0)
+<div style="float: right; display: grid; position: relative; bottom: 480px" class="textoutline">
+    <p style="position: absolute;justify-self: center;">Seasons</p>
+    <div id="Seasons" class="textoutline" style="position: absolute; display: flex;justify-self: center; top: 25px;">
+
+        <select id="SeasonList">
+            @for (int j = 0; j < Model.SeasonsNames.Count; j++)
+            {
+                <option value="@j">@Model.SeasonsNames[j]</option>
+            }
+        </select>
+    </div>
+
+    <ul class="textoutline" style="top: 40px;position: relative;">
+        Episodes
+        @for (int i = 0; i < @Model.SeasonsNames.Count; i++)
         {
-            <div id="season-@i">
-                @foreach (var episode in Model.EpisodesInSeasons[i])
-                {
-                    <li>
-                        @episode.name
-                    </li>
-                }
-            </div>
+            @if (i == 0)
+            {
+                <div id="season-@i">
+                    @foreach (var episode in Model.EpisodesInSeasons[i])
+                    {
+                        <li>
+                            @episode.name
+                        </li>
+                    }
+                </div>
+            }
+            else
+            {
+                <div id="season-@i" style="display: none;">
+                    @foreach (var episode in @Model.EpisodesInSeasons[i])
+                    {
+                        <li>
+                            @episode.name
+                        </li>
+                    }
+                </div>
+            }
         }
-        else
-        {
-            <div id="season-@i" style="display: none;">
-                @foreach (var episode in @Model.EpisodesInSeasons[i])
-                {
-                    <li>
-                        @episode.name
-                    </li>
-                }
-            </div>
-        }
-    }
-</ul>
+    </ul>
+</div>
 <ul>
     @foreach (var actor in Model.actors)
     {
@@ -52,5 +76,5 @@
         </li>
     }
 </ul>
-<a asp-action="EditShow" asp-controller="Admin" asp-route-showiddd="@Model.id" class="buttons"> Edit Show</a>
+
 <script src="~/js/SelectSeasonScript.js" asp-append-version="true" type="module"></script>

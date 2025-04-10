@@ -1,21 +1,40 @@
-@model RegisterViewModel 
-<h2>Register</h2> 
-<form asp-action="Register" method="post">
-    <div>
-        <label asp-for="UserName"></label>
-        <input asp-for="UserName"/>
+@using joro.too.Entities
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model RegisterViewModel
+@inject SignInManager<User> SignInManager
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        You must Log Out before making a registration!
+        <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <link rel="stylesheet" href="~/css/loginRegisterForm.css" asp-append-version="true"/>
+    <div style="justify-content: center; display: grid">
+        <h2 align="center" style="text-align: center" class="textoutline">Register</h2>
+        <form asp-action="Register" method="post" class="form textoutline">
+            <div class="input-span">
+                <label asp-for="UserName"></label>
+                <input type="email" asp-for="UserName"/>
+            </div>
+            <div class="input-span">
+                <label asp-for="Email"></label>
+                <input asp-for="Email"/>
+            </div>
+            <div class="input-span">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" type="password"/>
+            </div>
+            <div class="input-span">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" type="password"/>
+            </div>
+            <button class="submit" type="submit">Register</button>
+        </form>
     </div>
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email"/>
-    </div>
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password"/>
-    </div>
-    <div>
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password"/>
-    </div>
-    <button type="submit">Register</button>
-</form>
+}

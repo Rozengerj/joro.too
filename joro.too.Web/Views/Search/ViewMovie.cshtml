@@ -1,21 +1,29 @@
 @model ViewMovieModel
 
-<img src="@Model.imgsrc"
-     alt="if you can read this either something has gone horribly wrong with the server or youre just reading through my ugly html">
-<h2 class="textoutline">
-    @Model.name
-</h2>
-<p class="textoutline">
-    @Model.description
-</p>
-<a  asp-action="WatchMovie" asp-controller="Watch" asp-route-movieId="@Model.id" >Start Watching Now</a>
-<ul>
-    @foreach (var actor in Model.actors)
-    {
-        <li>
-            @actor.Name - @actor.Role
-        </li>
-    }
-</ul>
-<a asp-action="EditMovie" asp-controller="Admin" asp-route-id="@Model.id" class="buttons"> Edit Show</a>
-<script src="~/js/SelectSeasonScript.js" asp-append-version="true" type="module"></script>
+<div style="display: flex">
+    <img src="@Model.imgsrc"
+         alt="if you can read this either something has gone horribly wrong with the server or youre just reading through my ugly html"
+         style="margin-top: 2.5vh; margin-left: 2.5vh">
+    <div style="position: relative; text-align: center; top: 35px; left: 10vw">
+        <h1 class="textoutline">
+            @Model.name
+        </h1>
+        <p class="textoutline">
+            @Model.description
+        </p>
+        <div style="justify-content: center; display: flex;">
+            <p class="textoutline" style="position: absolute; ">Genres</p>
+            @foreach (var genre in Model.genres)
+            {
+                <div style="margin-left: 1em; margin: 1em" class="textoutline">
+                    @genre.Type
+                </div>
+            }
+        </div>
+        <a asp-action="WatchShow" asp-controller="Watch" asp-route-showId="@Model.id">Start Watching Now</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="EditShow" asp-controller="Admin" asp-route-showiddd="@Model.id" class="buttons">Edit Show</a>
+        }
+    </div>
+</div>

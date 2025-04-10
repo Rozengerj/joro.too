@@ -207,7 +207,8 @@ namespace joro.too.Web.Controllers
                 genres = show.Genres.Select(x => x.Genre).ToList(),
                 rating = await _mediaService.GetAvgRating(show),
                 actors = actors,
-                imgsrc = show.MediaImgSrc
+                imgsrc = show.MediaImgSrc,
+                description = show.Description
             };
             modelshow.SeasonsNames = new List<string>();
             modelshow.EpisodesInSeasons = new List<List<VideoViewModel>>();

@@ -11,11 +11,8 @@ public class LoginViewModel
     [Required]
     [DataType(DataType.Password)]
     public string Password {get; set;}
-    
-    [Display(Name = "Remember me?")] 
-    public bool RememberMe {get; set;}
-    [Required]
-    public string UserName { get; set; }
+
+    [Display(Name = "Remember me?")] public bool RememberMe { get; set; }
 }
 
 public class RegisterViewModel
@@ -34,4 +31,6 @@ public class RegisterViewModel
     public string ConfirmPassword { get; set; }
     [Required]
     public string UserName { get; set; }
+
+    [Required] public IFormFile Pfp { get; set; }
 }

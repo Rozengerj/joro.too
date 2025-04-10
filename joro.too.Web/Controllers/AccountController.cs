@@ -35,7 +35,6 @@ public class AccountController : Controller
         }
         else
         {
-            Console.WriteLine(model.UserName);
             // dolu tuka 
             var user = await _userManager.FindByEmailAsync(model.Email);
             
@@ -61,16 +60,13 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
-        Console.WriteLine(model.Email);
-        Console.WriteLine(model.Password);
         if (ModelState.IsValid)
         {
             var user = new User { UserName = model.UserName, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
-            Console.WriteLine(String.Join(", ", result.Errors.Select(e => e.Description)));
+            //Console.WriteLine(String.Join(", ", result.Errors.Select(e => e.Description)));
             if (result.Succeeded)
             {
-                Console.WriteLine("regisetred nicely");
                 await _userManager.AddToRoleAsync(user, "User"); // По подразбиране новите потребители са "User" 
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
@@ -80,11 +76,7 @@ public class AccountController : Controller
             {
                 ModelState.AddModelError("", error.Description);
             }
-
-            Console.WriteLine("modelstate valid but something went wrong");
         }
-
-        Console.WriteLine("somethigns went bad");
         return View(model);
     }
 
@@ -103,9 +95,15 @@ public class AccountController : Controller
         }
         return RedirectToAction("WatchMovie","Watch", new {showId = mediaId});
     }
-
     public IActionResult AccessDenied()
     {
+        return View();
+    }
+
+    public async Task<IActionResult> EditAccountInfo()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
         return View();
     }
 }

@@ -10,9 +10,17 @@
 }
 else
 {
+    <link rel="stylesheet" href="~/css/UplaodImage.css" asp-append-version="true"/>
     <form method="post" enctype="multipart/form-data">
         <input name="name" id="name" type="text">
-        <input type="file" name="img" id="img" accept="image/*">
+        <div class="tb-container">
+            <div class="tb-img-view">
+                <img id="tb-image" />
+            </div>
+            <label>Upload Image</label>
+            <input class="fileUpload" type="file" name="img" id="img" accept="image/*" />
+        </div>
         <input type="submit" >
     </form>
+    <script src="~/js/PreviewUploadedImg.js" asp-append-version="true" type="module"></script>
 }
