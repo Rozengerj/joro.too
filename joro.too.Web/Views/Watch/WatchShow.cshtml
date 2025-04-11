@@ -5,6 +5,7 @@
 @using Microsoft.IdentityModel.Tokens
 @model WatchShowModel
 @inject SignInManager<User> signInManager;
+@inject UserManager<User> userManager;
 <style>
     .mainthingie {
         margin: 0;
@@ -97,61 +98,13 @@
         </div>
     </div>
 </div>
-<!--
-<div>
-    <div id="Seasons" class="textoutline">
-        <select id="SeasonList">
-            @for (int j = 0; j < @Model.seasonsNames.Count; j++)
-            {
-                <option value="@j">@Model.seasonsNames[j]</option>
-            }
-        </select>
-    </div>
-    <ul class="textoutline">
-        @for (int i = 0; i < @Model.seasonsNames.Count; i++)
-        {
-            @if (i == 0)
-            {
-                <div id="season-@i">
-                    @foreach (var episode in @Model.episodesInSeasons[i])
-                    {
-                        <li>
-                            <button id="@episode.name" value="@episode.vidsrc"
-                                    class="episodebutton">@episode.name</button>
-                        </li>
-                    }
-                </div>
-            }
-            else
-            {
-                <div id="season-@i" style="display: none;">
-                    @foreach (var episode in @Model.episodesInSeasons[i])
-                    {
-                        <li>
-                            <button id="@episode.name" value="@episode.vidsrc"
-                                    class="episodebutton">@episode.name</button>
-                        </li>
-                    }
-                </div>
-            }
-        }
-    </ul>
-</div>
--->
 <div class="video-container mainthingie">
     <iframe class="vidplayer" width="100%" height="100%" src="" title="" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    <!--video controls>
-    <THis is where the video will go eventually>
-    <source src="https://www.youtube.com/embed/DwQ3MdubVbI" type="video/mp4">
-    </video-->
 </div>
 <p> Comments </p>
-<div>
-
-
-</div>
+<link rel="stylesheet" href="~/css/Comment.css" asp-append-version="true"/>
 <div class="comment-inline">
     @if (Model.episodesInSeasons.IsNullOrEmpty())
     {
@@ -168,13 +121,24 @@
                 var episodeId = episodesInSeason.Select(x => x.id).ToList()[counter];
                 if (signInManager.IsSignedIn(User))
                 {
+                    var pfp = (await userManager.GetUserAsync(User)).Pfp;
                     <div style="display: none"
                          class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62, 10) allcoments">
                         Write a Comment!
                         <form asp-action="WriteComment" asp-controller="Account">
-                            <input type="text" id="text" name="text">
                             <input type="hidden" name="mediaId" value="@episodeId">
                             <input type="hidden" name="isShow" value="true">
+                            <div class="comment-m">
+                                <div class="img" style="background-image: url(@pfp)"></div>
+                                <div class="textBox">
+                                    <div class="textContent">
+                                        <p class="username">@userManager.GetUserName(User)</p>
+                                    </div>
+                                    <p class="comment-text">
+                                        <input type="text" id="text" name="text">
+                                    </p>
+                                    <div>
+                                    </div></div></div>
                             <input type="submit">
                         </form>
                     </div>
@@ -191,11 +155,16 @@
                      class="@episodesInSeason.Select(x => x.vidsrc).ToList()[counter].Substring(62, 10) allcoments">
                     @foreach (var comment in comments)
                     {
-                        <li class="cw_l-line">
-                            <img class="user-avatar user-avatar-img" src="@comment.pfpsrc">
-                            @comment.username
-                            @comment.comment
-                        </li>
+                        <!-- From Uiverse.io by JohnnyCSilva --> 
+                        <div class="comment-m">
+                            <div class="img" style="background-image: url(@comment.pfpsrc)"></div>
+                            <div class="textBox">
+                                <div class="textContent">
+                                    <p class="username">@comment.username</p>
+                                </div>
+                                <p class="comment-text">@comment.comment</p>
+                                <div>
+                                </div></div></div>
                         <a asp-action="DeleteComment" asp-controller="Admin" asp-route-id="@comment.id">
                         </a>
                     }

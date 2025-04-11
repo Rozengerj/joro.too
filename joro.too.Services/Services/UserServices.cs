@@ -19,10 +19,10 @@ public class UserServices : IUserService
 
     public async Task WriteComment(string text, User user, int mediaId, bool isShow)
     {
-        //if (isShow)
-        //{
-        Console.WriteLine(mediaId);
-        Console.WriteLine(isShow);
+        if (isShow)
+        {
+            Console.WriteLine(mediaId);
+            Console.WriteLine(isShow);
             await comments.AddAsync(new Comment()
             {
                 Text = text,
@@ -32,14 +32,15 @@ public class UserServices : IUserService
             });
             await context.SaveChangesAsync();
             return;
-        //}
-       // await comments.AddAsync(new Comment()
-       // {
-        //    Text = text,
-        //    UserId = user.Id,
-        //    MovieId = mediaId,
-        //    Commenter = user
-        //});
+        }
+
+        await comments.AddAsync(new Comment()
+        {
+            Text = text,
+            UserId = user.Id,
+            MovieId = mediaId,
+            Commenter = user
+        });
         await context.SaveChangesAsync();
     }
 

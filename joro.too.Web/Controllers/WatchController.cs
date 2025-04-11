@@ -20,6 +20,7 @@ public class WatchController:Controller
         {
             name = movie.Name,
             vidSrc = movie.VidSrc,
+            id = movie.Id,
             Comments = movie.Comments.Select(y => new ViewCommentsModel()
             {
                 username = y.Commenter.UserName,

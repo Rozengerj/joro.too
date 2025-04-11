@@ -3,8 +3,8 @@
 <div style="display: flex">
     <img src="@Model.imgsrc"
          alt="if you can read this either something has gone horribly wrong with the server or youre just reading through my ugly html"
-         style="margin-top: 2.5vh; margin-left: 2.5vh">
-    <div style="position: relative; text-align: center; top: 35px; left: 10vw">
+         style="margin-top: 2.5vh; margin-left: 2.5vh; min-height: 69vh">
+    <div style="position: relative; text-align: center; top: 2.5vh; left: 5vw" class="outline-background-me">
         <h1 class="textoutline">
             @Model.name
         </h1>
@@ -20,10 +20,10 @@
                 </div>
             }
         </div>
-        <a asp-action="WatchShow" asp-controller="Watch" asp-route-showId="@Model.id">Start Watching Now</a>
+        <a asp-action="WatchMovie" asp-controller="Watch" asp-route-movieId="@Model.id">Start Watching Now</a>
         @if (User.IsInRole("Admin"))
         {
-            <a asp-action="EditShow" asp-controller="Admin" asp-route-showiddd="@Model.id" class="buttons">Edit Show</a>
+            <a asp-action="EditMovie" asp-controller="Admin" asp-route-id="@Model.id" class="buttons">Edit Movie</a>
         }
     </div>
 </div>
