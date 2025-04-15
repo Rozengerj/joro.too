@@ -82,7 +82,7 @@ namespace joro.too.DataAccess
                     Id = 1,
                     Name = "One Piece",
                     MediaImgSrc =
-                        "https://res.cloudinary.com/djubwo5uq/image/upload/v1742844720/lhopqfkq2ehjf7ljzlcz.jpg",
+                        "https://res.cloudinary.com/djubwo5uq/image/upload/v1744470967/eycbyrohr6vtvjqamn3e.jpg",
                     Description =
                         "Monkey D Luffy sets out to sea to find the legendary pirate treasure One Piece!",
                     RatedCount = 10,

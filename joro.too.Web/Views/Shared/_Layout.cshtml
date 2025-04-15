@@ -15,9 +15,9 @@
 </head>
 <body style="background: #2a2733; margin-bottom: 0px">
 <header style="background: #423952">
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow textoutline">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">joro.to</a>
+            <a class="navbar-brand" style="color: white" asp-area="" asp-controller="Home" asp-action="Index">joro.to</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -26,31 +26,35 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link" style="color: white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link" style="color: white" asp-area="" asp-controller="Search" asp-action="ViewActors">Actors Database</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-action="Login" asp-controller="Account">
+                        
                             @if (SignInManager.IsSignedIn(User))
                             {
-                                <div>
-                                    Log out
-                                </div>
+                                <a class="nav-link" style="color: white" asp-action="EditAccountInfo" asp-controller="Account">
+                                    <div>
+                                        Profile
+                                    </div>
+                                </a>
                             }
                             else
                             {
-                                <div>
-                                    Login
-                                </div>
+                                <a class="nav-link" style="color: white" asp-action="Login" asp-controller="Account">
+                                    <div>
+                                        Login
+                                    </div>
+                                </a>
                             }
-                        </a>
+                        
                     </li>
                     @if (User.IsInRole("Admin"))
                     {
                         <li>
-                            <a class="nav-link text-dark" asp-action="AdminActions" asp-controller="Admin">Admin Page</a>
+                            <a class="nav-link" style="color: white" asp-action="AdminActions" asp-controller="Admin">Admin Page</a>
                         </li>
                     }
                     <li style="align-self: center;right: 0.2em; position: absolute; min-width: 25vw;">
@@ -70,6 +74,7 @@
                                     type="text"
                                     placeholder="Search Your favourite Movies Here..."
                                     name="name"
+                                    style="background-color: #16171d"
                                 />
                             </div>
                             <input asp-action="SearchResult" asp-controller="Search" type="submit" class="btn" hidden="hidden">

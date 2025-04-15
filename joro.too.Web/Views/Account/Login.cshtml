@@ -4,9 +4,6 @@
 @model LoginViewModel
 
 @inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
-
-
 
 @if (SignInManager.IsSignedIn(User))
 {
@@ -16,8 +13,7 @@
         </form>
     </li>
 }
-else
-{
+else {
     <link rel="stylesheet" href="~/css/loginRegisterForm.css" asp-append-version="true"/>
     <div style="justify-content: center; display: grid">
         <h2 align="center" style="text-align: center" class="textoutline">Login</h2>
@@ -26,18 +22,20 @@ else
             <div class="input-span">
                 <label asp-for="Email"></label>
                 <input asp-for="Email"/>
+                <span asp-validation-for="Email"></span>
             </div>
             <div class="input-span">
                 <label asp-for="Password"></label>
                 <input asp-for="Password" type="password"/>
+                <span asp-validation-for="Password"></span>
             </div>
             <div class="input-span" style="justify-content: center">
                 <label asp-for="RememberMe" style="align-self: center"></label>
                 <input asp-for="RememberMe" type="checkbox"/>
             </div>
             <button class="submit" type="submit">Login</button>
+            <!--<span>@Model.IncorrectData</span>-->
         </form>
-
         <a asp-action="Register" class="span textoutline" asp-controller="Account" style="display: grid; justify-content: center">Don't Have An Account?</a>
     </div>
 }

@@ -24,11 +24,11 @@ public class MediaService : IMediaService
         //mediagenerservice = new MediasGenresServices(context);
     }
 
-    public async Task<bool> AddMovie(string name, string coversrc, List<Genre> genres, string Desc, string vidsrc)
+    public async Task<bool> AddMovie(string name, string coversrc, List<Genre> genres, string Desc, string vidsrc, string director)
     {
         var tempMovie = new Movie()
         {
-            Name = name, MediaImgSrc = coversrc, Description = Desc, RatedCount = 0, RatingsSum = 0, VidSrc = vidsrc
+            Name = name, MediaImgSrc = coversrc, Description = Desc, RatedCount = 0, RatingsSum = 0, VidSrc = vidsrc, Director = director
         };
 
         await movieTable.AddAsync(tempMovie);
@@ -38,10 +38,10 @@ public class MediaService : IMediaService
     }
 
     public async Task<bool> AddShow(string name, string coversrc, List<Genre> genres, string Desc,
-        List<List<Tuple<string, string>>> vidData, List<string> seasonNames)
+        List<List<Tuple<string, string>>> vidData, List<string> seasonNames, string director)
     {
         var tempShow = new Show()
-            { Name = name, MediaImgSrc = coversrc, Description = Desc, RatedCount = 0, RatingsSum = 0 };
+            { Name = name, MediaImgSrc = coversrc, Description = Desc, RatedCount = 0, RatingsSum = 0, Director = director };
         List<Season> seasons = new List<Season>();
         for (int i = 1; i <= seasonNames.Count; i++)
         {
@@ -93,16 +93,7 @@ public class MediaService : IMediaService
         await context.SaveChangesAsync();
         return true;
     }
-
-    public async Task<decimal> UpdateRating(int newRating, IMedia media)
-    {
-        media.RatingsSum += newRating;
-        media.RatedCount++;
-        await context.SaveChangesAsync();
-        return media.RatingsSum / media.RatedCount;
-    }
-
-    public async Task<decimal> GetAvgRating(IMedia media)
+    public async Task<float> GetAvgRating(IMedia media)
     {
         if (media.RatedCount == 0)
         {
@@ -116,7 +107,6 @@ public class MediaService : IMediaService
     {
         if (genres.IsNullOrEmpty())
         {
-            Console.WriteLine("i went in here and died");
             return new Tuple<List<Show>, List<Movie>>(showTable.ToList(), movieTable.ToList());
         }
 
@@ -154,12 +144,13 @@ public class MediaService : IMediaService
 
     public async Task UpdateMedia(Movie media, List<Genre>? newGenres)
     {
+        await DeleteGenreTable(media);
         if (!newGenres.IsNullOrEmpty())
         {
-            await DeleteGenreTable(media);
             await AddMovieGenresTable(media, newGenres);
         }
         movieTable.Update(media);
+        await context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -176,9 +167,9 @@ public class MediaService : IMediaService
     public async Task UpdateMedia(Show media, List<List<Tuple<string, string>>>? vidData, List<string>? seasonNames,
         List<Genre>? newGenres)
     {
+        await DeleteGenreTable(media);
         if (!newGenres.IsNullOrEmpty())
         {
-            await DeleteGenreTable(media);
             await AddShowGenresTable(media, newGenres);
         }
 
@@ -191,9 +182,6 @@ public class MediaService : IMediaService
             hui = "VLQZOH ????????????????";
             return;
         }
-
-        Console.WriteLine(hui);
-
         List<Season> seasons = new List<Season>();
         for (int i = 0; i < seasonNames.Count; i++)
         {

@@ -9,17 +9,17 @@ $(document).ready(function () {
             '   <div class="form-container helper" id="s' + seasonsCount + '">' +
             '      <div class="input-group">' +
             '        <label class="search-label">'+
-            '         <input type="text" name="season" id="' + seasonsCount + '" class="input" required="" placeholder="Input Season Name Here">' +
+            '         <input required="required" minlength="3" maxlength="69" type="text" name="season" id="' + seasonsCount + '" class="input" required="" placeholder="Input Season Name Here">' +
             '         </label>'+          
             '         <div>' +
             '            <div class="AddEpisodeDiv">' +
-            '               <button class="AddEpisodeBtn'+ seasonsCount +'">Add Episode</button>' +
+            '               <button class="AddEpisodeBtn'+ seasonsCount +' boton-elegante">Add Episode</button>' +
             '            </div>'+
             '         </div>' +
             '            <input type="hidden" name="episode" id="99999s' + seasonsCount + '" value="_-_-_|_-_-_">' +
             '            </input>'+
             '      </div>' +
-            '   <button class="RemoveSeasonBtn">Remove Season</button> ' +
+            '   <button class="RemoveSeasonBtn boton-elegante" style="background-color: orangered">Remove Season</button> ' +
             '   </div>'+
             '</li>');
         $('.RemoveSeasonBtn').click(function (event) {
@@ -38,9 +38,9 @@ $(document).ready(function () {
             console.log("are you gonna write shit in here four times i na row you fucking piece of shit")
             $(this).closest('.AddEpisodeDiv').append(
                 '      <div class="input-group ep">' +
-                '         <input type="text" name="episode" id="'+ epcount + seasonnum + '" asp-validation-for="" class="input" required="" placeholder="Input Episode Name Here">' +
-                '         <input type="file" name="episodevidsrc" id="' + epcount + seasonnum + '" accept="video/*">' +
-                '         <button class="RemoveEpisodeBtn">Remove Episode</button>'+
+                '         <input required="required" minlength="3" maxlength="69" type="text" name="episode" id="'+ epcount + seasonnum + '" asp-validation-for="" class="input" required="" placeholder="Input Episode Name Here">' +
+                '         <input required="required" type="file" name="episodevidsrc" id="' + epcount + seasonnum + '" accept="video/*">' +
+                '         <button class="RemoveEpisodeBtn boton-elegante" style="background-color: orangered">Remove Episode</button>'+
                 '      </div>'
             );
             epcount++;

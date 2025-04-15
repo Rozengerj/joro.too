@@ -2,7 +2,7 @@
 @if (!User.IsInRole("Admin"))
 {
     <h1 class="text-center textoutline">
-        Hiya, instead of trying to put your nose where it does'nt belong, why don't you instead enjoy some of the media in our fine collection hm?
+        Hiya, instead of trying to put your nose where it doesn't belong, why don't you instead enjoy some of the media in our fine collection hm?
 
     </h1>
     <p class="text-center textoutline">
@@ -11,7 +11,10 @@
 }
 else
 {
-    <a asp-action="AddActor">Add Actor</a>
-    <a asp-action="AddMovie">Add Movie</a>
-    <a asp-action="AddShow">Add Show</a>
+    <link rel="stylesheet" href="~/css/FancyButton.css" asp-append-version="true"/>
+    <div style="justify-content: center; display: flex;">
+    <a class="fancy-button" asp-action="AddActor"><span class="text">Add Actor</span></a>
+    <a class="fancy-button" asp-action="AddMovie"><span class="text">Add Movie</span></a>
+    <a class="fancy-button" asp-action="AddShow"><span class="text">Add Show</span></a>
+    </div>
 }

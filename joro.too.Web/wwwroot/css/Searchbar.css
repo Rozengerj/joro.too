@@ -36,11 +36,6 @@
         .input:valid ~ .search-icon {
             display: block;
         }
-
-        .input:valid {
-            width: calc(100% - 22px);
-            transform: translateX(20px);
-        }
 .form-container {
     width: 320px;
     border-radius: 0.75rem;

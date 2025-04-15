@@ -13,7 +13,8 @@ public class Show:IMedia
     public string Description { get; set; }
     public List<GenresShows> Genres { get; set; }
     public List<ActorRolesShows>? Actors { get; set; }
-    public long RatingsSum { get; set; }
+    public float RatingsSum { get; set; }
     public int RatedCount { get; set; }
+    public string? Director { get; set; }
     
 }

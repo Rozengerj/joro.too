@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json.Serialization;
 
 namespace joro.too.Web.Models;
 
@@ -13,6 +14,7 @@ public class LoginViewModel
     public string Password {get; set;}
 
     [Display(Name = "Remember me?")] public bool RememberMe { get; set; }
+    public string? IncorrectData { get; set; }
 }
 
 public class RegisterViewModel
@@ -23,6 +25,7 @@ public class RegisterViewModel
     
     [Required]
     [DataType(DataType.Password)]
+    
     public string Password { get; set; }
     
     [Required]
@@ -30,7 +33,7 @@ public class RegisterViewModel
     [Compare("Password", ErrorMessage = "The passwords do not match.")]
     public string ConfirmPassword { get; set; }
     [Required]
+    [MinLength(3)]
+    [MaxLength(50)]
     public string UserName { get; set; }
-
-    [Required] public IFormFile Pfp { get; set; }
-}
+ }

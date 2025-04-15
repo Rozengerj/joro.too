@@ -36,6 +36,7 @@ namespace joro.too.Web.Controllers
             {
                 model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
             }
+
             if (genres is not null)
             {
                 foreach (SelectListItem li in model.Genres)
@@ -47,9 +48,7 @@ namespace joro.too.Web.Controllers
                     }
                 }
             }
-            Console.WriteLine(string.Join(", ", genreIds));
-            Console.WriteLine(rating);
-            Console.WriteLine(name);
+
             foreach (SelectListItem li in model.Genres)
             {
                 if (genres.Contains(li.Value))
@@ -59,42 +58,31 @@ namespace joro.too.Web.Controllers
                 }
             }
 
-            //Console.WriteLine(string.Join(", ",genreIds));
             List<Genre> genresfr = await _genreService.GetGenresById(genreIds);
             List<SearchResultModel> modellist = new List<SearchResultModel>();
             var media = await _mediaService.GetMediasWithGenres(genresfr);
-            Console.WriteLine(string.Join(", ",genresfr.Select(x=>x.Type)));
             List<IMedia> allmedias = new List<IMedia>();
             allmedias.AddRange(media.Item1);
             allmedias.AddRange(media.Item2);
-            //Console.WriteLine("------------------------------------------------------------");
-            foreach (var item in allmedias)
-            {
-                Console.WriteLine(item.Description);
-                Console.WriteLine(item.Name);
-                Console.WriteLine(name);
-                Console.WriteLine();
-            }
-
             if (!name.IsNullOrEmpty())
             {
                 allmedias = allmedias.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();
             }
-            Console.WriteLine(rating);
+
             if (rating > 0)
             {
                 allmedias = allmedias.Where(x =>
                 {
-                    //Console.WriteLine(x.RatingsSum / x.RatedCount);
                     if (x.RatedCount != 0)
                     {
                         return x.RatingsSum / x.RatedCount >= rating;
                     }
-                    
+
                     return false;
                 }).ToList();
             }
-
+            Console.WriteLine(isShow);
+            Console.WriteLine(isMovie);
             if (isShow == false && isMovie == false)
             {
                 modellist.AddRange(allmedias.Where(x => x is Show).Select(
@@ -133,7 +121,11 @@ namespace joro.too.Web.Controllers
                     });
                 }
 
-                return View(modellist);
+                if (!isMovie)
+                {
+                    return View(modellist);
+                }
+                
             }
 
             foreach (var item in allmedias.Where(x => x is Movie))
@@ -147,7 +139,7 @@ namespace joro.too.Web.Controllers
                     isShow = false
                 });
             }
-            Console.WriteLine(rating);
+
             return View(modellist);
         }
 
@@ -156,14 +148,24 @@ namespace joro.too.Web.Controllers
             if (!isShow)
             {
                 var movie = await _mediaService.FindMovieById(id);
+                var actorsformovies = new List<ActorInGivenMediaModel>();
+                foreach (var movieact in movie.Actors)
+                {
+                    foreach (var role in movieact.Roles)
+                    {
+                        actorsformovies.Add(new ActorInGivenMediaModel()
+                        {
+                            Name = movieact.Actor.Name, Id = movieact.Actor.Id, Role = role, img = movieact.Actor.imgsrc
+                        });
+                    }
+                }
                 var model = new ViewMovieModel()
                 {
                     id = movie.Id,
                     genres = movie.Genres.Select(x => x.Genre).ToList(),
                     name = movie.Name,
                     rating = await _mediaService.GetAvgRating(movie),
-                    actors = movie.Actors.Select(x =>
-                        new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList(),
+                    actors = actorsformovies,
                     description = movie.Description,
                     imgsrc = movie.MediaImgSrc,
                     movie = new VideoViewModel()
@@ -181,24 +183,21 @@ namespace joro.too.Web.Controllers
                 };
                 return View("ViewMovie", model);
             }
-
             var show = await _mediaService.FindShowById(id);
-            //for shows only
-            //Console.WriteLine(id);
-            //Console.WriteLine(isShow);
-            //Console.WriteLine(show.Name);
             var actors = new List<ActorInGivenMediaModel>();
-            if (show.Actors is not null)
+            if (!show.Actors.IsNullOrEmpty())
             {
-                actors = show.Actors.Select(x =>
-                    new ActorInGivenMediaModel() { Name = x.Actor.Name, Id = x.Actor.Id, Role = x.Role }).ToList();
+                foreach (var showact in show.Actors)
+                {
+                    foreach (var role in showact.Roles)
+                    {
+                        actors.Add(new ActorInGivenMediaModel()
+                        {
+                            Name = showact.Actor.Name, Id = showact.Actor.Id, Role = role, img = showact.Actor.imgsrc
+                        });
+                    }
+                }
             }
-
-            if (show.Genres is null)
-            {
-                Console.WriteLine("why are the genres null this shit is so ass what am i supposed to do");
-            }
-            //Console.WriteLine(string.Join(", ",show.Genres.Select(x=>x.Genre).ToList()));
 
             ViewShowModel modelshow = new ViewShowModel()
             {
@@ -241,25 +240,41 @@ namespace joro.too.Web.Controllers
             List<ViewActorsModel> model = actors.Select(x => new ViewActorsModel()
             {
                 Name = x.Name, Id = x.Id,
-                Roles = new List<ActorRolesModel>()
+                Roles = new List<ActorRolesModel>(),
+                img = x.imgsrc
             }).ToList();
             for (int i = 0; i < actors.Count; i++)
             {
-                model[i].Roles.AddRange(actors[i].RolesInMovies.Select(x => new ActorRolesModel()
+                foreach (var roles in actors[i].RolesInMovies)
                 {
-                    MediaId = x.MovieId,
-                    isShow = false,
-                    Role = x.Role,
-                    MediaName = x.Movie.Name
-                }));
-                model[i].Roles.AddRange(actors[i].RolesInShows.Select(x => new ActorRolesModel()
+                    foreach (var role in roles.Roles)
+                    {
+                        model[i].Roles.Add(new ActorRolesModel()
+                        {
+                            MediaName = roles.Movie.Name,
+                            Role = role,
+                            MediaId = roles.MovieId,
+                            isShow = false,
+                            
+                        });
+                    }
+                }
+
+                foreach (var roles in actors[i].RolesInShows)
                 {
-                    MediaId = x.ShowId,
-                    isShow = true,
-                    Role = x.Role,
-                    MediaName = x.Show.Name
-                }));
+                    foreach (var role in roles.Roles)
+                    {
+                        model[i].Roles.Add(new ActorRolesModel()
+                        {
+                            MediaName = roles.Show.Name,
+                            Role = role,
+                            MediaId = roles.ShowId,
+                            isShow = true
+                        });
+                    }
+                }
             }
+
             return View(model);
         }
     }

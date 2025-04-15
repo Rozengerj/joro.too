@@ -171,10 +171,6 @@ content: attr(aria-label);
     }
 }
 /* general styling */
-body {
-    font-family: "Open Sans", sans-serif;
-    line-height: 1.25;
-}
 
 .card2 {
     width: 190px;

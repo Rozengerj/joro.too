@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace joro.too.Services.Services;
 
-public class ActorService:IActorService
+public class ActorService : IActorService
 {
     public MovieDbContext context;
     public DbSet<Actor> ac;
@@ -21,7 +21,11 @@ public class ActorService:IActorService
 
     public async Task<int> AddActor(string name, string imgsrc)
     {
-        var idk = await ac.AddAsync(new Actor() { Name = name , imgsrc = imgsrc, RolesInMovies = new List<ActorRolesMovies>(), RolesInShows = new List<ActorRolesShows>()});
+        var idk = await ac.AddAsync(new Actor()
+        {
+            Name = name, imgsrc = imgsrc, RolesInMovies = new List<ActorRolesMovies>(),
+            RolesInShows = new List<ActorRolesShows>()
+        });
         await context.SaveChangesAsync();
         return idk.Entity.Id;
     }
@@ -29,29 +33,41 @@ public class ActorService:IActorService
     public async Task AddRoleToActor(int actorId, string role, IMedia media)
     {
         var actor = await ac.FindAsync(actorId);
+
         if (media is Movie)
         {
-            var actorinmovie = new ActorRolesMovies()
+            if (actor.RolesInMovies.IsNullOrEmpty())
             {
-                Actor = actor,
-                ActorId = actorId,
-                Movie = (Movie)media,
-                MovieId = media.Id,
-                Role = role
-            };
-            await context.ActorsRolesMovies.AddAsync(actorinmovie);
+                var actorinmovie = new ActorRolesMovies()
+                {
+                    Actor = actor,
+                    ActorId = actorId,
+                    Movie = (Movie)media,
+                    MovieId = media.Id,
+                    Roles = new List<string>()
+                };
+                await context.ActorsRolesMovies.AddAsync(actorinmovie);
+                await context.SaveChangesAsync();
+            }
+
+            actor.RolesInMovies.Find(x => x.MovieId == media.Id).Roles.Add(role);
             await context.SaveChangesAsync();
             return;
         }
-        var actorinshow = new ActorRolesShows()
+        if (actor.RolesInShows.IsNullOrEmpty())
         {
-            Actor = actor,
-            ActorId = actorId,
-            Show = (Show)media,
-            ShowId = media.Id,
-            Role = role
-        };
-        await context.ActorsRolesShows.AddAsync(actorinshow);
+            var actorinshow = new ActorRolesShows()
+            {
+                Actor = actor,
+                ActorId = actorId,
+                Show = (Show)media,
+                ShowId = media.Id,
+                Roles = new List<string>()
+            };
+            await context.ActorsRolesShows.AddAsync(actorinshow);
+            await context.SaveChangesAsync();
+        }
+        actor.RolesInShows.Find(x => x.ShowId == media.Id).Roles.Add(role);
         await context.SaveChangesAsync();
     }
 
@@ -61,13 +77,19 @@ public class ActorService:IActorService
         var rolesShows = context.ActorsRolesShows.Where(x => x.ActorId == actorId).ToList();
         foreach (var role in roles)
         {
-            if (rolesMovies.Exists(x => x.Role.ToLower() == role.ToLower()))
+            foreach (var things in rolesShows)
             {
-                context.ActorsRolesMovies.Remove(rolesMovies.Find(x => x.Role.ToLower() == role.ToLower()));
+                if (things.Roles.Select(x => x.ToLower()).Contains(role.ToLower()))
+                {
+                    things.Roles.Remove(role);
+                }
             }
-            if (rolesShows.Exists(x => x.Role.ToLower() == role.ToLower()))
+            foreach (var things in rolesMovies)
             {
-                context.ActorsRolesShows.Remove(rolesShows.Find(x => x.Role.ToLower() == role.ToLower()));
+                if (things.Roles.Select(x => x.ToLower()).Contains(role.ToLower()))
+                {
+                    things.Roles.Remove(role);
+                }
             }
         }
         await context.SaveChangesAsync();
@@ -80,6 +102,7 @@ public class ActorService:IActorService
             return ac.Include(x => x.RolesInMovies).ThenInclude(y => y.Movie)
                 .Include(x => x.RolesInShows).ThenInclude(y => y.Show).ToList();
         }
+
         return ac.Include(x => x.RolesInMovies).ThenInclude(y => y.Movie)
             .Include(x => x.RolesInShows).ThenInclude(y => y.Show)
             .Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();
@@ -103,5 +126,4 @@ public class ActorService:IActorService
             .Include(x => x.RolesInShows).ThenInclude(y => y.Show)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
-
 }

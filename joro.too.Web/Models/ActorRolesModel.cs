@@ -6,4 +6,6 @@ public class ActorRolesModel
     public string MediaName { get; set; }
     public int MediaId { get; set; }
     public bool isShow { get; set; }
+    public int id { get; set; }
+    
 }

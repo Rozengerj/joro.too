@@ -2,7 +2,7 @@
 @if (!User.IsInRole("Admin"))
 {
     <h1 class="text-center textoutline">
-        Hiya, instead of trying to put your nose where it does'nt belong, why don't you instead enjoy some of the media in our fine collection hm?
+        Hiya, instead of trying to put your nose where it doesn't belong, why don't you instead enjoy some of the media in our fine collection hm?
 
     </h1>
     <p class="text-center textoutline">
@@ -11,11 +11,15 @@
 }
 else
 {
-    <form method="post" enctype="multipart/form-data" asp-action="EditEpisode">
+    <link rel="stylesheet" href="~/css/UplaodImage.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Botonlmao.css" asp-append-version="true"/>
+    <div style="display: grid;">
+    <form method="post" enctype="multipart/form-data" asp-action="EditEpisode" class="textoutline" style="display: grid; justify-content: center; justify-self: center; background-color: #574662; border-radius: 12px; width: 50vw; margin-top: 1rem;">
         <input type="hidden" id="id" name="id" asp-for="id">
         <input type="hidden" id="oldVidSrc" name="oldVidSrc" asp-for="vidsrc">
-        <input type="text" asp-for="name" id="name" name="name">
-        <input type="file" name="vid" id="vid" accept="video/*">
-        <input type="submit" class="buttons btn-warning">
+        <input required="required" minlength="3" maxlength="69" type="text" asp-for="name" id="name" name="name" class="input" style="width: 40vw">
+        Update video <input type="file" name="vid" id="vid" accept="video/*">
+        <input type="submit" class="boton-elegante" value="Update Episode">
     </form>
+    </DIV>
 }

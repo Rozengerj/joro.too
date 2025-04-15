@@ -4,5 +4,6 @@ public class EditActorModel
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public List<string> Roles { get; set; }
+    public List<ActorRolesModel> Roles { get; set; }
+    public string oldImg { get; set; }
 }

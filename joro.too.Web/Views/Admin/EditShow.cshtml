@@ -4,7 +4,7 @@
 @if (!User.IsInRole("Admin"))
 {
     <h1 class="text-center textoutline">
-        Hiya, instead of trying to put your nose where it does'nt belong, why don't you instead enjoy some of the media in our fine collection hm?
+        Hiya, instead of trying to put your nose where it doesn't belong, why don't you instead enjoy some of the media in our fine collection hm?
 
     </h1>
     <p class="text-center textoutline">
@@ -13,21 +13,29 @@
 }
 else
 {
-    <link rel="stylesheet" href="~/css/Searchbar.css" asp-append-version="true"/>
-    <form method="post" enctype="multipart/form-data" asp-action="EditShow" asp-controller="Admin" asp-route-model="22">
+    <link rel="stylesheet" href="~/css/UplaodImage.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Botonlmao.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/containers.css" asp-append-version="true"/>
+    <div style="display: grid; margin-bottom: 7rem">
+    <form method="post" enctype="multipart/form-data" asp-action="EditShow" asp-controller="Admin" asp-route-model="22" class="textoutline" style="display: grid; justify-content: center; justify-self: center; background-color: #574662; border-radius: 12px; width: 50vw; margin-top: 1rem;">
 
         <input name="Id" id="Id" asp-for="Id" type="hidden">
         <div>
             Name
-            <input name="name" id="name" asp-for="Name" type="text">
+            <input required="required" minlength="3" maxlength="69" name="name" id="name" asp-for="Name" type="text" class="input">
         </div>
         <div>
             Description
-            <input name="desc" id="desc" asp-for="Description" type="text">
+            <textarea required="required" minlength="10" maxlength="1000" name="desc" id="desc" asp-for="Description" type="text" class="input" style="height: 6rem"></textarea>
         </div>
         <div style="float: right">
-            Upload image
-            <input type="file" id="img" name="img" accept="image/*">
+            <div class="tb-container">
+                <div class="tb-img-view">
+                    <img id="tb-image" src="@Model.MediaImgSrc"/>
+                </div>
+                <label>Update Image</label>
+                <input class="fileUpload" type="file" name="img" id="img" accept="image/*" />
+            </div>
         </div>
 
         <div>
@@ -45,8 +53,8 @@ else
                         <div class="form-container helper">
                             <div class="input-group">
                                 @Model.SeasonNames[i]
-                                <a asp-action="EditSeason" asp-route-sId="@Model.SeasonIds[i]" class="buttons btn btn-warning">Edit Season</a>
-                                <a asp-action="RemoveSeason" asp-route-id="@Model.SeasonIds[i]" asp-route-showId="@Model.Id" class="buttons btn btn-danger">Remove Season</a>
+                                <a asp-action="EditSeason" asp-route-sId="@Model.SeasonIds[i]" class="boton-elegante" style="background-color: palegoldenrod">Edit Season</a>
+                                <a asp-action="RemoveSeason" asp-route-id="@Model.SeasonIds[i]" asp-route-showId="@Model.Id" class="boton-elegante" style="background-color: orangered">Remove Season</a>
                                 @for (int j = 0; j < @Model.Episodes[i].Count; j++)
                                 {
 
@@ -62,13 +70,14 @@ else
         </div>
 
         <div>
-            <button id="AddSeasonBtn">
-                Add Seaskon
+            <button id="AddSeasonBtn" class="boton-elegante">
+                Add Season
             </button>
         </div>
 
-        <input type="submit" class="btn" value="hui">
+        <input type="submit" class="boton-elegante" value="Update Show">
     </form>
-
+</div>
     <script src="~/js/AddShowScript.js" asp-append-version="true" type="module"></script>
+    <script src="~/js/PreviewUploadedImg.js" asp-append-version="true" type="module"></script>
 }

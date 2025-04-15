@@ -33,7 +33,7 @@ namespace joro.too.Web
                // options.Timeout = TimeSpan.FromSeconds(10);
             });
             builder.Services.AddDbContext<MovieDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsNotSoAssConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();
@@ -89,6 +89,11 @@ namespace joro.too.Web
                 var services = scope.ServiceProvider;
                 await CreateAdmin(services);
             }
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await CreateUser(services);
+            }
 
             app.MapControllerRoute(
                 name: "default",
@@ -119,11 +124,26 @@ namespace joro.too.Web
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
-                var user = new User { UserName = "admin@admin.com", Email = adminEmail };
+                var user = new User { UserName = "admin@admin.com", Email = adminEmail, Pfp = "https://res.cloudinary.com/djubwo5uq/image/upload/v1744467542/n9kfa5wcfkpmnzti1quv.webp"};
                 var result = await userManager.CreateAsync(user, "AdminPassword123!");
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "Admin"); // Добавя роля "Admin" 
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+        }
+        public static async Task CreateUser(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var adminEmail = "gosho@gmail.com";
+            var guyUser = await userManager.FindByEmailAsync(adminEmail);
+            if (guyUser == null)
+            {
+                var user = new User { UserName = "gosho", Email = adminEmail, Pfp = "https://res.cloudinary.com/djubwo5uq/image/upload/v1744467542/n9kfa5wcfkpmnzti1quv.webp"};
+                var result = await userManager.CreateAsync(user, "P@ssW0rd");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "User");
                 }
             }
         }

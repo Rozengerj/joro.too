@@ -5,24 +5,47 @@
 @inject SignInManager<User> SignInManager
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        You must Log Out before making a registration!
-        <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+    <link rel="stylesheet" href="~/css/loginRegisterForm.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Botonlmao.css" asp-append-version="true"/>
+    <div style="justify-content: center; display: grid">
+        <h2 align="center" style="text-align: center" class="textoutline">Edit Profile</h2>
+        <form asp-action="EditAccountInfo" asp-controller="Account" method="post" enctype="multipart/form-data" class="form textoutline outline-background-me" style="justify-self: center">
+            <div class="input-span">
+                <label asp-for="Username"></label>
+                <input asp-for="Username"  name="username" id="username"/>
+            </div>
+            <div class="input-span">
+                <label asp-for="Email"></label>
+                <input type="email" asp-for="Email" name="email" id="email"/>
+            </div>
+            <div class="tb-container">
+                <div class="tb-img-view">
+                    <img style="size: 100px;height: 100px;width: 100px;object-fit: cover;" id="tb-image" src="@Model.PfpSource" />
+                </div>
+                <label>Upload Image</label>
+                <input class="fileUpload" type="file" name="newimg" id="newimg" accept="image/*" />
+            </div>
+            <button class="submit" type="submit">Update Profile</button>
         </form>
-    </li>
+        <a asp-controller="Account" asp-action="DeleteUser" class="boton-elegante" style="background-color: orangered; width: 15vw;height: 5vh ;justify-content: center;display: grid;">
+            <p>Delete Profile!</p>
+            <label style="font-size: 0.75rem">
+                This cannot be undone!
+            </label>
+        </a>
+        <li class="nav-item" style="justify-content: center;display: flex;">
+            <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout">
+                <button id="logout" type="submit" class="boton-elegante">Logout</button>
+            </form>
+        </li>
+        
+    </div>
+    <script src="~/js/PreviewUploadedImg.js" asp-append-version="true" type="module"></script>
 }
 else
 {
-    <link rel="stylesheet" href="~/css/loginRegisterForm.css" asp-append-version="true"/>
-    <div style="justify-content: center; display: grid">
-        <h2 align="center" style="text-align: center" class="textoutline">Register</h2>
-        <form asp-action="Register" method="post" class="form textoutline outline-background-me" >
-            <div class="input-span">
-                <label asp-for="Username"></label>
-                <input type="email" asp-for="Username"/>
-            </div>
-            <button class="submit" type="submit">Register</button>
-        </form>
-    </div>
+    <li class="nav-item">
+        You must be logged in to view this page i really don't know how you're here!
+        If you want to view the contents here you can <a asp-controller="Account" asp-action="Login"> Log In</a> :D
+    </li>
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using joro.too.DataAccess;
 
@@ -11,9 +12,11 @@ using joro.too.DataAccess;
 namespace joro.too.DataAccess.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250412162645_slightDbTweak")]
+    partial class slightDbTweak
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,7 +261,7 @@ namespace joro.too.DataAccess.Migrations
                     b.Property<int>("ActorId")
                         .HasColumnType("int");
 
-                    b.PrimitiveCollection<string>("Roles")
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -277,7 +280,7 @@ namespace joro.too.DataAccess.Migrations
                     b.Property<int>("ActorId")
                         .HasColumnType("int");
 
-                    b.PrimitiveCollection<string>("Roles")
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

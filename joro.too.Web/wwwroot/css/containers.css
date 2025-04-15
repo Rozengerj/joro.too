@@ -1,0 +1,11 @@
+.form-container {
+    width: 320px;
+    border-radius: 0.75rem;
+    background-color: #695677;
+    padding: 2rem;
+    color: rgba(243, 244, 246, 1);
+}
+.season{
+    margin: 0.2em;
+}
+

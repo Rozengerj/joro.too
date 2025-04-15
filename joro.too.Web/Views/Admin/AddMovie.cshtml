@@ -3,7 +3,7 @@
 @if (!User.IsInRole("Admin"))
 {
     <h1 class="text-center textoutline">
-        Hiya, instead of trying to put your nose where it does'nt belong, why don't you instead enjoy some of the media in our fine collection hm?
+        Hiya, instead of trying to put your nose where it doesn't belong, why don't you instead enjoy some of the media in our fine collection hm?
 
     </h1>
     <p class="text-center textoutline">
@@ -12,31 +12,46 @@
 }
 else
 {
-    <form method="post" enctype="multipart/form-data">
-        <div>
-            Name
-            <input name="name" id="name" type="text">
-        </div>
-        <div>
-            Description
-            <input name="desc" id="desc" type="text">
-        </div>
-        <div style="float: right">
-            Upload image
-            <input type="file" id="img" name="img" accept="image/*">
-        </div>
-        <div>
-            @foreach (var item in Model.Genres)
-            {
-                <input name="genres" id="@item.Value" value="@item.Value" type="checkbox">
-                @item.Text
-            }
-        </div>
-        <div>
-            Upload video
-            <input type="file" id="vid" name="vid" accept="video/*">
-        </div>
-        <input type="submit" class="btn">
-
-    </form>
+    <link rel="stylesheet" href="~/css/loginRegisterForm.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Botonlmao.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/UplaodImage.css" asp-append-version="true"/>
+    <div style="display: grid;">
+        <form method="post" enctype="multipart/form-data" class="textoutline" style="display: grid; justify-content: center; justify-self: center; background-color: #574662; border-radius: 12px; width: 50vw; margin-top: 1rem;">
+            <div class="input-span">
+                Name
+                <input required="required" minlength="3" maxlength="69" name="name" id="name" type="text" class="input">
+            </div>
+            <div class="input-span">
+                Description
+                <textarea required="required" minlength="10" maxlength="1000" name="desc" id="desc" type="text" class="input"></textarea>
+            </div>
+            <div class="input-span">
+                Director
+                <input required="required" minlength="3" maxlength="69" name="director" id="director" type="text" class="input">
+            </div>
+            <div style="float: right">
+                <div class="tb-container">
+                    <div class="tb-img-view">
+                        <img id="tb-image" />
+                    </div>
+                    <label>Upload Image</label>
+                    <input required="required" class="fileUpload" type="file" name="img" id="img" accept="image/*" />
+                </div>
+            </div>
+            <div>
+                Select genres
+                @foreach (var item in Model.Genres)
+                {
+                    <input name="genres" id="@item.Value" value="@item.Value" type="checkbox">
+                    @item.Text
+                }
+            </div>
+            <div>
+                Upload video
+                <input type="file" required="required" id="vid" name="vid" accept="video/*">
+            </div>
+            <input type="submit" class="boton-elegante" value="Upload Movie">
+        </form>
+    </div>
+    <script src="~/js/PreviewUploadedImg.js" asp-append-version="true" type="module"></script>
 }

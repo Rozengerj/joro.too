@@ -15,7 +15,8 @@ public class Movie:IMedia
     public List<GenresMovies> Genres { get; set; }
     public List<ActorRolesMovies>? Actors { get; set; }
     
-    public long RatingsSum { get; set; }
+    public float RatingsSum { get; set; }
     public int RatedCount { get; set; }
+    public string? Director { get; set; }
     
 }

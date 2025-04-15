@@ -1,25 +1,69 @@
 @using System.Runtime.Serialization
 @using CloudinaryDotNet.Actions
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.IdentityModel.Tokens
 @model List<ViewActorsModel>
-<ul>
+
+<link rel="stylesheet" href="~/css/ActorCards.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/Botonlmao.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/MainSearchBar.css" asp-append-version="true"/>
+<div class="text-center textoutline" style="">
+<form>
+    <div class="group" style="width: 75vw; margin: 1.723rem">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+            <g>
+                <path
+                    d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
+                ></path>
+            </g>
+        </svg>
+
+        <input
+            id="name"
+            class="input"
+            type="text"
+            placeholder="Search Actors..."
+            name="name"
+        />
+        <input asp-action="ViewActors" asp-controller="Search" type="submit" class="btn" hidden="hidden">
+    </div>
+</form>
+</div>
+<ul style="display: flex; justify-content: center">
+    @if (Model.IsNullOrEmpty())
+    {
+        <h1 style="text-align: center" class="textoutline">Sorry, we couldn't find the actor you were looking for, you might want to search for something else instead!</h1>
+    }
     @foreach (var actor in Model)
     {
-        <li>
-            @actor.Name 
-            who played as:
-            @foreach (var role in actor.Roles)
-           {
-               <div>
-                   @role.Role in <a asp-action="ViewMedia" asp-route-id="@role.MediaId" asp-route-isShow="@role.isShow">@role.MediaName</a>
-               </div>
-           }
-           Edit Actor
-           <a asp-action="EditActor" asp-controller="Admin" asp-route-actorid="@actor.Id">Edit actor</a>
-           <a asp-action="AddRoleToActor" asp-controller="Admin" asp-route-actorId="@actor.Id">Add role to actor</a>
-           <a asp-action="RemoveActor" asp-controller="Admin" >Remove actor</a>
-            
+        <li class="actor_card" style="margin: 0.23em;">
+            <div class="actor_card__content">
+                <div class="textoutline">
+                    @actor.Name
+                    who played as:
+                    @foreach (var role in actor.Roles)
+                    {
+                        <div>
+                            @role.Role in
+                            <a asp-action="ViewMedia" asp-route-id="@role.MediaId"
+                               asp-route-isShow="@role.isShow">@role.MediaName</a>
+                        </div>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="EditActor" asp-controller="Admin" asp-route-actorid="@actor.Id"
+                           class="boton-elegante" style="padding: 5px 10px; font-size: 0.9rem">Edit actor</a>
+                        <a asp-action="AddRoleToActor" asp-controller="Admin" asp-route-actorId="@actor.Id"
+                           class="boton-elegante" style="padding: 5px 10px; font-size: 0.9rem">Add role to actor</a>
+                        <a asp-action="DeleteActor" asp-controller="Admin" class="boton-elegante"
+                           style="padding: 5px 10px; font-size: 0.9rem">Remove actor</a>
+                        <div style="color: rgb(5, 6, 45); text-shadow: none">
+                            'eow :3
+                        </div>
+                    }
+                </div>
+                <img src="@actor.img" style="border-radius: 17px;height: 20vh">
+            </div>
         </li>
     }
-    
-    
 </ul>

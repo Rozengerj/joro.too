@@ -2,7 +2,7 @@
 @if (!User.IsInRole("Admin"))
 {
     <h1 class="text-center textoutline">
-        Hiya, instead of trying to put your nose where it does'nt belong, why don't you instead enjoy some of the media in our fine collection hm?
+        Hiya, instead of trying to put your nose where it doesn't belong, why don't you instead enjoy some of the media in our fine collection hm?
 
     </h1>
     <p class="text-center textoutline">
@@ -11,33 +11,43 @@
 }
 else
 {
-    <form method="post" enctype="multipart/form-data">
-        <input type="hidden" id="oldimgsrc" value="@Model.imgsrc" name="oldimgsrc">
-        <input type="hidden" id="oldvidsrc" value="@Model.videourl" name="oldvidsrc">
-        <input type="hidden" id="id" value="@Model.id" name="id">
-        <div>
-            Name
-            <input asp-for="name" name="name" id="name" type="text">
-        </div>
-        <div>
-            Description
-            <input asp-for="description" name="desc" id="desc" type="text">
-        </div>
-        <div style="float: right">
-            Upload image
-            <input type="file" id="img" name="img" accept="image/*">
-        </div>
-        <div>
-            @foreach (var item in Model.Genres)
-            {
-                <input name="genres" id="@item.Value" value="@item.Value" type="checkbox" checked="@item.Selected">
-                @item.Text
-            }
-        </div>
-        <div>
-            Upload video
-            <input type="file" id="vid" name="vid" accept="video/*">
-        </div>
-        <input type="submit" class="btn">
-    </form>
+    <link rel="stylesheet" href="~/css/UplaodImage.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Botonlmao.css" asp-append-version="true"/>
+    <div style="display: grid;">
+        <form method="post" enctype="multipart/form-data" asp-action="EditMovie" asp-controller="Admin" asp-route-model="22" class="textoutline" style="display: grid; justify-content: center; justify-self: center; background-color: #574662; border-radius: 12px; width: 50vw; margin-top: 1rem;">
+            <input type="hidden" id="oldimgsrc" value="@Model.imgsrc" name="oldimgsrc">
+            <input type="hidden" id="oldvidsrc" value="@Model.videourl" name="oldvidsrc">
+            <input type="hidden" id="id" value="@Model.id" name="id">
+            <div>
+                Name
+                <input required="required" minlength="3" maxlength="69" asp-for="name" name="name" id="name" type="text" class="input">
+            </div>
+            <div>
+                Description
+                <textarea required="required" minlength="10" maxlength="1000" asp-for="description" name="desc" id="desc" type="text" class="input" style="height: 6rem"></textarea>
+            </div>
+            <div style="float: right">
+                <div class="tb-container">
+                    <div class="tb-img-view">
+                        <img id="tb-image" src="@Model.imgsrc"/>
+                    </div>
+                    <label>Update Image</label>
+                    <input class="fileUpload" type="file" name="img" id="img" accept="image/*" />
+                </div>
+            </div>
+            <div>
+                @foreach (var item in Model.Genres)
+                {
+                    <input name="genres" id="@item.Value" value="@item.Value" type="checkbox" checked="@item.Selected">
+                    @item.Text  
+                }
+            </div>
+            <div>
+                Update video
+                <input type="file" id="vid" name="vid" accept="video/*">
+            </div>
+            <input type="submit" class="boton-elegante" value="Update Movie">
+        </form>
+    </DIV>
+    <script src="~/js/PreviewUploadedImg.js" asp-append-version="true" type="module"></script>
 }

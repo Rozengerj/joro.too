@@ -9,7 +9,7 @@ public class ViewShowModel
     public string description { get; set; }
     public string imgsrc { get; set; }
     public List<Genre> genres { get; set; } 
-    public decimal rating { get; set; }
+    public float rating { get; set; }
     public List<ActorInGivenMediaModel>? actors { get; set; }
     //showonly
     public List<List<VideoViewModel>>? EpisodesInSeasons { get; set; }

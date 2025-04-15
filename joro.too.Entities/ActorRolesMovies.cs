@@ -13,6 +13,6 @@ namespace joro.too.Entities
         public Actor Actor { get; set; }
         public Movie Movie { get; set; }
         
-        public string Role { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

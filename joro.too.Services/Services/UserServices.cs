@@ -3,6 +3,7 @@ using joro.too.Entities;
 using joro.too.Services.Services.IServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace joro.too.Services.Services;
 
@@ -21,8 +22,6 @@ public class UserServices : IUserService
     {
         if (isShow)
         {
-            Console.WriteLine(mediaId);
-            Console.WriteLine(isShow);
             await comments.AddAsync(new Comment()
             {
                 Text = text,
@@ -48,6 +47,32 @@ public class UserServices : IUserService
     {
         var comment = comments.Find(id);
         comments.Remove(comment);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task RateMedia(User user, float rating, int mediaId, bool isShow)
+    {
+        if (user.RatedShows.IsNullOrEmpty())
+        {
+            user.RatedShows = new List<int>();
+        }
+        if (user.RatedMovies.IsNullOrEmpty())
+        {
+            user.RatedMovies = new List<int>();
+        }
+        if (isShow)
+        {
+            var show = await context.Shows.FindAsync(mediaId);
+            show.RatedCount++;
+            show.RatingsSum += rating;
+            user.RatedShows.Add(mediaId);
+            await context.SaveChangesAsync();
+            return;
+        }
+        var movie = await context.Shows.FindAsync(mediaId);
+        movie.RatedCount++;
+        movie.RatingsSum += rating;
+        user.RatedMovies.Add(mediaId);
         await context.SaveChangesAsync();
     }
 }

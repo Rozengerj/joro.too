@@ -1,0 +1,37 @@
+
+@model AddRoleToActorModel
+@if (!User.IsInRole("Admin"))
+{
+<h1 class="text-center textoutline">
+    Hiya, instead of trying to put your nose where it doesn't belong, why don't you instead enjoy some of the media in our fine collection hm?
+
+</h1>
+<p class="text-center textoutline">
+    <a asp-action="SearchResult" asp-controller="Search">Go back and don't waste your time here</a>
+</p>
+}
+else
+{
+    <link rel="stylesheet" href="~/css/UplaodImage.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Botonlmao.css" asp-append-version="true"/>
+    <div style="display: grid;">
+    <form method="post" class="textoutline" style="display: grid; justify-content: center; justify-self: center; background-color: #574662; border-radius: 12px; width: 50vw; margin-top: 1rem;">
+        <input type="hidden" name="actorId" id="actorId" value="@Model.actorId">
+        The Role Of
+        <input type="text" minlength="2" maxlength="69" placeholder="Role..." name="role" id="role" class="input">
+        in
+        <select class="selctthingie input" name="mediaId" id="mediaId">
+            @foreach (var media in Model.allMedia)
+            {
+                <option value="@media.id" name="@media.isShow+">
+                    @media.name
+                </option>
+            }
+        </select>
+        <input type="hidden" class="isshow" name="isShow" id="isShow" >
+        <input type="submit" class="boton-elegante" value="Add Role">
+    </form>
+    </div>
+
+    <script src="~/js/AddRoleToActorFunction.js" asp-append-version="true" type="module"></script>
+}

@@ -1,6 +1,7 @@
 ﻿@using joro.too.Services.Services
 @using joro.too.Services.Services.IServices
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.IdentityModel.Tokens
 @model List<SearchResultModel>
 @inject IGenreService _GenreService
 <link rel="stylesheet" href="~/css/ViewMediaCards.css" asp-append-version="true"/>
@@ -8,18 +9,23 @@
 <div style="display: flex">
     <div class="container-fluid" style="display: flex; max-width: 95vw; justify-content: center">
         <ul style="flex-wrap: wrap; list-style-type: none; float: unset" class="list-group list-group-horizontal ">
+            @if (Model.IsNullOrEmpty())
+            {
+                <h1 class="textoutline" style="text-align: center"> Sorry for the inconvenience, but it seems like there aren't any movies that fit your criteria! You should try searching for something else instead!</h1>
+            }
             @foreach (var item in Model)
             {
-                <a asp-action="ViewMedia" asp-route-id="@item.id" asp-route-isShow="@item.isShow">
-                    <li style="margin: 0.5em">
+                <a asp-action="ViewMedia" asp-route-id="@item.id" asp-route-isShow="@item.isShow" style=" box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px; background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB); border-radius: 20px; margin: 0.5em">
+                    <li style="margin: 0.5em;">
                         <div height="100em">
                             <div class="card-container">
-                                <div class="card">
+                                <div class="card" style="border-radius: inherit; border: none">
                                     <div class="img-content">
                                         <img
                                             src="@item.imgsrc"
                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-miterlimit="2"
-                                            stroke-linejoin="round" fill-rule="evenodd" clip-rule="evenodd">
+                                            stroke-linejoin="round" fill-rule="evenodd" clip-rule="evenodd"
+                                            style="height: 55vh">
                                         <path fill-rule="nonzero"
                                               d="m2 19v-14c0-.552.447-1 1-1 .542 0 4.418 2.028 9 2.028 4.593 0 8.456-2.028 9-2.028.55 0 1 .447 1 1v14c0 .553-.45 1-1 1-.544 0-4.407-2.028-9-2.028-4.582 0-8.458 2.028-9 2.028-.553 0-1-.448-1-1zm1.5-.791 6.449-7.691c.289-.344.879-.338 1.16.012 0 0 1.954 2.434 1.954 2.434l1.704-1.283c.319-.24.816-.168 1.054.154l4.679 6.335v-12.44c-1.58.58-4.819 1.798-8.5 1.798-3.672 0-6.918-1.218-8.5-1.799zm2.657-.834c1.623-.471 3.657-.903 5.843-.903 2.309 0 4.444.479 6.105.98l-3.041-4.117-1.065.802.275.344c.259.323.206.796-.117 1.054-.323.259-.795.207-1.054-.117l-2.591-3.236zm.698-9.534c-1.051 0-1.905.854-1.905 1.905s.854 1.904 1.905 1.904 1.904-.853 1.904-1.904-.853-1.905-1.904-1.905zm0 1.3c.333 0 .604.271.604.605 0 .333-.271.604-.604.604-.334 0-.605-.271-.605-.604 0-.334.271-.605.605-.605z"></path>
                                     </div>
@@ -38,8 +44,7 @@
         </ul>
     </div>
     <div float="right">
-        <!-- From Uiverse.io by alexruix -->
-        <div class="card2 textoutline" box-sizing="border-box">
+        <div class="card2 textoutline" box-sizing="border-box" style="border-radius: 12px; outline-color: rebeccapurple; outline-width: 3px">
             <h4 class="title">Filter</h4>
             <form>
                 <div class="group">
@@ -52,7 +57,6 @@
                     </svg>
 
                     <input
-                        style="width: 14%"
                         id="name"
                         class="input"
                         type="text"
@@ -74,11 +78,19 @@
                     </ul>
                 </div>
                 <div class="field">
+                    <input type="checkbox" name="isShow" id="isShow" value="true"> Show
+                    <input type="checkbox" name="isMovie" id="isMovie" value="true"> Movie
+                </div>
+                <div class="field">
                     Rating
                     <input type="number" name="rating" id="rating" class="input-field" min="1" max="10"
-                           step=".1"></input>
+                           step=".1"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 256 256" xml:space="preserve">
+<g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; height: 3rem; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+    <path d="M 89.95 34.92 c -0.135 -0.411 -0.519 -0.688 -0.95 -0.688 H 56.508 L 45.948 2.814 C 45.811 2.408 45.43 2.133 45 2.133 s -0.811 0.274 -0.948 0.681 l -10.56 31.417 H 1 c -0.432 0 -0.815 0.277 -0.95 0.688 s 0.009 0.861 0.357 1.117 l 26.246 19.314 l -10 31.21 c -0.131 0.409 0.014 0.856 0.36 1.11 c 0.348 0.257 0.817 0.261 1.168 0.012 L 45 68.795 l 26.818 18.889 c 0.173 0.122 0.375 0.183 0.576 0.183 c 0.208 0 0.416 -0.064 0.592 -0.194 c 0.347 -0.254 0.491 -0.701 0.36 -1.11 l -10 -31.21 l 26.246 -19.314 C 89.94 35.781 90.085 35.331 89.95 34.92 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,212,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+</g>
+</svg>
                 </div>
-                <button asp-action="SearchResult" class="btn" type="submit">Search!</button>
+                <button asp-action="SearchResult" class="btn" type="submit" style="background-color: palegoldenrod;">Search!</button>
             </form>
         </div>
     </div>

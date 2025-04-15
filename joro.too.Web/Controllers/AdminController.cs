@@ -47,23 +47,26 @@ public class AdminController : Controller
     [RequestSizeLimit(2147483647)] //unit is bytes => 2GB
     [RequestFormLimits(MultipartBodyLengthLimit = 2147483647)]
     public async Task<IActionResult> AddMovie(string name, string desc, IFormFile img, string[] genres, IFormFile vid,
-        AddMediaModel model)
+        AddMediaModel model, string director)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
-        Console.WriteLine(name);
-        Console.WriteLine(desc);
         foreach (Genre item in list)
         {
             model.Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
         }
 
-        foreach (SelectListItem li in model.Genres)
+        if (!genres.IsNullOrEmpty())
         {
-            if (genres.Contains(li.Value))
+
+
+            foreach (SelectListItem li in model.Genres)
             {
-                li.Selected = true;
-                genreIds.Add(int.Parse(li.Value));
+                if (genres.Contains(li.Value))
+                {
+                    li.Selected = true;
+                    genreIds.Add(int.Parse(li.Value));
+                }
             }
         }
 
@@ -71,7 +74,7 @@ public class AdminController : Controller
         var imageUrl = await _cloudinary.UploadImageAsync(img);
         var genresreal = await _genreService.GetGenresById(genreIds);
         var vidsrc = await _cloudinary.UploadVideoAsync(vid);
-        await _mediaService.AddMovie(name, imageUrl, genresreal, desc, vidsrc);
+        await _mediaService.AddMovie(name, imageUrl, genresreal, desc, vidsrc, director);
         return RedirectToAction("SearchResult", "Search");
     }
 
@@ -85,7 +88,6 @@ public class AdminController : Controller
             if (movie.Genres.Select(x => x.Genre).Contains(item))
             {
                 Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type, Selected = true });
-                Console.WriteLine("do i go in here please");
                 continue;
             }
 
@@ -108,12 +110,11 @@ public class AdminController : Controller
     [RequestSizeLimit(2147483647)] //unit is bytes => 2GB
     [RequestFormLimits(MultipartBodyLengthLimit = 2147483647)]
     public async Task<IActionResult> EditMovie(string name, string desc, IFormFile? img, string[] genres, IFormFile? vid,
-        AddMediaModel model, string oldvidsrc, string oldimgsrc, int id)
+        AddMediaModel model, int id)
     {
         Movie movie = await _mediaService.FindMovieById(id);
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
-
         model.Genres = new List<SelectListItem>();
         foreach (Genre item in list)
         {
@@ -121,7 +122,17 @@ public class AdminController : Controller
         }
         movie.Name = name;
         movie.Description = desc;
-        
+        if (!genres.IsNullOrEmpty())
+        {
+            foreach (SelectListItem li in model.Genres)
+            {
+                if (genres.Contains(li.Value))
+                {
+                    li.Selected = true;
+                    genreIds.Add(int.Parse(li.Value));
+                }
+            }
+        }
         if (img is not null)
         {
             await _cloudinary.DeleteImageAsync(movie.MediaImgSrc);
@@ -160,7 +171,7 @@ public class AdminController : Controller
     [RequestSizeLimit(2147483647)] //unit is bytes => 2GB
     [RequestFormLimits(MultipartBodyLengthLimit = 2147483647)]
     public async Task<IActionResult> AddShow(string name, string desc, string[] genres, IFormFile img, string[] season,
-        string[] episode, IFormFileCollection episodevidsrc, AddMediaModel model)
+        string[] episode, IFormFileCollection episodevidsrc, AddMediaModel model, string director)
     {
         List<int> genreIds = new List<int>();
         var list = await _genreService.GetGenres();
@@ -172,8 +183,7 @@ public class AdminController : Controller
         }
 
         var imageUrl = await _cloudinary.UploadImageAsync(img);
-        Console.WriteLine(imageUrl);
-        if (genres is not null)
+        if (!genres.IsNullOrEmpty())
         {
             foreach (SelectListItem li in model.Genres)
             {
@@ -195,7 +205,6 @@ public class AdminController : Controller
             if (item != "_-_-_|_-_-_")
             {
                 var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
-                Console.WriteLine("uploaded video " + counter);
                 if (item.Trim().IsNullOrEmpty())
                 {
                     tempList.Add(new Tuple<string, string>("episode " + episodeCounter, vidurl));
@@ -208,19 +217,13 @@ public class AdminController : Controller
                 counter++;
                 continue;
             }
-
-            Console.WriteLine("Added Episodes For Season");
             episodesinfo.Add(tempList);
             episodeCounter = 1;
             tempList = new List<Tuple<string, string>>();
         }
 
         var genresreal = await _genreService.GetGenresById(genreIds);
-        //Console.WriteLine("this is the top");
-        //Console.WriteLine(string.Join(", ", episode));
-        //Console.WriteLine(string.Join(", ", season));
-        //Console.WriteLine("this is the bottom");
-        await _mediaService.AddShow(name, imageUrl, genresreal, desc, episodesinfo, season.ToList());
+        await _mediaService.AddShow(name, imageUrl, genresreal, desc, episodesinfo, season.ToList(), director);
         return RedirectToAction("SearchResult", "Search");
     }
 
@@ -234,10 +237,8 @@ public class AdminController : Controller
             if (show.Genres.Select(x => x.Genre).Contains(item))
             {
                 Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type, Selected = true });
-                Console.WriteLine("do i go in here please");
                 continue;
             }
-
             Genres.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.Type });
         }
 
@@ -294,7 +295,7 @@ public class AdminController : Controller
             imageUrl = await _cloudinary.UploadImageAsync(img);
         }
 
-        if (genres is not null)
+        if (!genres.IsNullOrEmpty())
         {
             foreach (SelectListItem li in model.Genres)
             {
@@ -316,7 +317,6 @@ public class AdminController : Controller
                 if (item != "_-_-_|_-_-_")
                 {
                     var vidurl = await _cloudinary.UploadVideoAsync(episodevidsrc[counter]);
-                    Console.WriteLine("uploaded video " + counter);
                     if (item.Trim().IsNullOrEmpty())
                     {
                         tempList.Add(new Tuple<string, string>("episode " + episodeCounter, vidurl));
@@ -328,7 +328,6 @@ public class AdminController : Controller
                     counter++;
                     continue;
                 }
-                Console.WriteLine("Added Episodes For Season");
                 episodesinfo.Add(tempList);
                 episodeCounter = 1;
                 tempList = new List<Tuple<string, string>>();
@@ -345,10 +344,6 @@ public class AdminController : Controller
         media.MediaImgSrc = imageUrl;
         var genresReal = await _genreService.GetGenresById(genreIds);
         await _mediaService.UpdateMedia(media, episodesinfo, season.ToList(), genresReal);
-        //Console.WriteLine("this is the top");
-        //Console.WriteLine(string.Join(", ", episode));
-        //Console.WriteLine(string.Join(", ", season));
-        //Console.WriteLine("this is the bottom");
         return RedirectToAction("ViewMedia", "Search", new { id = id, IsShow = true });
     }
 
@@ -364,7 +359,6 @@ public class AdminController : Controller
     }
     public async Task<IActionResult> EditSeason(int sId)
     {
-        //Console.WriteLine(sId);
         Season s = await _seasonService.FindSeasonById(sId);
         EditSeasonModel model = new EditSeasonModel()
         {
@@ -378,7 +372,6 @@ public class AdminController : Controller
                 }
             ).ToList()
         };
-        //Console.WriteLine(string.Join(", ",s.Episodes.Select(x=>x.name).ToList()));
         return View(model);
     }
 
@@ -393,7 +386,6 @@ public class AdminController : Controller
         {
             episodeVidSrcs.Add(await _cloudinary.UploadVideoAsync(episode));
         }
-        Console.WriteLine(string.Join(", ", episodeFiles.Select(x => x.FileName)));
         await _seasonService.AddEpisdesToSeason(season, episodeNames.ToList(), episodeVidSrcs);
         season.Name = name;
         await _seasonService.UpdateSeason(season);
@@ -427,10 +419,8 @@ public class AdminController : Controller
     {
         Episode ep = await _episodeService.FindEpisodeById(id);
         ep.name = name;
-        Console.WriteLine(vid.FileName);
         if (vid is not null)
         {
-            Console.WriteLine("Does this go here at all");
             await _cloudinary.DeleteVideoAsync(oldVidSrc);
             ep.vidsrc = await _cloudinary.UploadVideoAsync(vid);
         }
@@ -463,37 +453,42 @@ public class AdminController : Controller
     public async Task<IActionResult> AddActor(string name, IFormFile img)
     {
         string imgsrc = await _cloudinary.UploadImageAsync(img);
-        Console.WriteLine(imgsrc);
         await _actorService.AddActor(name, imgsrc);
         return RedirectToAction("ViewActors", "Search");
     }
 
-    public async Task<IActionResult> AddRoleToActor()
+    public async Task<IActionResult> AddRoleToActor(int actorId)
     {
+        var actor = await _actorService.FindActorById(actorId);
         var tempTuple = await _mediaService.GetMediasWithGenres(null);
-        var recommendedMedia = new List<IMedia>();
-        recommendedMedia.AddRange(tempTuple.Item1); recommendedMedia.AddRange(tempTuple.Item2);
-        List<ActorInGivenMediaModel> model = recommendedMedia.Select(x => new ActorInGivenMediaModel()
+        var allMedia = new List<IMedia>();
+        allMedia.AddRange(tempTuple.Item1); allMedia.AddRange(tempTuple.Item2);
+        AddRoleToActorModel model = new AddRoleToActorModel();
+        model.actorId = actorId;
+        model.allMedia = allMedia.Select(x => new AllMediaModel()
         {
-            Name = x.Name,
-            Id = x.Id
+            name = x.Name,
+            id = x.Id,
+            isShow = x is Show
         }).ToList();
+        model.actorName = actor.Name;
         return View(model);
     }
 
     [HttpPost]
     public async Task<IActionResult> AddRoleToActor(string role, int actorId, int mediaId, bool isShow)
     {
-        IMedia media;
+        Console.WriteLine(isShow);
         if (isShow)
         {
-            media = await _mediaService.FindShowById(mediaId);
+            Show media = await _mediaService.FindShowById(mediaId);
+            await _actorService.AddRoleToActor(actorId, role, media); 
         }
         else
         {
-            media = await _mediaService.FindMovieById(mediaId);
+           Movie media = await _mediaService.FindMovieById(mediaId);
+           await _actorService.AddRoleToActor(actorId, role, media); 
         }
-        await _actorService.AddRoleToActor(actorId, role, media);
         return RedirectToAction("ViewActors", "Search");
     }
 
@@ -504,10 +499,35 @@ public class AdminController : Controller
         {
             Name = actor.Name,
             Id = actor.Id,
-            Roles = new List<string>()
+            Roles = new List<ActorRolesModel>(),
+            oldImg = actor.imgsrc
         };
-        model.Roles.AddRange(actor.RolesInMovies.Select(x => x.Role).ToList());
-        model.Roles.AddRange(actor.RolesInShows.Select(x => x.Role).ToList());
+        foreach (var roles in actor.RolesInMovies)
+        {
+            foreach (var role in roles.Roles)
+            {
+                model.Roles.Add(new ActorRolesModel()
+                {
+                    MediaName = roles.Movie.Name,
+                    Role = role,
+                    MediaId = roles.MovieId,
+                    isShow = false
+                });
+            } 
+        }
+        foreach (var roles in actor.RolesInShows)
+        {
+            foreach (var role in roles.Roles)
+            {
+                model.Roles.Add(new ActorRolesModel()
+                {
+                    MediaName = roles.Show.Name,
+                    Role = role,
+                    MediaId = roles.ShowId,
+                    isShow = true
+                });
+            } 
+        }
         return View(model);
     }
     [HttpPost]
@@ -524,6 +544,13 @@ public class AdminController : Controller
         await _actorService.UpdateActor(actor);
         return RedirectToAction("ViewActors", "Search");
     }
+
+    public async Task<IActionResult> DeleteActor(int actorId)
+    {
+        await _actorService.RemoveActor(actorId);
+        return RedirectToAction("ViewActors", "Search");
+    }
+    
 
     public async Task<IActionResult> AdminActions()
     {
