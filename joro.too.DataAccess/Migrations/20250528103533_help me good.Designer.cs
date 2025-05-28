@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using joro.too.DataAccess;
 
@@ -11,9 +12,11 @@ using joro.too.DataAccess;
 namespace joro.too.DataAccess.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250528103533_help me good")]
+    partial class helpmegood
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -522,16 +525,11 @@ namespace joro.too.DataAccess.Migrations
                     b.Property<float>("RatingsSum")
                         .HasColumnType("real");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("VidSrc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Movies");
 
@@ -618,12 +616,7 @@ namespace joro.too.DataAccess.Migrations
                     b.Property<float>("RatingsSum")
                         .HasColumnType("real");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Shows");
 
@@ -650,10 +643,12 @@ namespace joro.too.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.PrimitiveCollection<string>("RatedMovieIds")
+                    b.PrimitiveCollection<string>("RatedMovies")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.PrimitiveCollection<string>("RatedShowsIds")
+                    b.PrimitiveCollection<string>("RatedShows")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("User");
@@ -820,13 +815,6 @@ namespace joro.too.DataAccess.Migrations
                     b.Navigation("Show");
                 });
 
-            modelBuilder.Entity("joro.too.Entities.Movie", b =>
-                {
-                    b.HasOne("joro.too.Entities.User", null)
-                        .WithMany("RatedMovies")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("joro.too.Entities.Season", b =>
                 {
                     b.HasOne("joro.too.Entities.Show", "Show")
@@ -836,13 +824,6 @@ namespace joro.too.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Show");
-                });
-
-            modelBuilder.Entity("joro.too.Entities.Show", b =>
-                {
-                    b.HasOne("joro.too.Entities.User", null)
-                        .WithMany("RatedShows")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("joro.too.Entities.Actor", b =>
@@ -890,10 +871,6 @@ namespace joro.too.DataAccess.Migrations
             modelBuilder.Entity("joro.too.Entities.User", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("RatedMovies");
-
-                    b.Navigation("RatedShows");
                 });
 #pragma warning restore 612, 618
         }

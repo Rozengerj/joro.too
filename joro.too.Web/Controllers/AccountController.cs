@@ -72,7 +72,7 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = new User { UserName = model.UserName, Email = model.Email, Pfp = "https://res.cloudinary.com/djubwo5uq/image/upload/v1744467542/n9kfa5wcfkpmnzti1quv.webp", RatedShows = new List<int>(), RatedMovies = new List<int>() };
+            var user = new User { UserName = model.UserName, Email = model.Email, Pfp = "https://res.cloudinary.com/djubwo5uq/image/upload/v1744467542/n9kfa5wcfkpmnzti1quv.webp", RatedShows = new List<Show>(), RatedMovies = new List<Movie>() };
             Console.WriteLine(user.UserName);
             Console.WriteLine(user.Pfp);
             Console.WriteLine(user.Email);

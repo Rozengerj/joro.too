@@ -54,25 +54,25 @@ public class UserServices : IUserService
     {
         if (user.RatedShows.IsNullOrEmpty())
         {
-            user.RatedShows = new List<int>();
+            user.RatedShows = new List<Show>();
         }
         if (user.RatedMovies.IsNullOrEmpty())
         {
-            user.RatedMovies = new List<int>();
+            user.RatedMovies = new List<Movie>();
         }
         if (isShow)
         {
             var show = await context.Shows.FindAsync(mediaId);
             show.RatedCount++;
             show.RatingsSum += rating;
-            user.RatedShows.Add(mediaId);
+            user.RatedShowsIds.Add(mediaId);
             await context.SaveChangesAsync();
             return;
         }
         var movie = await context.Shows.FindAsync(mediaId);
         movie.RatedCount++;
         movie.RatingsSum += rating;
-        user.RatedMovies.Add(mediaId);
+        user.RatedMovieIds.Add(mediaId);
         await context.SaveChangesAsync();
     }
 }

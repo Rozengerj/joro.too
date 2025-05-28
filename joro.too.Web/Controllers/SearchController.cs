@@ -229,7 +229,6 @@ namespace joro.too.Web.Controllers
                     }).ToList());
                 modelshow.SeasonsNames.Add(season.Name);
             }
-
             return View("ViewShow", modelshow);
         }
 

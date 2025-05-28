@@ -2,6 +2,7 @@
 @using joro.too.Entities
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.IdentityModel.Tokens
 @inject UserManager<User> userManager;
 @inject SignInManager<User> signInManager;
 <link rel="stylesheet" href="~/css/Botonlmao.css" asp-append-version="true"/>
@@ -49,7 +50,7 @@
             @if(signInManager.IsSignedIn(User))
             {
                 var user = await userManager.GetUserAsync(User);
-                if (!user.RatedShows.Contains(Model.id))
+                if (!user.RatedShowsIds.Contains(Model.id))
                 {
                     <form asp-action="RateMedia" asp-controller="Account">
                         <input type="hidden" id="mediaId" name="mediaId" value="@Model.id">

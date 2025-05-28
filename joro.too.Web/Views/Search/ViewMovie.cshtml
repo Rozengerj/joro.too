@@ -1,6 +1,7 @@
 @using joro.too.Entities
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.IdentityModel.Tokens
 @model ViewMovieModel
 @inject UserManager<User> userManager;
 @inject SignInManager<User> signInManager;
@@ -46,7 +47,7 @@
             @if(signInManager.IsSignedIn(User))
             {
                 var user = await userManager.GetUserAsync(User);
-                if (!user.RatedMovies.Contains(Model.id))
+                if (!user.RatedMovieIds.Contains(Model.id))
                 {
                     <form asp-action="RateMedia" asp-controller="Account">
                         <input type="hidden" id="mediaId" name="mediaId" value="@Model.id">

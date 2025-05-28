@@ -33,7 +33,7 @@ namespace joro.too.Web
                // options.Timeout = TimeSpan.FromSeconds(10);
             });
             builder.Services.AddDbContext<MovieDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsNotSoAssConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ArchIsAssConnection")));
             //personal services setup
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IMediaService, MediaService>();
@@ -92,7 +92,7 @@ namespace joro.too.Web
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                await CreateUser(services);
+                //await CreateUser(services);
             }
 
             app.MapControllerRoute(
@@ -124,7 +124,7 @@ namespace joro.too.Web
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
-                var user = new User { UserName = "admin@admin.com", Email = adminEmail, Pfp = "https://res.cloudinary.com/djubwo5uq/image/upload/v1744467542/n9kfa5wcfkpmnzti1quv.webp"};
+                var user = new User { UserName = "admin@admin.com", Email = adminEmail, Pfp = "https://res.cloudinary.com/djubwo5uq/image/upload/v1744467542/n9kfa5wcfkpmnzti1quv.webp", RatedShows = new List<Show>(), RatedMovies = new List<Movie>() };
                 var result = await userManager.CreateAsync(user, "AdminPassword123!");
                 if (result.Succeeded)
                 {
@@ -139,7 +139,7 @@ namespace joro.too.Web
             var guyUser = await userManager.FindByEmailAsync(adminEmail);
             if (guyUser == null)
             {
-                var user = new User { UserName = "gosho", Email = adminEmail, Pfp = "https://res.cloudinary.com/djubwo5uq/image/upload/v1744467542/n9kfa5wcfkpmnzti1quv.webp"};
+                var user = new User { UserName = "gosho", Email = adminEmail, Pfp = "https://res.cloudinary.com/djubwo5uq/image/upload/v1744467542/n9kfa5wcfkpmnzti1quv.webp", RatedShows = new List<Show>(), RatedMovies = new List<Movie>() };
                 var result = await userManager.CreateAsync(user, "P@ssW0rd");
                 if (result.Succeeded)
                 {

@@ -10,8 +10,10 @@ public class User:IdentityUser
     public List<Comment>? Comments { get; set; }
     [ForeignKey(nameof(Comment))]
     public List<int>? CommentsId { get; set; }
+    public List<Movie>? RatedMovies { get; set; }
     [ForeignKey(nameof(Movie))]
-    public List<int>? RatedMovies { get; set; }
+    public List<int>? RatedMovieIds { get; set; }
+    public List<Show>? RatedShows { get; set; }
     [ForeignKey(nameof(Show))]
-    public List<int>? RatedShows { get; set; }
+    public List<int>? RatedShowsIds { get; set; }
 }
